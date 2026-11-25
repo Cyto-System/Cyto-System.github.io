@@ -28,8 +28,8 @@ export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
           id="cosci-results"
           index="03"
           kicker="ALGORITHM DESIGN"
-          title={zh ? '两项方法开发任务，' : 'Two method-development tasks,'}
-          accent={zh ? '与已有方法在同一考题上比较。' : 'scored against existing methods.'}
+          title="OpenProblem Autoresearch"
+          accent={zh ? '效果测评' : 'Benchmark evaluation'}
         />
         <button
           type="button"
