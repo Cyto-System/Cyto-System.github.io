@@ -875,37 +875,37 @@ export const IDENTITY_CASE_GIF = {
 export const IDENTITY_STAGES: { code: string; title: BilingualText; body: BilingualText; hotspot: Hotspot }[] = [
   {
     code: '01',
-    title: { zh: '自适应流形提供器', en: 'Adaptive Manifold Provider' },
+    title: { zh: 'Manifold Provider (候选生成)', en: 'Adaptive Manifold Provider' },
     body: {
-      zh: '集成基因秩次、检出支持与表达程序三路特征编码，利用样本条件局部度量张量与多原型匹配保留亚型判别轴，为每个单细胞生成高召回的 Cell Ontology 候选术语分布。',
+      zh: '集成基因秩次、检出支持与表达程序三路表征，借助样本条件局部度量张量与多原型匹配，为每个单细胞输出高召回的 Cell Ontology 候选分布。',
       en: 'Integrates gene-rank, detection-support, and gene-program views with a cell-conditioned Riemannian metric and multiple prototypes to propose ranked Cell Ontology candidates per cell.',
     },
     hotspot: { x: 26.2, y: 1.2, w: 73.0, h: 33.4 },
   },
   {
     code: '02',
-    title: { zh: 'Analyst Agent 与分群报告', en: 'Analyst Agent & Per-Cluster Report' },
+    title: { zh: 'Analyst Agent (证据提取)', en: 'Analyst Agent & Per-Cluster Report' },
     body: {
-      zh: '独立于候选预测构建无监督表达图谱与分群，提取簇内标志基因、表达程序与质控特征生成 Per-Cluster Report，将分子证据严格区分为 Supported、Unresolved、Contradicted 与 Unmeasured 四类。',
-      en: 'Builds label-free populations independently of provider scores and compiles Per-Cluster Reports separating supported, unresolved, contradicted, and unmeasured evidence.',
+      zh: '独立于候选预测构建无监督表达图谱与分群，提取标志基因、功能程序与质控特征生成 Per-Cluster Report，将分子证据严格区分为 Supported、Unresolved、Contradicted 与 Unmeasured 四类。',
+      en: 'Builds label-free populations independently of candidate predictions, compiling Per-Cluster Reports that categorize molecular evidence into Supported, Unresolved, Contradicted, and Unmeasured classes.',
     },
     hotspot: { x: 0.7, y: 36.2, w: 50.6, h: 43.2 },
   },
   {
     code: '03',
-    title: { zh: 'Reviewer Agent 与知识图谱', en: 'Reviewer Agent & Knowledge Graph' },
+    title: { zh: 'Reviewer Agent & KG (闭环审阅)', en: 'Reviewer Agent & Knowledge Graph' },
     body: {
-      zh: '检索 Cell Ontology 知识图谱对齐标志基因与组织先验，在相关对比簇间评估竞争解释，自主执行 Inspect、Split、Merge 或 Ancestor Fallback 等闭环动作，并支持 Meta Review 仲裁。',
+      zh: '检索 Cell Ontology 知识图谱 (KG) 对齐标志基因与组织先验，在相关对比簇间评估竞争假设，自主执行 Inspect、Split、Merge 或 Ancestor Fallback 等闭环动作。',
       en: 'Queries Cell Ontology knowledge to contextualize marker panels against comparator clusters, executing closed-loop Inspect, Split, Merge, or Ancestor Fallback actions with optional Meta Review adjudication.',
     },
     hotspot: { x: 52.8, y: 36.2, w: 46.5, h: 43.2 },
   },
   {
     code: '04',
-    title: { zh: '本体锚定的可溯源注释', en: 'Ontology-Constrained Release' },
+    title: { zh: 'Meta Review & Release (终审发布)', en: 'Ontology-Constrained Release' },
     body: {
-      zh: '在具备充分分子实测支持且排除观测冲突的前提下，释放证据支持的最细粒度 Cell Ontology 身份，同步记录细胞状态、证据评级与备选假设。',
-      en: 'Releases the finest Cell Ontology identity supported by observed molecular measurements without unresolved contradictions, documenting cellular state, evidence grades, and alternative explanations.',
+      zh: '在具备充分分子实测支持且排除观测冲突的前提下，释放最细粒度的 Cell Ontology 细胞身份；疑难冲突谱系调用 Meta Review 引入单细胞配对受体序列终审裁决。',
+      en: 'Releases the finest Cell Ontology identity supported by observed molecular measurements without unresolved contradictions, invoking Meta Review for multimodal receptor adjudication.',
     },
     hotspot: { x: 0.7, y: 86.2, w: 98.6, h: 13.0 },
   },
@@ -1032,9 +1032,9 @@ export const IDENTITY_MAIT_RECALL: {
   addedTrue: number;
   falsePositives: number;
 }[] = [
-  { criterion: { zh: '联合判别标准 (TCR + KLRB1 + SLC4A10)', en: 'Joint criteria (TCR + KLRB1 + SLC4A10)' }, recall: 69.09, addedTrue: 0, falsePositives: 23 },
+  { criterion: { zh: '严格联合标准 (TCR + KLRB1 + SLC4A10)', en: 'Joint criteria (TCR + KLRB1 + SLC4A10)' }, recall: 69.09, addedTrue: 0, falsePositives: 23 },
   { criterion: { zh: '放宽 SLC4A10 表达限制 (TCR + KLRB1)', en: 'SLC4A10 optional (TCR + KLRB1)' }, recall: 84.30, addedTrue: 144, falsePositives: 23 },
-  { criterion: { zh: '仅依赖配对 TCR 序列 (Canonical TRAV1-2)', en: 'Paired TCR alone (Canonical TRAV1-2)' }, recall: 91.91, addedTrue: 85, falsePositives: 23 },
+  { criterion: { zh: '配对 TCR 受体序列确证 (TRAV1-2 Invariant)', en: 'Paired TCR alone (Canonical TRAV1-2)' }, recall: 91.91, addedTrue: 85, falsePositives: 23 },
 ];
 
 export function pickText(t: BilingualText, lang: Lang): string {

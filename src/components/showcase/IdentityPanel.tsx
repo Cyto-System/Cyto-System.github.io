@@ -193,8 +193,8 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           id="identity-benchmark"
           index="02"
           kicker="IDENTITY BENCHMARK"
-          title={zh ? '跨三类独立单细胞队列，' : 'Across three independent single-cell cohorts,'}
-          accent={zh ? '与基础模型、分类器及 LLM 智能体全面对比。' : 'benchmarked against foundation models, classifiers, and LLM agents.'}
+          title={zh ? '涵盖实体器官与泛癌 T 细胞微环境，' : 'Across diverse tissues and complex T-cell contexts,'}
+          accent={zh ? '系统对比单细胞 Foundation Model、分类器与 LLM Agent。' : 'systematically benchmarked against foundation models, classifiers, and LLM agents.'}
         />
 
         <BenchControlsBar
@@ -380,11 +380,11 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
 
           <div className="lg:col-span-5 flex flex-col gap-5">
             <BenchCard
-              title={zh ? '三阶段 FACS 分选真值演进' : 'Staged verification against FACS ground truth'}
-              meta={zh ? '5 大 T 细胞主谱系' : '5 major T-cell lineages'}
+              title={zh ? '三阶段分期核验性能演进' : 'Staged verification against FACS ground truth'}
+              meta={zh ? '对照物理 FACS 分选真值 (5 大 T 细胞主谱系)' : '5 major T-cell lineages (FACS sorted)'}
               footer={
                 zh
-                  ? 'Agent Review 修订 3,949 个细胞并净增 +2,784 正确标注；Meta Review 进一步修订 611 个细胞并净增 +606 正确标注。'
+                  ? 'Agent Review 重新注释 3,949 个细胞（净增 +2,784 个正确标注）；Meta Review 结合配对 TCR 复核 611 个细胞（净增 +606 个正确标注）。'
                   : 'Agent Review revises 3,949 cells (+2,784 net correct); Meta Review revises 611 rare cells (+606 net correct).'
               }
             >
@@ -415,11 +415,11 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
 
             <BenchCard
               className="flex-1"
-              title={zh ? '多模态配对 TCR 罕见亚群验证' : 'Multimodal paired-TCR rare-lineage verification'}
+              title={zh ? '多模态配对 TCR 罕见谱系核验' : 'Multimodal paired-TCR rare-lineage verification'}
               meta={zh ? '四聚体物理分选对照' : 'Tetramer sorting ground truth'}
               footer={
                 zh
-                  ? '放宽因技术性基因丢失受阻的 SLC4A10 表达限制后，MAIT Recall 由 69.09% 升至 91.91%，而假阳性始终恒定为 23 个细胞。'
+                  ? '针对单细胞测序中常见的 SLC4A10 技术性 Dropout，引入单细胞配对 TCR 重排后，MAIT 召回率 (Recall) 由 69.09% 跃升至 91.91%，且假阳性严格恒定在 23 个细胞（经 Scirpy 共享克隆型确证）。'
                   : 'Relaxing RNA dropout constraints via paired TCR raises MAIT recall from 69.09% to 91.91% while false positives stay fixed at 23 cells.'
               }
             >
@@ -429,14 +429,14 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
                     <div className="text-[11px] text-slate-500">iNKT · CD1d-PBS57</div>
                     <div className="font-mono text-sm font-bold text-emerald-800 tabular-nums mt-0.5">98.88%</div>
                     <div className="text-[10.5px] text-slate-500 mt-0.5">
-                      {zh ? '177 / 179 匹配分选' : '177 / 179 verified'}
+                      {zh ? '177 / 179 实验分选确证' : '177 / 179 verified'}
                     </div>
                   </div>
                   <div className="rounded-xl bg-[#F4FAF6] border border-emerald-950/[0.06] px-3 py-2.5">
                     <div className="text-[11px] text-slate-500">MAIT · MR1-5-OP-RU</div>
                     <div className="font-mono text-sm font-bold text-emerald-800 tabular-nums mt-0.5">99.54%</div>
                     <div className="text-[10.5px] text-slate-500 mt-0.5">
-                      {zh ? '430 / 432 匹配分选' : '430 / 432 verified'}
+                      {zh ? '430 / 432 实验分选确证' : '430 / 432 verified'}
                     </div>
                   </div>
                 </div>
