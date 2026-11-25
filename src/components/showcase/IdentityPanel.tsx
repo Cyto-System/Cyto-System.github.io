@@ -130,8 +130,8 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           id="identity-architecture"
           index="01"
           kicker="THE ARCHITECTURE"
-          title={zh ? '先用局部流形高召回提出候选，' : 'Propose high-recall candidates on a local manifold,'}
-          accent={zh ? '再用样本内实测证据逐层验证。' : 'then verify them against query measurements.'}
+          title={zh ? '基于自适应流形生成候选，' : 'Generate high-recall candidates on an adaptive manifold,'}
+          accent={zh ? '立足样本分子实测数据闭环核验。' : 'verify through closed-loop molecular evidence.'}
         />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           <ol className="lg:col-span-4 space-y-2">
