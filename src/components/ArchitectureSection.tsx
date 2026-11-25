@@ -86,7 +86,7 @@ const ModuleTile: React.FC<{ mod: CytoModule; tier: TierId; lang: Lang; stretch?
           </span>
         ) : (
           <span className={`px-2 py-0.5 rounded text-[10.5px] font-mono shrink-0 ${style.badge}`}>
-            {mod.status === 'in_dev' ? (zh ? '研发中' : 'R&D') : zh ? '待发布' : 'Pending'}
+            {mod.status === 'in_dev' ? (zh ? '研发中' : 'R&D') : zh ? '近期开源' : 'Coming soon'}
           </span>
         )}
       </span>
