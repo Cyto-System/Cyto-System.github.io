@@ -160,7 +160,7 @@ export const SpatialPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
             <Choices label={zh ? '检索数据集' : 'Retrieval dataset'} labels={['HESTA', 'DLPFC']} value={cohort} onChange={setCohort} />
             <Bars {...barProps} entries={rows(retrievalNames, retrieval[cohort])} title={cohort === 0 ? 'AUPRC' : 'PCC'} />
             <p className="spatial-card-copy">{zh ? (cohort === 0 ? '八个器官的平均 AUPRC，衡量匹配区域的检索质量。' : '七类皮层邻域的平均 PCC，衡量预测相似度与参考匹配分数的一致性。') : (cohort === 0 ? 'Mean AUPRC across eight organs measures retrieval of matching regions.' : 'Mean PCC across seven niche classes measures agreement with reference matching scores.')}</p>
-            <p className="spatial-note">{zh ? 'SUDOKU：任务微调。右侧为独立查询示例，不等同于队列平均。' : 'Task-fine-tuned SUDOKU. Examples at right are distinct from cohort means.'}</p>
+            <p className="spatial-note">{zh ? 'SUDOKU：任务微调。' : 'Task-fine-tuned SUDOKU. Examples at right are distinct from cohort means.'}</p>
           </article>
           <RetrievalCase kind="hesta" lang={lang} onZoom={onZoom} replay={replay} /><RetrievalCase kind="dlpfc" lang={lang} onZoom={onZoom} replay={replay} />
         </div></> : <><div className="spatial-board spatial-board-four" data-task="R2">
