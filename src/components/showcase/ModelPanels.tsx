@@ -103,6 +103,7 @@ export const PerturbationPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           { href: '#perturbation-framework', label: zh ? '模型框架' : 'Framework' },
           { href: '#perturbation-benchmark', label: zh ? '基准评测' : 'Benchmarks' },
         ]}
+        githubUrl="https://github.com/Cyto-System/Cyto.Perturbation"
       />
 
       {/* 01 Framework */}

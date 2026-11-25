@@ -121,6 +121,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           { href: '#identity-benchmark', label: zh ? '基准评测' : 'Benchmarks' },
           { href: '#identity-case', label: zh ? '阶段验证案例' : 'Case study' },
         ]}
+        githubUrl="https://github.com/Cyto-System/Cyto.Identity"
       />
 
       {/* 01 Architecture */}

@@ -27,6 +27,7 @@ export const CoScientistPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           { href: '#cosci-results', label: zh ? '算法设计' : 'Algorithm design' },
           { href: '#cosci-cases', label: zh ? '案例影片' : 'Case films' },
         ]}
+        githubUrl="https://github.com/Cyto-System/Cyto.CoScientist"
       />
       <div className="pt-12 sm:pt-14 border-t border-emerald-950/[0.08]">
         <CoSciArchitecture lang={lang} />

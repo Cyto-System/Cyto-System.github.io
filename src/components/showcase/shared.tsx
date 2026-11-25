@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Maximize2, X } from 'lucide-react';
+import { ArrowUpRight, Github, Maximize2, X } from 'lucide-react';
 import type { Lang } from '../../lib/cytoDomain';
 import type { Hotspot } from '../../lib/modelShowcase';
 
@@ -81,12 +81,13 @@ interface ModelIntroProps {
   description: string;
   logo?: string;
   subnav?: { href: string; label: string }[];
+  githubUrl?: string;
   lang: Lang;
 }
 
 const DEFAULT_CYTO_LOGO = '/assets/coscientist/cytoco-logo.png';
 
-/** Shared opening block for every model panel: name, one-line positioning, scope, section index. */
+/** Shared opening block for every model panel: name, one-line positioning, scope, section index & GitHub link. */
 export const ModelIntro: React.FC<ModelIntroProps> = ({
   eyebrow,
   name,
@@ -94,43 +95,68 @@ export const ModelIntro: React.FC<ModelIntroProps> = ({
   description,
   logo = DEFAULT_CYTO_LOGO,
   subnav,
+  githubUrl,
   lang,
-}) => (
-  <div className="space-y-7">
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end">
-      <div className="lg:col-span-7">
-        <div className="flex items-center gap-3">
-          {logo && <img src={logo} alt="" width={40} height={36} className="w-10 h-auto shrink-0" />}
-          <p className="font-mono text-xs tracking-[0.2em] text-emerald-800/70">{eyebrow}</p>
+}) => {
+  const zh = lang === 'zh';
+  const showFooterBar = Boolean((subnav && subnav.length > 0) || githubUrl);
+
+  return (
+    <div className="space-y-7">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end">
+        <div className="lg:col-span-7">
+          <div className="flex items-center gap-3">
+            {logo && <img src={logo} alt="" width={40} height={36} className="w-10 h-auto shrink-0" />}
+            <p className="font-mono text-xs tracking-[0.2em] text-emerald-800/70">{eyebrow}</p>
+          </div>
+          <h3 className="mt-4 text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-tight leading-[1.14]">
+            <span className="text-[#0C261B]">{name}</span>
+            <span className="block text-emerald-700 mt-1.5 text-2xl sm:text-3xl lg:text-[34px] leading-[1.2]">{tagline}</span>
+          </h3>
         </div>
-        <h3 className="mt-4 text-3xl sm:text-4xl lg:text-[44px] font-bold tracking-tight leading-[1.14]">
-          <span className="text-[#0C261B]">{name}</span>
-          <span className="block text-emerald-700 mt-1.5 text-2xl sm:text-3xl lg:text-[34px] leading-[1.2]">{tagline}</span>
-        </h3>
+        <p className="lg:col-span-5 text-sm text-slate-600 leading-[1.7] lg:border-l lg:border-emerald-950/10 lg:pl-7 lg:py-0.5 [text-wrap:pretty]">
+          {description}
+        </p>
       </div>
-      <p className="lg:col-span-5 text-sm text-slate-600 leading-[1.7] lg:border-l lg:border-emerald-950/10 lg:pl-7 lg:py-0.5 [text-wrap:pretty]">
-        {description}
-      </p>
+      {showFooterBar && (
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 border-t border-emerald-950/[0.08]">
+          {subnav && subnav.length > 0 ? (
+            <nav
+              aria-label={zh ? `${name} 章节` : `${name} sections`}
+              className="flex flex-wrap gap-x-2 gap-y-1.5 text-sm"
+            >
+              {subnav.map((s, i) => (
+                <a
+                  key={s.href}
+                  href={s.href}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-slate-600 hover:text-emerald-800 hover:bg-emerald-950/[0.04] transition-colors"
+                >
+                  <span className="font-mono text-xs text-emerald-700/60">{String(i + 1).padStart(2, '0')}</span>
+                  <span>{s.label}</span>
+                </a>
+              ))}
+            </nav>
+          ) : (
+            <span />
+          )}
+
+          {githubUrl && (
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-950/12 bg-white hover:border-emerald-600/50 hover:text-emerald-800 text-xs font-medium text-[#0C261B] shadow-[0_1px_2px_rgba(6,78,59,0.04)] transition-colors whitespace-nowrap shrink-0"
+            >
+              <Github className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
+              <span>GitHub</span>
+              <ArrowUpRight className="w-3 h-3 text-slate-400" aria-hidden="true" />
+            </a>
+          )}
+        </div>
+      )}
     </div>
-    {subnav && subnav.length > 1 && (
-      <nav
-        aria-label={lang === 'zh' ? `${name} 章节` : `${name} sections`}
-        className="flex flex-wrap gap-x-2 gap-y-1.5 text-sm pt-5 border-t border-emerald-950/[0.08]"
-      >
-        {subnav.map((s, i) => (
-          <a
-            key={s.href}
-            href={s.href}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-slate-600 hover:text-emerald-800 hover:bg-emerald-950/[0.04] transition-colors"
-          >
-            <span className="font-mono text-xs text-emerald-700/60">{String(i + 1).padStart(2, '0')}</span>
-            <span>{s.label}</span>
-          </a>
-        ))}
-      </nav>
-    )}
-  </div>
-);
+  );
+};
 
 /** Horizontal bar chart; bars grow from 0 when `play` turns true. */
 export const BarChart: React.FC<{
