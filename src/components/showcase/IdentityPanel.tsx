@@ -373,7 +373,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
             </div>
             <figcaption className="px-4 sm:px-5 py-3 border-t border-emerald-950/[0.06] text-xs text-slate-500 leading-relaxed bg-[#FAFDFB]">
               {zh
-                ? '基于 13 位健康供体胸腺与外周血 T 细胞配对单细胞 RNA 及 TCR-seq 数据，展示 Agent Review 解决 CD4/CD8 谱系混淆并局部拆分胸腺 γδ 分支，以及 Meta Review 结合配对 TCR 高精度召回罕见 MAIT 与 iNKT 亚群。'
+                ? '基于 13 位健康供体胸腺与外周血 T 细胞配对单细胞 RNA 及 TCR-seq 数据，展示智能体审阅解决 CD4/CD8 谱系混淆并局部细分胸腺 γδ 发育分支，以及多模态终审结合配对 TCR 高精度召回罕见 MAIT 与 iNKT 亚群。'
                 : 'On paired scRNA-seq and TCR profiles from 13 healthy donors, Agent Review resolves CD4/CD8 conflicts and splits hidden thymic γδ trajectories, while Meta Review recovers rare MAIT and iNKT populations backed by paired TCRs.'}
             </figcaption>
           </figure>
@@ -384,7 +384,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               meta={zh ? '对照物理 FACS 分选真值 (5 大 T 细胞主谱系)' : '5 major T-cell lineages (FACS sorted)'}
               footer={
                 zh
-                  ? 'Agent Review 重新注释 3,949 个细胞（净增 +2,784 个正确标注）；Meta Review 结合配对 TCR 复核 611 个细胞（净增 +606 个正确标注）。'
+                  ? '智能体审阅重新注释 3,949 个细胞（净增 +2,784 个正确标注）；多模态终审结合配对 TCR 复核 611 个细胞（净增 +606 个正确标注）。'
                   : 'Agent Review revises 3,949 cells (+2,784 net correct); Meta Review revises 611 rare cells (+606 net correct).'
               }
             >

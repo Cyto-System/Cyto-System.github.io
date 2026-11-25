@@ -875,37 +875,37 @@ export const IDENTITY_CASE_GIF = {
 export const IDENTITY_STAGES: { code: string; title: BilingualText; body: BilingualText; hotspot: Hotspot }[] = [
   {
     code: '01',
-    title: { zh: 'Manifold Provider (候选生成)', en: 'Adaptive Manifold Provider' },
+    title: { zh: '自适应流形候选生成', en: 'Adaptive Manifold (Candidate Generation)' },
     body: {
-      zh: '集成基因秩次、检出支持与表达程序三路表征，借助样本条件局部度量张量与多原型匹配，为每个单细胞输出高召回的 Cell Ontology 候选分布。',
-      en: 'Integrates gene-rank, detection-support, and gene-program views with a cell-conditioned Riemannian metric and multiple prototypes to propose ranked Cell Ontology candidates per cell.',
+      zh: '集成基因秩次、检出支持与表达程序多视角表征，结合细胞条件局部度量与原型匹配，为每个单细胞输出高召回的候选细胞类型。',
+      en: 'Integrates gene-rank, detection-support, and expression-programme representations with local metrics and prototypes to propose high-recall candidate cell types per cell.',
     },
     hotspot: { x: 26.2, y: 1.2, w: 73.0, h: 33.4 },
   },
   {
     code: '02',
-    title: { zh: 'Analyst Agent (证据提取)', en: 'Analyst Agent & Per-Cluster Report' },
+    title: { zh: '分群分子证据提取', en: 'Analyst Agent (Evidence Profiling)' },
     body: {
-      zh: '独立于候选预测构建无监督表达图谱与分群，提取标志基因、功能程序与质控特征生成 Per-Cluster Report，将分子证据严格区分为 Supported、Unresolved、Contradicted 与 Unmeasured 四类。',
-      en: 'Builds label-free populations independently of candidate predictions, compiling Per-Cluster Reports that categorize molecular evidence into Supported, Unresolved, Contradicted, and Unmeasured classes.',
+      zh: '独立构建无监督细胞分群，系统检验标志基因表达、细胞异质性与质控特征，严格区分阳性支持、冲突矛盾与未测基因。',
+      en: 'Constructs unsupervised cell clusters independently and profiles marker expression, functional programmes, and data quality to distinguish supported, contradicted, and unmeasured features.',
     },
     hotspot: { x: 0.7, y: 36.2, w: 50.6, h: 43.2 },
   },
   {
     code: '03',
-    title: { zh: 'Reviewer Agent & KG (闭环审阅)', en: 'Reviewer Agent & Knowledge Graph' },
+    title: { zh: '知识图谱闭环审阅', en: 'Reviewer Agent & Knowledge Graph' },
     body: {
-      zh: '检索 Cell Ontology 知识图谱 (KG) 对齐标志基因与组织先验，在相关对比簇间评估竞争假设，自主执行 Inspect、Split、Merge 或 Ancestor Fallback 等闭环动作。',
-      en: 'Queries Cell Ontology knowledge to contextualize marker panels against comparator clusters, executing closed-loop Inspect, Split, Merge, or Ancestor Fallback actions with optional Meta Review adjudication.',
+      zh: '检索细胞本体知识图谱对齐标志基因与组织先验，在相近亚群间对比分子差异，自主执行特征复核、亚群细分、同质合并或祖先回退。',
+      en: 'Contextualizes candidate markers against Cell Ontology knowledge and neighbouring populations, executing targeted evidence requests, subpopulation splitting, merging, or ancestor fallback.',
     },
     hotspot: { x: 52.8, y: 36.2, w: 46.5, h: 43.2 },
   },
   {
     code: '04',
-    title: { zh: 'Meta Review & Release (终审发布)', en: 'Ontology-Constrained Release' },
+    title: { zh: '多模态终审与细胞注释', en: 'Multimodal Meta-Review & Annotation' },
     body: {
-      zh: '在具备充分分子实测支持且排除观测冲突的前提下，释放最细粒度的 Cell Ontology 细胞身份；疑难冲突谱系调用 Meta Review 引入单细胞配对受体序列终审裁决。',
-      en: 'Releases the finest Cell Ontology identity supported by observed molecular measurements without unresolved contradictions, invoking Meta Review for multimodal receptor adjudication.',
+      zh: '在具备充分分子实测支持且排除冲突的前提下，输出最细粒度的标准细胞本体注释；疑难谱系引入单细胞配对受体序列完成多模态终审。',
+      en: 'Assigns the finest Cell Ontology identity supported by observed molecular evidence, incorporating single-cell paired antigen receptor sequences for multimodal final adjudication.',
     },
     hotspot: { x: 0.7, y: 86.2, w: 98.6, h: 13.0 },
   },
@@ -914,10 +914,10 @@ export const IDENTITY_STAGES: { code: string; title: BilingualText; body: Biling
 export type IdentityParadigm = 'ours' | 'foundation' | 'classifier' | 'agent';
 
 export const IDENTITY_PARADIGM_LABEL: Record<IdentityParadigm, BilingualText> = {
-  ours: { zh: 'scVerity (Ours)', en: 'scVerity (ours)' },
-  foundation: { zh: '单细胞基础模型 (Foundation Model)', en: 'Foundation model' },
-  classifier: { zh: '参考图谱分类器 (Reference Classifier)', en: 'Reference classifier' },
-  agent: { zh: 'LLM 智能体 (LLM Agent)', en: 'LLM agent' },
+  ours: { zh: 'scVerity (本文方法)', en: 'scVerity (Ours)' },
+  foundation: { zh: '单细胞基础模型', en: 'Foundation model' },
+  classifier: { zh: '参考图谱分类器', en: 'Reference classifier' },
+  agent: { zh: '大语言模型智能体', en: 'LLM agent' },
 };
 
 export interface IdentityBenchmarkRow {
@@ -952,7 +952,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 33.55, macroF1: 27.87 },
     ],
     note: {
-      zh: 'Manifold Provider 仅在 872 万参考细胞上单次预训练且零微调；相比最强外部基线 SingleR，ACC 提升 +14.86 个百分点，Macro-F1 提升 +11.83 个百分点。',
+      zh: '流形表征模型仅在 872 万参考细胞上预训练一次且零微调；相比最强外部基线 SingleR，ACC 提升 +14.86 个百分点，Macro-F1 提升 +11.83 个百分点。',
       en: 'Pretrained once on 8.72M reference cells with zero dataset-specific fine-tuning; gains +14.86 pp accuracy and +11.83 pp Macro-F1 over strongest baseline SingleR.',
     },
   },
@@ -1020,9 +1020,9 @@ export const IDENTITY_CASE_STAGES: {
   revised: number;
   netGain: number;
 }[] = [
-  { stage: { zh: 'Manifold Provider', en: 'Manifold Provider' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
-  { stage: { zh: 'Agent Review', en: 'Agent Review' }, acc: 55.85, macroF1Pct: 45.34, revised: 3949, netGain: 2784 },
-  { stage: { zh: 'Meta Review', en: 'Meta Review' }, acc: 56.63, macroF1Pct: 47.61, revised: 611, netGain: 606 },
+  { stage: { zh: '流形候选生成', en: 'Adaptive Manifold' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
+  { stage: { zh: '智能体审阅', en: 'Agent Review' }, acc: 55.85, macroF1Pct: 45.34, revised: 3949, netGain: 2784 },
+  { stage: { zh: '多模态终审', en: 'Meta Review' }, acc: 56.63, macroF1Pct: 47.61, revised: 611, netGain: 606 },
 ];
 
 /** Fig. 3g: Multimodal MAIT cell recall across decision criteria (constant 23 false positives across all three). */

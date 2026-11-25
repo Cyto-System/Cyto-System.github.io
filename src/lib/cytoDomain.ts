@@ -275,7 +275,7 @@ export const CYTO_MODULES: CytoModule[] = [
       en: 'Input: Single-cell profile & tissue context → Output: Hierarchical cell identity + explicit molecular reasoning chain',
     },
     summary: {
-      zh: 'scVerity 将单细胞候选假设生成与样本内生物学证据核验解耦，结合 Adaptive Manifold Provider、Analyst 与 Reviewer 双智能体及 Cell Ontology 知识图谱，实现细粒度单细胞身份注释与多模态罕见亚群核验。',
+      zh: 'scVerity 将单细胞候选假设生成与样本内生物学证据核验解耦，结合自适应流形表征、分析与评审双智能体及细胞本体知识图谱，实现细粒度单细胞身份注释与多模态罕见亚群核验。',
       en: 'scVerity decouples per-cell candidate generation from sample-grounded biological verification via an Adaptive Manifold Provider, Analyst/Reviewer agents, and Cell Ontology knowledge graph for open-world annotation.',
     },
     reportLabel: 'arXiv',
