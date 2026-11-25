@@ -1,6 +1,6 @@
-# Cyto — Multi-Scale Spatiotemporal Cell Model Family
+# Cyto Model Family
 
-Official website for **Cyto System**, jointly developed by **BGI Research (华大研究院)** and **Beijing Zhongguancun Academy (北京中关村学院)**.
+Official website for **Cyto System**, jointly developed by **Beijing Zhongguancun Academy (北京中关村学院)** and **BGI Research (华大研究院)**.
 
 - Live site: https://cyto-system.github.io
 - GitHub organization: https://github.com/Cyto-System
