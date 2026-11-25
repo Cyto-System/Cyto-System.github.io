@@ -18,7 +18,7 @@ export const CoScientistPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         tagline={zh ? '面向生命科学的 Autoresearch 系统' : 'An Autoresearch system for long-horizon biological discovery'}
         description={
           zh
-            ? '在固定模型参数下实现任务内递归自我改进（Within-Task RSI），横跨生信算法开发与开放式多组学研究。将「结果能否产出」与「结论是否具备证据准入资格」严格分离，依托持久研究状态、多分支候选演化与循证控制闭环，在长程探索中持续修正假设、方法与科学结论。'
+            ? '在固定模型参数下实现任务内递归自我改进（Within-Task RSI），横跨生信算法开发与开放式多组学研究。将“结果能否产出”与“结论是否具备证据准入资格”严格分离，依托持久研究状态、多分支候选演化与循证控制闭环，在长程探索中持续修正假设、方法与科学结论。'
             : 'Realizes within-task recursive self-improvement (RSI) under fixed model parameters across bioinformatics algorithm development and open-ended multi-omics inquiry—decoupling whether a result runs from whether it is evidentially admissible through multi-branch evolution, layered auditing, and revisable research state.'
         }
         subnav={[

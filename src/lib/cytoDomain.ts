@@ -1060,7 +1060,7 @@ export function synthesizeCoScientistTrace(input: CustomHypothesisInput): CoScie
         phase: { zh: '组织空间微环境定位', en: 'Spatial Niche Localization' },
         module: 'Cyto.Spatial',
         detail: {
-          zh: `在「${tissue}」空间图谱中识别 ${gene} 高表达亚群及其 40 μm 邻域配受体互作网络。`,
+          zh: `在“${tissue}”空间图谱中识别 ${gene} 高表达亚群及其 40 μm 邻域配受体互作网络。`,
           en: `Localized ${gene}-enriched micro-domains and 40 μm paracrine networks across ${tissue}.`,
         },
         readout: `Niche z = +${zScore}`,
@@ -1090,7 +1090,7 @@ export function synthesizeCoScientistTrace(input: CustomHypothesisInput): CoScie
         phase: { zh: '验证方案生成与闭环判据', en: 'Testable Protocol & Loop Criterion' },
         module: 'Cyto.CoScientist',
         detail: {
-          zh: `生成针对「${tissue}」的体外功能验证读出指标与单细胞复测判据。`,
+          zh: `生成针对“${tissue}”的体外功能验证读出指标与单细胞复测判据。`,
           en: `Synthesized wet-lab validation endpoints and single-cell readout criteria for ${tissue}.`,
         },
         readout: 'Protocol Ready',
