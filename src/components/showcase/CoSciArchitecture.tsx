@@ -23,8 +23,8 @@ export const CoSciArchitecture: React.FC<{ lang: Lang }> = ({ lang }) => {
         id="cosci-architecture"
         index="01"
         kicker="THE ARCHITECTURE"
-        title={zh ? '循环探索结合 meta-review 纠偏，' : 'Iterative exploration paired with meta-review correction,'}
-        accent={zh ? '在固定参数下实现任务内递归自我改进（RSI）。' : 'driving within-task recursive self-improvement under fixed weights.'}
+        title={zh ? '逐项评审研究结果，' : 'Reviewing individual results and'}
+        accent={zh ? '跨轮次审视研究方向' : 'reassessing the research direction across rounds'}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
@@ -74,10 +74,11 @@ export const CoSciArchitecture: React.FC<{ lang: Lang }> = ({ lang }) => {
         <div className="lg:col-span-8 space-y-4">
           <HotspotFigure
             src="/assets/coscientist/cycle-a.png"
-            alt={zh ? 'CytoCoScientist 系统架构图' : 'CytoCoScientist architecture'}
+            alt={zh ? 'Cyto.CoScientist 系统架构图' : 'Cyto.CoScientist architecture'}
             width={2400}
             height={1490}
             hotspot={current.hotspot}
+            relatedHotspot={current.relatedHotspot}
             lang={lang}
           />
           <div

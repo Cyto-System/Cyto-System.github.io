@@ -252,12 +252,13 @@ interface HotspotFigureProps {
   width: number;
   height: number;
   hotspot?: Hotspot | null;
+  relatedHotspot?: Hotspot;
   lang: Lang;
   caption?: string;
 }
 
 /** Figure with an optional highlighted region (everything else dimmed) and a zoom button. */
-export const HotspotFigure: React.FC<HotspotFigureProps> = ({ src, alt, width, height, hotspot, lang, caption }) => {
+export const HotspotFigure: React.FC<HotspotFigureProps> = ({ src, alt, width, height, hotspot, relatedHotspot, lang, caption }) => {
   const [zoom, setZoom] = useState(false);
   return (
     <figure className="bg-white rounded-2xl border border-emerald-950/[0.09] shadow-[0_1px_2px_rgba(6,78,59,0.04),0_18px_42px_-28px_rgba(6,78,59,0.2)] p-3 sm:p-4 lg:p-5">
@@ -272,7 +273,17 @@ export const HotspotFigure: React.FC<HotspotFigureProps> = ({ src, alt, width, h
           className="block w-full h-auto select-none"
           draggable={false}
         />
-        {hotspot && (
+        {hotspot && relatedHotspot && (
+          <svg aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full pointer-events-none">
+            <path fill="rgba(244, 250, 246, 0.56)" fillRule="evenodd" d={
+              'M0 0H100V100H0Z ' + [hotspot, relatedHotspot].map(({ x, y, w, h }) => `M${x} ${y}h${w}v${h}h-${w}Z`).join(' ')
+            } />
+            {[hotspot, relatedHotspot].map(({ x, y, w, h }, i) => (
+              <rect key={i} x={x} y={y} width={w} height={h} rx="0.9" ry="1.5" fill="none" className="stroke-emerald-600" strokeWidth="2" strokeDasharray={i === 1 ? '5 3' : undefined} vectorEffect="non-scaling-stroke" />
+            ))}
+          </svg>
+        )}
+        {hotspot && !relatedHotspot && (
           <div
             aria-hidden="true"
             className="absolute rounded-lg ring-2 ring-emerald-500/90 transition-[left,top,width,height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] pointer-events-none"

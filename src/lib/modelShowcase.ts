@@ -70,22 +70,23 @@ export interface CoSciComponent {
   gist: BilingualText;
   detail: BilingualText;
   hotspot: Hotspot;
+  relatedHotspot?: Hotspot;
 }
 
 export const COSCI_COMPONENT_GROUPS: Record<CoSciComponent['group'], BilingualText> = {
-  loop: { zh: 'DUAL-LOOP RSI / 内外双环控制', en: 'DUAL-LOOP RSI CONTROL' },
-  support: { zh: 'LONG-HORIZON STATE / 长程演化支撑', en: 'LONG-HORIZON STATE & REUSE' },
+  loop: { zh: '研究行动与评审', en: 'Research actions and review' },
+  support: { zh: '候选探索与经验复用', en: 'Candidate exploration and experience reuse' },
 };
 
 export const COSCI_COMPONENTS: CoSciComponent[] = [
   {
     id: 'agent',
     group: 'loop',
-    name: { zh: '主 Agent', en: 'Main agent' },
-    gist: { zh: '检索文献 / 提出假设 / 编写程序 / 运行分析', en: 'Retrieve / hypothesize / code / analyze' },
+    name: { zh: '主智能体', en: 'Main agent' },
+    gist: { zh: '依据研究目标、已有证据和未决问题选择下一步行动。', en: 'Selects the next action based on the research objectives, available evidence, and open questions.' },
     detail: {
-      zh: '每一步只选一个动作，依据是上一步的结果与评审结论。任务内递归自我改进（RSI）改写的是研究过程，模型权重始终不变。',
-      en: 'Each step picks one action based on the previous result and its review. Within-task recursive self-improvement rewrites the investigation; the weights never change.',
+      zh: '每轮结束后，主智能体将结果和评审意见纳入研究记录，再决定是沿当前方向继续，还是回到先前的问题。',
+      en: 'After each round, the main agent updates the research record with the results and review findings. It can then pursue the current direction or revisit an earlier question.',
     },
     hotspot: { x: 15.4, y: 16.6, w: 69.2, h: 10.6 },
   },
@@ -93,10 +94,10 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
     id: 'activities',
     group: 'loop',
     name: { zh: '研究活动', en: 'Research activities' },
-    gist: { zh: '假设探索 · 生信分析 · 程序演化', en: 'Hypotheses · bioinformatics · programs' },
+    gist: { zh: '按研究需要安排任务，而非依次执行固定流程。', en: 'Research needs determine the order of activities.' },
     detail: {
-      zh: '假设探索交给子 Agent，在隔离上下文中完成生成、比较、修订、累积评审与实验设计，各条路线的中间结论不会互相干扰。',
-      en: 'Sub-agents explore hypotheses in isolated contexts — generate, compare, revise, cumulative review, experimental design — so intermediate conclusions of different routes do not leak into each other.',
+      zh: '可选活动包括获取证据、探索假设与设计实验、改进程序、分析组学数据和撰写论文。子智能体在独立上下文中完成具体任务，向主智能体报告发现和尚待解决的问题。',
+      en: 'Activities include gathering evidence, exploring hypotheses and designing experiments, refining programs, analyzing omics data, and writing manuscripts. Subagents work in separate contexts and report their findings and open questions to the main agent.',
     },
     hotspot: { x: 17.6, y: 36.6, w: 31.2, h: 31.6 },
   },
@@ -104,68 +105,66 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
     id: 'review',
     group: 'loop',
     name: { zh: '分层评审', en: 'Layered review' },
-    gist: {
-      zh: 'R0 执行完整性 · R1 确定性检查 · R2 主 Agent 评估 · R3 LLM 领域评审 · R4 人类专家（可选）',
-      en: 'R0 execution · R1 deterministic · R2 main agent · R3 LLM domain · R4 human (optional)',
-    },
+    gist: { zh: '判断一项结果能支持什么结论，而不只看程序是否运行成功。', en: 'Assesses what a result supports, not just whether the code ran.' },
     detail: {
-      zh: '严格执行确定性校验优先，并将方法学有效性与正向效应解耦：R0–R1 的执行或协议失败不可被语义评判覆盖；方法可靠但呈阴性结果可作为有效证据保留，存在数据泄漏或混杂的高分运行会被直接拒收。',
-      en: 'Enforces deterministic validation first and separates methodological validity from positive effect size: R0–R1 failures cannot be overridden by semantic review; rigorous null findings are retained, while leaky or confounded high-scoring runs are rejected.',
+      zh: '系统按需检查执行状态（R0）和数据与分析规程（R1），由主智能体审查结果（R2），并可引入独立模型进行方法学评审（R3）或请领域专家评审（R4）。方法可靠的阴性结果可以保留；存在数据泄漏的高分不能作为改进的证据。',
+      en: 'Checks depend on the task: execution status (R0), data and protocol checks (R1), main-agent inspection (R2), independent methodological review by a language model (R3), and optional human expert review (R4). A sound null result can inform the study; a high score due to data leakage cannot establish an improvement.',
     },
     hotspot: { x: 50.9, y: 36.6, w: 31.2, h: 31.6 },
   },
   {
     id: 'gate',
     group: 'loop',
-    name: { zh: '前提检查与完成门控', en: 'Preconditions & completion gate' },
-    gist: { zh: '行动之前一道，写入产出之前一道', en: 'One before acting, one before output' },
+    name: { zh: '执行前提与完成判定', en: 'Action preconditions and study completion' },
+    gist: { zh: '执行前检查所需输入；结束前核对研究目标。', en: 'Checks inputs before an action and objective coverage before concluding the study.' },
     detail: {
-      zh: '前提不满足的动作不会执行；未通过完成门控的结果不会写入产出，控制权回到主 Agent。',
-      en: 'Actions with unmet preconditions are not executed; results that fail the gate never reach the outputs and control returns to the main agent.',
+      zh: '缺少必要输入或前置评审尚未完成时，相关行动暂不执行。结束研究前，系统逐项核对证据和已评审的研究产出；尚未回答的问题留待后续处理。',
+      en: 'An action waits if required inputs or reviews are missing. Before concluding the study, the system checks the evidence and reviewed outputs against each objective and identifies any work still needed.',
     },
     hotspot: { x: 17.6, y: 29.4, w: 64.5, h: 5.6 },
   },
   {
     id: 'meta',
     group: 'loop',
-    name: { zh: '外环元评审', en: 'Outer-loop meta-review' },
-    gist: { zh: '跨轮次 · 人类专家评审为可选并列入口', en: 'Across rounds · optional human review alongside' },
+    name: { zh: '外环元评审与可选专家评审', en: 'Outer-loop meta-review and optional expert review' },
+    gist: { zh: '跨轮次审视研究路线，判断是否需要改变方向。', en: 'Reviews decisions across rounds to determine whether to change direction.' },
     detail: {
-      zh: '针对长程自主探索中的策略漂移与无效循环，外环元评审从独立上下文周期性审视历史决策、执行轨迹与证据缺口，触发分析重做、补充验证或研究路线转向（如脓毒症案例中从单次抽血转向患者内纵向轨迹）。',
-      en: 'To counter gradual strategic drift over long horizons, an outer-loop meta-reviewer periodically audits decisions, execution traces, and overlooked evidence from an independent context—triggering re-analysis, added validation, or strategic pivots.',
+      zh: '独立评审者检查一系列决策，识别被忽略的证据、缺乏依据的假设或反复无效的尝试。必要时，领域专家可补充意见，供主智能体调整研究路线时参考。',
+      en: 'An independent reviewer examines a sequence of decisions for overlooked evidence, unsupported assumptions, or repeated ineffective attempts. A human expert can offer an additional assessment to inform the main agent’s decision about whether to change direction.',
     },
-    hotspot: { x: 17.2, y: 6.9, w: 66.0, h: 8.6 },
+    hotspot: { x: 17.7, y: 7.3, w: 31.2, h: 7.6 },
+    relatedHotspot: { x: 51.1, y: 7.3, w: 31.2, h: 7.6 },
   },
   {
     id: 'search',
     group: 'support',
     name: { zh: '候选搜索空间', en: 'Candidate search space' },
-    gist: { zh: '搜索策略 + LLM-as-judge', en: 'Search policy + LLM-as-judge' },
+    gist: { zh: '分支选择决定延续哪个候选，评审反馈指导如何修订。', en: 'Branch selection determines which candidate to extend; review guides the revision.' },
     detail: {
-      zh: '下一步从哪个父节点继续扩展，由搜索策略与 LLM 评判打分共同决定。',
-      en: 'Which parent node to extend next is decided jointly by the search policy and an LLM judge.',
+      zh: '修订假设、程序或分析方案会产生新版本，并保留其来源。新证据也可以改变对已有版本的评价，而不改写其内容。',
+      en: 'Revising a hypothesis, program, or analysis produces a new version linked to its parent. New evidence can also change the assessment of an existing version without changing its content.',
     },
     hotspot: { x: 1.0, y: 72.6, w: 29.4, h: 26.6 },
   },
   {
     id: 'context',
     group: 'support',
-    name: { zh: '长程上下文', en: 'Long-horizon context' },
-    gist: { zh: 'L1 原始产物 · L2 语义 / 情节 / 程序性 · L3 任务综合', en: 'L1 artifacts · L2 semantic / episodic / procedural · L3 synthesis' },
+    name: { zh: '长程研究状态与记忆', en: 'Long-horizon research state and memory' },
+    gist: { zh: '新证据可以修正早期判断，原始依据仍可追溯。', en: 'New evidence can revise an earlier interpretation without erasing its basis.' },
     detail: {
-      zh: '最近步骤全文保留，更早的历史进入可修订时间线。时间线把每个决定链接到支撑它的分析，后来的修正可以向前传递。',
-      en: 'Recent steps stay in full; older history becomes a revisable timeline that links each decision to its supporting analysis, so later corrections carry forward.',
+      zh: '研究时间线记录进展、判断的变化和未决问题。分层记忆将研究层面的综合判断（L3）连接到各次尝试的发现与经验（L2），再追溯到原始数据、代码和评审记录（L1）。',
+      en: 'A revisable timeline tracks progress, changes in interpretation, and open questions. Research memory links the study synthesis (L3) to findings from individual attempts (L2) and to primary records such as data, code, and reviews (L1).',
     },
     hotspot: { x: 30.8, y: 72.6, w: 44.6, h: 26.6 },
   },
   {
     id: 'skills',
     group: 'support',
-    name: { zh: '技能检索与更新', en: 'Skill retrieval & update' },
-    gist: { zh: '本地技能库 · 外部库检索', en: 'Local skills · external libraries' },
+    name: { zh: '方法技能的检索与改进', en: 'Methodological skill retrieval and refinement' },
+    gist: { zh: '按需检索分析方法，并在后续研究中复用经检验的修订版本。', en: 'Retrieves analytical procedures as needed and tests revisions before reuse.' },
     detail: {
-      zh: '为当前任务检索可用技能；技能需要修改时先修订并测试，再写回技能库。',
-      en: 'Retrieves skills for the current task; skills that need changes are revised and tested before being written back.',
+      zh: '主智能体优先检索本地方法库；已有方法不足时，再查找外部资源。执行结果和评审意见用于修订方法，并检验其是否适用于当前研究。',
+      en: 'The main agent searches the local skill library first and consults external sources when local procedures are insufficient. Execution results and review feedback guide revisions, which are tested for suitability in the current study.',
     },
     hotspot: { x: 75.8, y: 72.6, w: 23.2, h: 26.6 },
   },

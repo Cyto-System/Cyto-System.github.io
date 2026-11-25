@@ -15,11 +15,11 @@ export const CoScientistPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         logo="/assets/coscientist/cytoco-logo.png"
         eyebrow="04 / CYTO.COSCIENTIST"
         name="Cyto.CoScientist"
-        tagline={zh ? '面向生命科学的 Autoresearch 系统' : 'An Autoresearch system for long-horizon biological discovery'}
+        tagline={zh ? '面向长程自主生物学研究的任务内递归自改进' : 'Within-Task Recursive Self-Improvement for Long-Horizon Autonomous Biological Research'}
         description={
           zh
-            ? '在固定模型参数下实现任务内递归自我改进（Within-Task RSI），横跨生信算法开发与开放式多组学研究。将“结果能否产出”与“结论是否具备证据准入资格”严格分离，依托持久研究状态、多分支候选演化与循证控制闭环，在长程探索中持续修正假设、方法与科学结论。'
-            : 'Realizes within-task recursive self-improvement (RSI) under fixed model parameters across bioinformatics algorithm development and open-ended multi-omics inquiry—decoupling whether a result runs from whether it is evidentially admissible through multi-branch evolution, layered auditing, and revisable research state.'
+            ? '在生物信息学算法开发和开放式多组学研究中，Cyto.CoScientist 根据每轮获得的证据和评审意见，修订假设、程序与分析方案。整个研究过程中，模型参数保持不变。'
+            : 'In bioinformatics algorithm development and open-ended multi-omics research, Cyto.CoScientist revises hypotheses, programs, and analyses in light of evidence and review from each round. Model parameters remain fixed throughout the study.'
         }
         subnav={[
           { href: '#cosci-architecture', label: zh ? '系统架构' : 'Architecture' },
