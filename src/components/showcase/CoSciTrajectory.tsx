@@ -16,8 +16,8 @@ export const CoSciTrajectory: React.FC<{ lang: Lang }> = ({ lang }) => {
         id="cosci-trajectory"
         index="02"
         kicker="ONE POSSIBLE TRAJECTORY"
-        title={zh ? '一条研究路线是一棵树，' : 'A research route is a tree;'}
-        accent={zh ? '分析不支持时沿回边退回。' : 'when analysis disagrees, it walks back.'}
+        title={zh ? '树结构研究路线，' : 'Tree-structured research trajectories,'}
+        accent={zh ? '支持可回溯的并行探索。' : 'enabling parallel exploration with backtracking.'}
       />
 
       <div
