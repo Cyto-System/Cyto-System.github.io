@@ -1,15 +1,11 @@
-import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import React, { useEffect, useId, useRef, useState, useSyncExternalStore } from 'react';
 import { motion } from 'motion/react';
-import { ArrowDown, ArrowRight, Maximize2, RotateCcw, X } from 'lucide-react';
+import { ArrowDown, Maximize2, Pause, Play, X } from 'lucide-react';
 import type { Lang } from '../../lib/cytoDomain';
 import { EyebrowHeading, ModelIntro, useInView } from './shared';
-import { SpatialBenchmarks } from './SpatialBenchmarks';
 import './spatial.css';
 
 const ASSETS = '/assets/spatial/';
-type Task = 'representation' | 'generation';
-
-// Subscribe locally so changing the OS preference also stops an active walkthrough.
 const motionQuery = '(prefers-reduced-motion: reduce)';
 const subscribeMotion = (notify: () => void) => {
   const query = window.matchMedia(motionQuery);
@@ -18,89 +14,155 @@ const subscribeMotion = (notify: () => void) => {
 };
 const readMotion = () => window.matchMedia(motionQuery).matches;
 const useReducedMotion = () => useSyncExternalStore(subscribeMotion, readMotion, () => true);
+type Zoom = (name: string, alt: string) => void;
 
-/** Only illustrations are animated. Paper images remain unchanged. */
-function TaskWalkthrough({ lang }: { lang: Lang }) {
-  const zh = lang === 'zh';
-  const reduced = useReducedMotion();
-  const [ref, visible] = useInView<HTMLDivElement>(false, 0.25);
-  const [task, setTask] = useState<Task>('representation');
-  const [step, setStep] = useState(0);
-  const [playing, setPlaying] = useState(true);
-  const stages = task === 'representation'
-    ? (zh ? ['读取表达与位置', '结合周围细胞', '识别组织结构', '聚类与跨片检索'] : ['Read expression + position', 'Read the neighborhood', 'Resolve tissue structure', 'Cluster and retrieve'])
-    : (zh ? ['保留已测细胞', '预测缺失状态', '逐轮补全', '得到空间分布'] : ['Keep observed cells', 'Predict missing states', 'Fill iteratively', 'Read spatial patterns']);
-  useEffect(() => {
-    if (!visible || !playing || reduced) return;
-    const timer = window.setInterval(() => setStep(s => {
-      if (s >= 3) return s;
-      return s + 1;
-    }), 1500);
-    return () => window.clearInterval(timer);
-  }, [visible, playing, reduced, task]);
-  useEffect(() => { if (step === 3) setPlaying(false); }, [step]);
-  const change = (next: Task) => { setTask(next); setStep(0); setPlaying(true); };
-  const shown = reduced ? 3 : step;
-  const colors = ['#2f7cc4', '#daaf49', '#dc768c'];
-  return <div ref={ref} className="spatial-demo">
-    <div className="spatial-demo-top">
-      <div className="spatial-choice" aria-label={zh ? '任务演示' : 'Task demonstration'}>
-        {(['representation', 'generation'] as const).map((t, i) => <button key={t} type="button" aria-pressed={task === t} onClick={() => change(t)}>
-          <span>0{i + 1}</span>{t === 'representation' ? (zh ? '表征 · 看懂组织' : 'Represent · understand') : (zh ? '生成 · 补全状态' : 'Generate · complete')}
-        </button>)}
-      </div>
-      <span className="spatial-note">{zh ? '流程示意，不是模型运行结果' : 'Illustration, not a model output'}</span>
-    </div>
-    <div className="spatial-demo-body">
-      <div className="spatial-demo-copy">
-        <span className="spatial-kicker">{task === 'representation' ? 'REPRESENTATION' : 'GENERATION'}</span>
-        <h4>{task === 'representation' ? (zh ? '给一张切片，读出它的结构。' : 'Read the organization of a tissue.') : (zh ? '给周围细胞，补全缺失的状态。' : 'Use neighboring cells to fill missing states.')}</h4>
-        <p>{task === 'representation' ? (zh ? '哪些细胞相似？哪些区域属于同一类邻域？从细胞到组织区域，用同一个模型理解。' : 'Which cells are alike? Which regions share a niche? Use one model across cells and tissue regions.') : (zh ? '保留细胞位置，用周围已测信息逐步补全。预测的是细胞状态，不是新坐标。' : 'Keep cell positions fixed. Complete missing states using observed neighbors, without inventing coordinates.')}</p>
-        <a className="spatial-text-link" href={task === 'representation' ? '#spatial-representation' : '#spatial-generation'}>{zh ? '查看真实结果' : 'Explore the results'} <ArrowDown size={14} /></a>
-      </div>
-      <div className="spatial-demo-map">
-        <svg viewBox="0 0 560 225" role="img" aria-label={zh ? '固定坐标的细胞示意，从输入到空间表征或状态补全' : 'Illustrative cells at fixed positions, from input to representations or completed states'}>
-          <rect x="8" y="8" width="232" height="205" rx="18" fill="#fff" stroke="#d9e7df" />
-          <rect x="320" y="8" width="232" height="205" rx="18" fill="#fff" stroke="#d9e7df" />
-          {[0, 1].map(side => <g key={side} transform={`translate(${side * 312},0)`}>
-            {Array.from({ length: 80 }, (_, i) => {
-              const col = i % 10, row = Math.floor(i / 10);
-              const x = 30 + col * 20 + Math.sin(i * 7) * 3, y = 31 + row * 22 + Math.cos(i * 3) * 3;
-              const group = Math.min(2, Math.floor((row + col * 0.25) / 3.5));
-              const masked = col >= 3 && col <= 6 && row >= 2 && row <= 6;
-              const complete = task === 'representation' ? side === 0 || shown >= 1 : !masked || side === 1 && shown >= 1 + i % 3;
-              const fill = complete ? colors[group] : '#d6dfdb';
-              return <motion.circle key={i} cx={x} cy={y} r={5.3} animate={{ fill, opacity: side === 1 && shown === 0 ? 0.42 : 1 }} transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : (i % 10) * .025 }} />;
-            })}
-            {task === 'representation' && <motion.rect x="64" y="43" width="92" height="85" rx="28" fill="none" stroke="#007a57" strokeWidth="2" strokeDasharray="5 4" animate={{ opacity: side === 0 || shown >= 2 ? 1 : 0 }} transition={{ duration: reduced ? 0 : .5 }} />}
-          </g>)}
-          <path d="M262 111h34m-7-7 7 7-7 7" fill="none" stroke="#00996e" strokeWidth="2" />
-        </svg>
-        <div className="spatial-demo-labels"><span>{zh ? '输入' : 'Input'}</span><span>{task === 'representation' ? (zh ? '相似细胞与邻域' : 'Related cells and niches') : (zh ? '固定位置，补全状态' : 'Fixed positions, completed states')}</span></div>
-      </div>
-    </div>
-    <div className="spatial-stepbar">
-      {stages.map((s, i) => <button key={s} type="button" aria-pressed={shown === i} onClick={() => { setStep(i); setPlaying(false); }} disabled={!!reduced} className={shown >= i ? 'is-reached' : ''}><span>0{i + 1}</span>{s}</button>)}
-      <button type="button" className="spatial-replay" onClick={() => { setStep(0); setPlaying(true); }} disabled={!!reduced} aria-label={zh ? '重播流程演示' : 'Replay demonstration'}><RotateCcw size={16} /></button>
-    </div>
-  </div>;
-}
-
-function PaperFigure({ name, alt, className = '', onZoom }: { name: string; alt: string; className?: string; onZoom: (name: string, alt: string) => void }) {
-  return <button type="button" className={`spatial-image ${className}`} onClick={() => onZoom(name, alt)} aria-label={`${alt} · Zoom`}>
+function PaperFigure({ name, alt, onZoom }: { name: string; alt: string; onZoom: Zoom }) {
+  return <button type="button" className="spatial-image" onClick={() => onZoom(name, alt)} aria-label={alt}>
     <img src={`${ASSETS}${name}.png`} alt={alt} loading="lazy" decoding="async" />
     <span className="spatial-zoom" aria-hidden="true"><Maximize2 size={14} /></span>
   </button>;
 }
 
+/** Four linked views: two training stages, then two inference modes. */
+function Architecture({ lang, onZoom }: { lang: Lang; onZoom: Zoom }) {
+  const zh = lang === 'zh';
+  const reduced = useReducedMotion();
+  const [ref, visible] = useInView<HTMLDivElement>(false, .1);
+  const [stage, setStage] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const projectionClip = useId();
+  const stages = zh ? [
+    {
+      tag: '第一阶段 · 表达编码', title: 'VQ-VAE 细胞状态编码器',
+      brief: '先学习细胞表达，将高维基因信息压缩为连续表征和两级离散编码。',
+      detail: '表达编码器把每个细胞的基因表达映射到连续向量。第一级量化描述粗粒度状态，第二级量化补充残差信息；解码器通过重构表达，帮助编码器保留细胞状态。',
+      input: '单细胞基因表达', output: '连续向量 + 两级细胞编码',
+    },
+    {
+      tag: '第二阶段 · 空间建模', title: '空间坐标感知 Transformer',
+      brief: '再结合细胞位置与邻域上下文，学习恢复被掩码的细胞状态。',
+      detail: '可见细胞以连续表达向量输入，二维坐标通过 2D-RoPE 融入注意力。被掩码细胞保留坐标，由空间去噪主干读取周围信息；两个预测头分别预测粗粒度编码与残差编码。',
+      input: '可见细胞表征 + 所有细胞坐标', output: '上下文表征 + 缺失状态分布',
+    },
+    {
+      tag: '推理模式一 · 表征', title: '表征提取（t = 0）',
+      brief: '完整观察邻域，读取细胞及邻域表征，用于检索与多尺度聚类。',
+      detail: '当输入全部可见时，空间主干输出包含邻域信息的细胞表征。对邻域内表征进行平均池化，得到邻域表征，用于跨切片寻找相似区域，并解析不同尺度的组织结构。',
+      input: '完整细胞表达与位置', output: '细胞表征 / 邻域表征',
+    },
+    {
+      tag: '推理模式二 · 生成', title: '状态生成（t > 0）',
+      brief: '固定细胞坐标，利用已知上下文，逐步补全缺失的细胞状态。',
+      detail: '模型先预测被掩码位置的两级编码，优先确定置信度较高的细胞，再将这些细胞加入上下文，继续补全其余位置。用于缺失区域补全与肿瘤克隆周围的细胞状态生成。',
+      input: '已知细胞状态 + 待补全位置', output: '缺失位置的细胞状态',
+    },
+  ] : [
+    {
+      tag: 'Stage 1 · Expression encoding', title: 'VQ-VAE cell-state tokenizer',
+      brief: 'Learn cell expression first, compressing gene profiles into continuous embeddings and two-level codes.',
+      detail: 'The expression encoder maps each cell to a continuous vector. The first quantization level captures a coarse state; the second refines its residual. Expression reconstruction trains the tokenizer to preserve cell-state information.',
+      input: 'Single-cell gene expression', output: 'Continuous embeddings + two-level codes',
+    },
+    {
+      tag: 'Stage 2 · Spatial modeling', title: 'Coordinate-aware Transformer',
+      brief: 'Use cell positions and neighborhood context to learn recovery of masked cell states.',
+      detail: 'Visible cells enter as continuous expression embeddings, with 2D-RoPE incorporating their spatial coordinates into attention. Masked cells retain their coordinates. The denoising backbone reads context, and two heads predict coarse and residual codes.',
+      input: 'Visible embeddings + all cell coordinates', output: 'Contextual embeddings + missing-state distributions',
+    },
+    {
+      tag: 'Inference mode 1 · Representation', title: 'Read representations (t = 0)',
+      brief: 'Observe the full neighborhood and read embeddings for retrieval and multi-scale clustering.',
+      detail: 'With all inputs visible, the backbone returns contextual cell embeddings. Mean pooling within a neighborhood yields its niche embedding, supporting cross-section retrieval and tissue organization at different scales.',
+      input: 'Complete expression and positions', output: 'Cell embeddings / niche embeddings',
+    },
+    {
+      tag: 'Inference mode 2 · Generation', title: 'Generate cell states (t > 0)',
+      brief: 'Keep coordinates fixed and iteratively complete missing states from known context.',
+      detail: 'Predict two-level codes at masked positions, commit the most confident cells first, and use them as context for the remaining positions. This supports masked-region completion and cell-state generation around tumor clones.',
+      input: 'Known cell states + positions to complete', output: 'Cell states at missing positions',
+    },
+  ];
+  // Normalized regions of the unchanged manuscript architecture image.
+  const zones = [
+    { x: 20, y: 3, w: 34, h: 24 },
+    { x: .5, y: 28, w: 55, h: 70 },
+    { x: 67, y: 1, w: 32, h: 47 },
+    { x: 67, y: 52, w: 32, h: 47 },
+  ];
+  const active = stages[stage];
+  const region = zones[stage];
+  const regionStyle = (r: typeof region) => ({ left: `${r.x}%`, top: `${r.y}%`, width: `${r.w}%`, height: `${r.h}%` });
+  const viewBox = `${region.x * 22.71} ${region.y * 11.38} ${region.w * 22.71} ${region.h * 11.38}`;
+  const choose = (i: number) => { setStage(i); setPlaying(false); };
+  useEffect(() => {
+    if (!visible || !playing || reduced) return;
+    const timer = window.setTimeout(() => {
+      if (stage < 3) setStage(stage + 1);
+      else setPlaying(false);
+    }, 5000);
+    return () => window.clearTimeout(timer);
+  }, [visible, playing, reduced, stage]);
+  return <div ref={ref} className="spatial-architecture-tour">
+    <div className="spatial-tour-toolbar">
+      <p>{zh ? '两阶段训练 → 表征与生成两种推理模式' : 'Two training stages → two inference modes'}</p>
+      <button type="button" className="spatial-text-link" disabled={reduced} onClick={() => {
+        if (playing) setPlaying(false); else { setStage(0); setPlaying(true); }
+      }} aria-label={zh ? (playing ? '暂停架构导览' : '播放架构导览') : (playing ? 'Pause architecture tour' : 'Play architecture tour')}>
+        {playing && !reduced ? <Pause size={14} /> : <Play size={14} />}
+        {zh ? (playing && !reduced ? '暂停导览' : '播放导览') : (playing && !reduced ? 'Pause tour' : 'Play tour')}
+      </button>
+    </div>
+    <div className="spatial-architecture-layout">
+      <div className="spatial-module-list" aria-label={zh ? '选择架构模块' : 'Choose an architecture module'}>
+        {stages.map((item, i) => <button type="button" key={i} aria-pressed={stage === i} aria-controls="spatial-module-detail" onClick={() => choose(i)}>
+          <span className="spatial-module-tag">0{i + 1} / {item.tag}</span>
+          <strong>{item.title}</strong><p>{item.brief}</p>
+        </button>)}
+      </div>
+      <div className="spatial-paper-card spatial-architecture-card">
+        <figure>
+          <div className="spatial-architecture-image">
+            <img src={`${ASSETS}sudoku-architecture.png`} width={2271} height={1138} alt={zh ? 'SUDOKU 完整架构：VQ-VAE、空间 Transformer、表征和生成' : 'Full SUDOKU architecture: VQ-VAE, spatial Transformer, representation and generation'} loading="lazy" />
+            <motion.div aria-hidden="true" className="spatial-architecture-focus" initial={false} animate={regionStyle(region)} transition={{ duration: reduced ? 0 : .65, ease: 'easeInOut' }} />
+            {zones.map((r, i) => <button type="button" key={i} className="spatial-architecture-hotspot" style={regionStyle(r)} aria-label={`${zh ? '查看' : 'Explore'} ${stages[i].title}`} aria-pressed={stage === i} aria-controls="spatial-module-detail" onClick={() => choose(i)} />)}
+          </div>
+          <figcaption className="spatial-diagram-caption"><span>{zh ? '点击左侧模块或图中区域，查看对应结构。' : 'Select a module or a region in the diagram to explore.'}</span><button type="button" className="spatial-text-link" onClick={() => onZoom('sudoku-architecture', zh ? 'SUDOKU 完整模型架构' : 'Complete SUDOKU model architecture')}><Maximize2 size={14} />{zh ? '放大原图' : 'Full figure'}</button></figcaption>
+        </figure>
+        <div id="spatial-module-detail" className="spatial-module-detail" aria-live={playing ? 'off' : 'polite'}>
+          <div className="spatial-projection">
+            <span className="spatial-kicker">{zh ? '当前模块 · 局部放大' : 'SELECTED MODULE · CLOSE-UP'}</span>
+            <motion.svg role="img" aria-label={active.title} initial={false} animate={{ viewBox }} transition={{ duration: reduced ? 0 : .65, ease: 'easeInOut' }} preserveAspectRatio="xMidYMid meet">
+              <defs><clipPath id={projectionClip}><motion.rect initial={false} animate={{ x: region.x * 22.71, y: region.y * 11.38, width: region.w * 22.71, height: region.h * 11.38 }} transition={{ duration: reduced ? 0 : .65, ease: 'easeInOut' }} /></clipPath></defs>
+              <image href={`${ASSETS}sudoku-architecture.png`} width="2271" height="1138" clipPath={`url(#${projectionClip})`} />
+            </motion.svg>
+          </div>
+          <motion.div key={stage} initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : .3 }} className="spatial-module-explanation">
+            <span className="spatial-module-tag">{active.tag}</span><h4>{active.title}</h4><p>{active.detail}</p>
+            <dl><div><dt>{zh ? '输入' : 'Input'}</dt><dd>{active.input}</dd></div><div><dt>{zh ? '输出' : 'Output'}</dt><dd>{active.output}</dd></div></dl>
+            {stage >= 2 && <a className="spatial-text-link" href={stage === 2 ? '#spatial-representation' : '#spatial-generation'}>{zh ? '查看两个下游任务与结果' : 'Explore the two tasks and results'}<ArrowDown size={14} /></a>}
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  </div>;
+}
+
+function Comparison({ title, columns, rows, note }: { title: string; columns: string[]; rows: string[][]; note: string }) {
+  return <div className="spatial-comparison">
+    <table><caption>{title}</caption><thead><tr>{columns.map(c => <th key={c} scope="col">{c}</th>)}</tr></thead>
+      <tbody>{rows.map(row => <tr key={row[0]} className={row[0].startsWith('SUDOKU') ? 'spatial-best-row' : undefined}>
+        {row.map((v, i) => i === 0 ? <th key={i} scope="row">{v}</th> : <td key={i}>{v}</td>)}
+      </tr>)}</tbody>
+    </table><p className="spatial-note">{note}</p>
+  </div>;
+}
+
 export const SpatialPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
   const zh = lang === 'zh';
   const reduced = useReducedMotion();
-  const [representation, setRepresentation] = useState<'hesta' | 'dlpfc' | 'cluster'>('hesta');
-  const [details, setDetails] = useState(false);
   const [zoom, setZoom] = useState<{ name: string; alt: string } | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
-  const zoomFigure = (name: string, alt: string) => setZoom({ name, alt });
+  const zoomFigure: Zoom = (name, alt) => setZoom({ name, alt });
   useEffect(() => {
     if (!zoom || !dialog.current) return;
     const previous = document.activeElement as HTMLElement | null;
@@ -109,69 +171,67 @@ export const SpatialPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
     dialog.current.showModal();
     return () => { document.body.style.overflow = overflow; previous?.focus(); };
   }, [zoom]);
-  const reveal = { initial: reduced ? false as const : { opacity: 0, y: 18 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: .08 }, transition: { duration: reduced ? 0 : .5 } };
+  const reveal = { initial: reduced ? false as const : { opacity: 0, y: 18 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: .06 }, transition: { duration: reduced ? 0 : .5 } };
+  const method = zh ? '模型 / 方法' : 'Model / method';
   return <div className="spatial-story space-y-12 sm:space-y-16">
     <ModelIntro lang={lang} eyebrow="01 / CYTO.SPATIAL · SUDOKU" name="Cyto.Spatial"
-      tagline={zh ? '看懂组织结构，补全细胞状态。' : 'Understand tissue. Complete cell states.'}
-      description={zh ? '输入基因表达和细胞位置，完成两类任务：用表征识别相似细胞与邻域，用生成补全缺失的细胞状态。适用于人和小鼠空间转录组。' : 'Start with gene expression and cell positions. Representations identify related cells and niches; generation completes missing cell states. Built for human and mouse spatial transcriptomics.'}
-      subnav={[{ href: '#spatial-representation', label: zh ? '表征任务' : 'Representation' }, { href: '#spatial-generation', label: zh ? '生成任务' : 'Generation' }, { href: '#spatial-architecture', label: zh ? '模型原理' : 'How it works' }, { href: '#spatial-benchmark', label: zh ? '完整评测' : 'All benchmarks' }]}
+      tagline={zh ? '面向空间转录组的生成式基础模型。' : 'A generative foundation model for spatial transcriptomics.'}
+      description={zh ? 'SUDOKU 将基因表达与空间位置结合，在细胞及其邻域中学习组织的空间结构。面向人和小鼠空间转录组，以统一的空间主干连接表征与生成。' : 'SUDOKU combines gene expression and spatial positions to learn tissue organization through cells and their neighborhoods. Built for human and mouse spatial transcriptomics, one spatial backbone unifies representation and generation.'}
+      subnav={[{ href: '#spatial-architecture', label: zh ? '模型架构' : 'Architecture' }, { href: '#spatial-representation', label: zh ? '表征 · 两个任务' : 'Representation · two tasks' }, { href: '#spatial-generation', label: zh ? '生成 · 两个任务' : 'Generation · two tasks' }]}
       githubUrl="https://github.com/Cyto-System/Cyto.Spatial" />
-    <TaskWalkthrough lang={lang} />
-
-    <motion.section {...reveal} className="spatial-section" aria-labelledby="spatial-representation">
-      <EyebrowHeading id="spatial-representation" index="01" kicker="REPRESENTATION" title={zh ? '表征：找到相似的细胞和区域。' : 'Representation: find related cells and regions.'} accent={zh ? '跨切片检索，也能读出多尺度结构。' : 'Across sections. Across spatial scales.'} />
-      <p className="spatial-lead">{zh ? '给定一个邻域，在另一张切片寻找相似区域；或者将整张切片按细胞类型、层带与脑区分组。' : 'Query a neighborhood in another section, or group a tissue by cell type, laminar band, and brain region.'}</p>
-      <div className="spatial-choice" aria-label={zh ? '表征任务案例' : 'Representation cases'}>
-        {(['hesta', 'dlpfc', 'cluster'] as const).map((id, i) => <button key={id} type="button" aria-pressed={representation === id} onClick={() => setRepresentation(id)}>{(zh ? ['心脏邻域检索', '皮层交界检索', '多尺度聚类'] : ['Heart niche retrieval', 'Cortical junction retrieval', 'Multi-scale clustering'])[i]}</button>)}
-      </div>
-      <motion.div key={representation} initial={reduced ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : .3 }} className="spatial-paper-card">
-        {representation !== 'cluster' ? <>
-          <div className="spatial-result-heading"><div><span className="spatial-kicker">{representation === 'hesta' ? 'HESTA · STEREO-SEQ' : 'DLPFC · VISIUM'}</span><h4>{representation === 'hesta' ? (zh ? '在另一张切片中，找到心脏。' : 'Find the heart in another section.') : (zh ? '识别另一张切片上的 L4/L5 交界。' : 'Locate the L4/L5 junction in another section.')}</h4></div><span className="spatial-badge">{zh ? '论文单例 · 非全队列均值' : 'Paper example · not a cohort average'}</span></div>
-          <div className="spatial-map-grid">
-            {['query', 'reference', 'sudoku', 'cellplm'].map((kind, i) => <figure key={kind} className={kind === 'sudoku' ? 'spatial-highlight' : ''}>
-              <figcaption><span>0{i + 1}</span>{(zh ? ['查询邻域', representation === 'hesta' ? '目标心脏标签' : '目标匹配分数', 'SUDOKU 相似度', 'CellPLM 相似度'] : ['Query niche', representation === 'hesta' ? 'Target heart labels' : 'Target matching score', 'SUDOKU similarity', 'CellPLM similarity'])[i]}</figcaption>
-              <PaperFigure name={`${representation}-${kind}`} alt={`${representation.toUpperCase()} · ${(zh ? ['查询邻域', '目标参考', 'SUDOKU 相似度', 'CellPLM 相似度'] : ['Query niche', 'Target reference', 'SUDOKU similarity', 'CellPLM similarity'])[i]}`} onZoom={zoomFigure} />
-            </figure>)}
-          </div>
-          <div className="spatial-result-foot"><p>{zh ? '从左到右：查询、目标参考、两种模型的检索图。相似度图中蓝色越深，匹配程度越高；各模型颜色按自身分位数缩放。' : 'Left to right: query, target reference, and two retrieval maps. Darker blue indicates stronger similarity; each model uses its own percentile color scale.'}</p><div className="spatial-score"><span>{representation === 'hesta' ? 'AUPRC' : 'Pearson r'} <small>{zh ? '单例' : 'example'}</small></span><strong>{representation === 'hesta' ? '0.99' : '0.87'}</strong><span>vs {representation === 'hesta' ? '0.61' : '0.24'}<small>CellPLM</small></span></div></div>
-          <button className="spatial-text-link" type="button" onClick={() => zoomFigure('niche-retrieval', zh ? '邻域检索完整原图' : 'Full niche retrieval figure')}>{zh ? '查看完整原图与评测曲线' : 'View the full figure and evaluation curves'} <Maximize2 size={14} /></button>
-        </> : <>
-          <div className="spatial-result-heading"><div><span className="spatial-kicker">MOUSE BRAIN · MERFISH</span><h4>{zh ? '同一张组织，从三个尺度理解。' : 'One tissue, three levels of organization.'}</h4></div><span className="spatial-badge">{zh ? '参考标签示例，不是预测图' : 'Reference labels, not predictions'}</span></div>
-          <PaperFigure name="multiscale-labels" alt={zh ? '脑区、层带、细胞类型三个层级的参考标签' : 'Reference labels at region, band, and cell-type levels'} className="spatial-label-figure" onZoom={zoomFigure} />
-          <div className="spatial-metric-row">{(zh ? ['脑区', '层带', '细胞类型'] : ['Region', 'Band', 'Cell type']).map((label, i) => <div key={label}><span>{label}</span><strong>{['0.342', '0.493', '0.520'][i]} <small>ARI</small></strong></div>)}</div>
-          <p className="spatial-note">{zh ? '图为一张切片的评测参考标签。分数为 SUDOKU 微调后在 6 张切片上的 ARI 中位数，并非这张图的单例分数。灰色为该层级未定义的细胞。' : 'The figure shows reference labels on one section. Scores are median ARI across six sections after task fine-tuning, not scores for this example. Gray cells are undefined at that level.'}</p>
-        </>}
-      </motion.div>
-    </motion.section>
-
-    <motion.section {...reveal} className="spatial-section" aria-labelledby="spatial-generation">
-      <EyebrowHeading id="spatial-generation" index="02" kicker="GENERATION" title={zh ? '生成：从已知邻域，补全缺失状态。' : 'Generation: complete states from known neighbors.'} accent={zh ? '位置不变，预测细胞如何分布。' : 'Keep positions fixed. Predict the cellular pattern.'} />
-      <p className="spatial-lead">{zh ? '隐藏部分细胞的表达，保留它们的位置。模型读取周围可见细胞，再逐轮填入缺失的状态。' : 'Hide some expression profiles while keeping their positions. Read the visible neighbors, then fill missing states iteratively.'}</p>
-      <div className="spatial-paper-card">
-        <div className="spatial-result-heading"><div><span className="spatial-kicker">SPATIAL COMPLETION</span><h4>{zh ? '四种缺失形态，同一个补全任务。' : 'Four missing geometries, one completion task.'}</h4></div><span className="spatial-badge">{zh ? '评测题目示例' : 'Benchmark inputs'}</span></div>
-        <div className="spatial-map-grid spatial-mask-grid">{['scattered', 'block', 'shell', 'multiple'].map((name, i) => <figure key={name}><figcaption>{(zh ? ['散点缺失', '内部块状', '外围环带', '多块缺失'] : ['Scattered', 'Interior block', 'Shell', 'Multiple blocks'])[i]}</figcaption><PaperFigure name={`mask-${name}`} alt={`${zh ? '掩码题目' : 'Mask example'}: ${name}`} onZoom={zoomFigure} /></figure>)}</div>
-        <div className="spatial-result-foot"><p>{zh ? '灰点是提供给模型的可见细胞；彩点是待补全位置的真实类型，不是模型预测。图示遮蔽比例为 40%。' : 'Gray cells are visible inputs. Colored cells show true types at masked positions, not model predictions. Examples use 40% masking.'}</p><div className="spatial-score"><span>{zh ? '类型准确率' : 'Type accuracy'}<small>{zh ? '微调后' : 'fine-tuned'}</small></span><strong>0.401</strong></div></div>
-        <div className="spatial-inline-facts"><span>{zh ? '31 张切片' : '31 sections'}</span><span>{zh ? '972 道题' : '972 questions'}</span><span>{zh ? '人脑 · 小鼠脑 · 小鼠肾' : 'Human brain · mouse brain · mouse kidney'}</span><button type="button" className="spatial-text-link" onClick={() => zoomFigure('generation-questions', zh ? '生成评测题目完整图' : 'Full generation benchmark inputs')}>{zh ? '查看全部示例' : 'All examples'} <ArrowRight size={14} /></button></div>
-      </div>
-      <div className="spatial-paper-card">
-        <div className="spatial-result-heading"><div><span className="spatial-kicker">SPAC-SEQ · CD274 (PD-L1)</span><h4>{zh ? '生成肿瘤克隆周围的细胞分布。' : 'Generate the cells surrounding a tumor clone.'}</h4></div><span className="spatial-badge">{zh ? '论文生成结果' : 'Generation result from the paper'}</span></div>
-        <p className="spatial-lead">{zh ? '给定实测肿瘤克隆，补全周围 50 μm 环带，再估计免疫细胞占比。下面是一个 Cd274 敲除克隆的实测与预测对照。' : 'Condition on a measured tumor clone, complete its 50 μm surrounding band, and estimate the immune fraction. Below is a measured-versus-generated Cd274-knockout example.'}</p>
-        <div className="spatial-map-grid spatial-generation-grid">{['reference', 'sudoku', 'gest'].map((name, i) => <figure key={name} className={name === 'sudoku' ? 'spatial-highlight' : ''}><figcaption>{i === 0 ? (zh ? '实测' : 'Measured') : i === 1 ? 'SUDOKU' : 'GeST'}<strong>{['65%', '63%', '10%'][i]}</strong></figcaption><PaperFigure name={`spac-${name}`} alt={`${name}: ${['65%', '63%', '10%'][i]} ${zh ? '免疫细胞占比' : 'immune fraction'}`} onZoom={zoomFigure} /></figure>)}</div>
-        <div className="spatial-legend">{(zh ? ['免疫细胞', '肿瘤细胞', '其他细胞', '肿瘤克隆'] : ['Immune', 'Tumor', 'Other cells', 'Tumor clone']).map((label, i) => <span key={label}><i style={{ background: ['#2f7cc4', '#ed3b48', '#3ba64b', '#ffd7d8'][i] }} />{label}</span>)}</div>
-        <div className="spatial-result-foot"><p>{zh ? '这是一例空间分布对照，不代表全队列。全队列包含 3 张切片、125 个克隆，SUDOKU 的平均 Spearman ρ 为 0.77。克隆条件生成是论文实验，当前推理包不含该工作流。' : 'This spatial comparison is one example, not the full cohort. Across three sections and 125 clones, SUDOKU achieves mean Spearman ρ = 0.77. Clone-conditioned generation is a paper experiment, not a workflow included in the inference package.'}</p><button type="button" className="spatial-text-link" onClick={() => zoomFigure('spac-generation', zh ? 'SPAC-seq 完整评测图' : 'Full SPAC-seq evaluation')}>{zh ? '查看完整原图' : 'Full figure'} <Maximize2 size={14} /></button></div>
-      </div>
-    </motion.section>
 
     <motion.section {...reveal} className="spatial-section" aria-labelledby="spatial-architecture">
-      <EyebrowHeading id="spatial-architecture" index="03" kicker="HOW IT WORKS" title={zh ? '先读懂细胞，再联系它的邻居。' : 'Encode a cell, then read its neighborhood.'} accent={zh ? '同一个空间主干，两种用法。' : 'One spatial backbone, two ways to use it.'} />
-      <div className="spatial-process">{(zh ? [['输入', '基因表达 + 细胞位置'], ['空间模型', '结合周围细胞理解当前细胞'], ['两种输出', '读取表征，或补全状态']] : [['Input', 'Expression + cell positions'], ['Spatial model', 'Interpret a cell in its neighborhood'], ['Two outputs', 'Read embeddings or complete states']]).map(([title, body], i) => <div key={title}><span>0{i + 1}</span><h4>{title}</h4><p>{body}</p></div>)}</div>
-      <details className="spatial-details"><summary>{zh ? '展开模型架构图与技术说明' : 'Explore the architecture and technical details'}</summary><div className="spatial-details-body"><PaperFigure name="sudoku-architecture" alt={zh ? 'SUDOKU 模型架构' : 'SUDOKU architecture'} onZoom={zoomFigure} /><p className="spatial-note">{zh ? '表达编码器将细胞表达压缩为向量和两级离散编码；空间 Transformer 结合二维坐标，读取上下文或预测缺失编码。图中的随机掩码、重构解码器和损失函数描述预训练，当前代码只发布推理与评测。' : 'The encoder maps expression to vectors and two-level codes. A spatial Transformer incorporates 2D coordinates to read context or predict missing codes. Random masking, the reconstruction decoder, and losses describe pretraining; the released code supports inference and evaluation only.'}</p></div></details>
+      <EyebrowHeading id="spatial-architecture" index="01" kicker={zh ? '模型架构' : 'THE MODEL'} title={zh ? '从细胞表达，到空间组织。' : 'From cell expression to tissue organization.'} accent={zh ? '一个模型，连接表征与生成。' : 'One model. Representation and generation.'} />
+      <p className="spatial-lead">{zh ? '第一阶段训练 VQ-VAE，学习细胞表达编码；第二阶段训练空间坐标感知 Transformer，学习细胞之间的空间关系。训练后的同一主干支持表征提取与状态生成。' : 'Stage one trains a VQ-VAE to encode cell expression. Stage two trains a coordinate-aware Transformer to learn spatial relationships. The resulting backbone supports both representation and generation.'}</p>
+      <Architecture lang={lang} onZoom={zoomFigure} />
     </motion.section>
 
-    <section id="spatial-benchmark" className="spatial-section spatial-benchmark-details">
-      <div className="spatial-result-heading"><div><span className="spatial-kicker">BENCHMARK DETAILS</span><h4>{zh ? '想看更多？展开完整对比。' : 'Go deeper with the full comparisons.'}</h4></div></div>
-      <p className="spatial-note">{zh ? '以上图与分数均来自论文，不是本网页实时运行结果。保留零样本与微调的区别：生成任务零样本准确率为 0.355，低于距离加权 300-NN 的 0.385；微调后为 0.401。任务微调权重与完整评测数据不包含在发布包中。' : 'Figures and scores come from the manuscript, not live inference on this page. Zero-shot generation accuracy is 0.355, below distance-weighted 300-NN at 0.385; fine-tuning reaches 0.401. Task-fine-tuned weights and complete evaluation inputs are not included in the release.'}</p>
-      <details className="spatial-details" onToggle={e => setDetails(e.currentTarget.open)}><summary>{zh ? '完整模型对比 · 零样本与微调 · 分任务结果' : 'All models · zero-shot vs fine-tuned · task-level scores'}</summary>{details && <div className="spatial-details-body"><SpatialBenchmarks lang={lang} /></div>}</details>
+    <section className="spatial-section" aria-labelledby="spatial-representation">
+      <EyebrowHeading id="spatial-representation" index="02" kicker="REPRESENTATION · TWO TASKS" title={zh ? '表征：读懂组织中的空间关系。' : 'Representation: read spatial relationships.'} accent={zh ? '邻域检索 + 多尺度聚类' : 'Niche retrieval + multi-scale clustering'} />
+      <motion.article {...reveal} className="spatial-paper-card" data-task="R1">
+        <div className="spatial-result-heading"><div><span className="spatial-kicker">R1 / NICHE RETRIEVAL</span><h4>{zh ? '邻域检索：跨切片找到相似区域。' : 'Niche retrieval: find a similar region across sections.'}</h4></div><span className="spatial-badge">HESTA · Stereo-seq</span></div>
+        <p className="spatial-lead">{zh ? '以心脏邻域为查询，在另一张切片中定位相似的组织区域。' : 'Use a heart neighborhood as a query to locate a matching region in another section.'}</p>
+        <div className="spatial-map-grid">{['query', 'reference', 'sudoku', 'cellplm'].map((kind, i) => <figure key={kind} className={kind === 'sudoku' ? 'spatial-highlight' : ''}>
+          <figcaption>{(zh ? ['查询邻域', '目标参考区域', 'SUDOKU', 'CellPLM'] : ['Query niche', 'Target reference', 'SUDOKU', 'CellPLM'])[i]}</figcaption>
+          <PaperFigure name={`hesta-${kind}`} alt={`${zh ? '心脏邻域检索' : 'Heart niche retrieval'} · ${kind}`} onZoom={zoomFigure} />
+        </figure>)}</div>
+        <div className="spatial-result-foot"><p>{zh ? '心脏示例 AUPRC：SUDOKU 0.99，CellPLM 0.61。蓝色越深，相似度越高；各模型按各自分位数着色。' : 'Heart example AUPRC: SUDOKU 0.99, CellPLM 0.61. Darker blue indicates higher similarity; each model uses its own percentile color scale.'}</p><button type="button" className="spatial-text-link" onClick={() => zoomFigure('hesta-retrieval', zh ? '心脏检索与 precision–recall 曲线' : 'Heart retrieval and precision–recall curve')}>{zh ? '查看检索曲线' : 'View retrieval curve'} <Maximize2 size={14} /></button></div>
+        <Comparison title={zh ? '结果对比 · HESTA 八个器官平均 AUPRC ↑' : 'Benchmark · mean AUPRC across eight HESTA organs ↑'} columns={[method, 'AUPRC ↑']} rows={[
+          ['SUDOKU', '0.496'], ['GeST', '0.447'], ['QueST', '0.416'], ['CellPLM', '0.332'],
+        ]} note={zh ? '八个器官 AUPRC 的算术平均；SUDOKU 为任务微调设置。上方心脏图展示一个查询示例。' : 'Arithmetic mean of eight organ-level AUPRC scores; SUDOKU uses task fine-tuning. The maps above show one heart query.'} />
+      </motion.article>
+      <motion.article {...reveal} className="spatial-paper-card" data-task="R2">
+        <div className="spatial-result-heading"><div><span className="spatial-kicker">R2 / MULTI-SCALE CLUSTERING</span><h4>{zh ? '多尺度聚类：从细胞类型到脑区。' : 'Multi-scale clustering: from cell types to brain regions.'}</h4></div><span className="spatial-badge">MERFISH · {zh ? '小鼠脑' : 'Mouse brain'}</span></div>
+        <p className="spatial-lead">{zh ? '用空间表征区分细胞类型、层带和脑区，连接细胞组成与组织结构。' : 'Resolve cell types, laminar bands, and brain regions with spatial representations, linking cell composition to tissue structure.'}</p>
+        <figure><PaperFigure name="multiscale-labels" alt={zh ? '小鼠脑多尺度参考标签：脑区、层带与细胞类型' : 'Multi-scale mouse brain reference labels: regions, bands, and cell types'} onZoom={zoomFigure} /><figcaption className="spatial-note">{zh ? '同一张小鼠脑切片的多尺度参考标签。' : 'Multi-scale reference labels on the same mouse brain section.'}</figcaption></figure>
+        <Comparison title={zh ? '结果对比 · 六张切片的 ARI 中位数 ↑' : 'Benchmark · median ARI over six sections ↑'} columns={[method, zh ? '脑区' : 'Region', zh ? '层带' : 'Band', zh ? '细胞类型' : 'Cell type']} rows={[
+          ['SUDOKU', '0.342', '0.493', '0.520'], ['STAGATE', '0.312', '0.420', '0.154'], ['BANKSY', '0.111', '0.091', '0.440'], ['CellPLM', '0.113', '0.115', '0.438'],
+        ]} note={zh ? 'SUDOKU 为任务微调设置；三个尺度分别对照对应的参考标签进行评测。' : 'SUDOKU uses task fine-tuning; each scale is evaluated against its corresponding reference labels.'} />
+      </motion.article>
+    </section>
+
+    <section className="spatial-section" aria-labelledby="spatial-generation">
+      <EyebrowHeading id="spatial-generation" index="03" kicker="GENERATION · TWO TASKS" title={zh ? '生成：由已知上下文，补全细胞状态。' : 'Generation: complete cell states from context.'} accent={zh ? '掩码补全 + 克隆周围生成' : 'Masked completion + clone-neighborhood generation'} />
+      <motion.article {...reveal} className="spatial-paper-card" data-task="G1">
+        <div className="spatial-result-heading"><div><span className="spatial-kicker">G1 / MASKED COMPLETION</span><h4>{zh ? '掩码补全：预测缺失位置的细胞状态。' : 'Masked completion: predict missing cell states.'}</h4></div><span className="spatial-badge">{zh ? '31 张切片 · 972 道题' : '31 sections · 972 questions'}</span></div>
+        <p className="spatial-lead">{zh ? '保留细胞坐标，用已测邻域补全被掩码的细胞状态。以四种空间掩码检验不同缺失形态下的生成能力。' : 'Keep coordinates fixed and use observed neighbors to complete masked cell states. Four spatial mask geometries test different patterns of missing information.'}</p>
+        <div className="spatial-map-grid">{['scattered', 'block', 'shell', 'multiple'].map((kind, i) => <figure key={kind}><figcaption>{(zh ? ['散点缺失', '块状缺失', '环带缺失', '多区域缺失'] : ['Scattered', 'Block', 'Shell', 'Multiple regions'])[i]}</figcaption><PaperFigure name={`mask-${kind}`} alt={`${zh ? '掩码题目参考' : 'Mask question reference'} · ${kind}`} onZoom={zoomFigure} /></figure>)}</div>
+        <p className="spatial-note">{zh ? '中等难度题目示例：每窗 500 个细胞，掩码比例 40%。灰色为已知输入，彩色为待预测位置的真实细胞类型。' : 'Medium-tier examples: 500 cells per window, 40% masked. Gray marks observed inputs; colors show the ground-truth cell types at positions to predict.'}</p>
+        <Comparison title={zh ? '结果对比 · 细胞类型预测准确率 ↑' : 'Benchmark · cell-type prediction accuracy ↑'} columns={[method, zh ? '总体' : 'All', zh ? '中等' : 'Medium', zh ? '困难' : 'Hard']} rows={[
+          ['SUDOKU', '0.401', '0.379', '0.273'], [zh ? '距离加权 300-NN' : 'Distance-weighted 300-NN', '0.385', '0.333', '0.258'], ['GeST', '0.362', '0.306', '0.253'],
+        ]} note={zh ? '神经模型为三次运行均值；SUDOKU 为任务微调设置，零样本总体准确率为 0.355。' : 'Neural-model scores are means over three runs. SUDOKU uses task fine-tuning; its zero-shot overall accuracy is 0.355.'} />
+      </motion.article>
+      <motion.article {...reveal} className="spatial-paper-card" data-task="G2">
+        <div className="spatial-result-heading"><div><span className="spatial-kicker">G2 / CLONE-NEIGHBORHOOD GENERATION</span><h4>{zh ? '克隆周围生成：恢复局部细胞分布。' : 'Clone-neighborhood generation: recover local cell patterns.'}</h4></div><span className="spatial-badge">SPAC-seq</span></div>
+        <p className="spatial-lead">{zh ? '以肿瘤克隆为条件，生成周围 50 μm 邻域的细胞状态。下图为 Cd274（PD-L1）敲除克隆的实测与生成结果。' : 'Condition on a tumor clone to generate cell states within its surrounding 50 μm band. The example compares measured and generated neighborhoods of a Cd274 (PD-L1) knockout clone.'}</p>
+        <div className="spatial-map-grid spatial-generation-grid">{['reference', 'sudoku', 'gest'].map((name, i) => <figure key={name} className={i === 1 ? 'spatial-highlight' : ''}><figcaption><span>{[zh ? '实测' : 'Measured', 'SUDOKU', 'GeST'][i]}</span><strong>{['65%', '63%', '10%'][i]}</strong></figcaption><PaperFigure name={`spac-${name}`} alt={`${name} · ${['65%', '63%', '10%'][i]} ${zh ? '免疫细胞占比' : 'immune fraction'}`} onZoom={zoomFigure} /></figure>)}</div>
+        <div className="spatial-legend">{(zh ? ['免疫细胞', '肿瘤细胞', '其他细胞', '肿瘤克隆'] : ['Immune', 'Tumor', 'Other cells', 'Tumor clone']).map((label, i) => <span key={label}><i style={{ background: ['#2f7cc4', '#ed3b48', '#3ba64b', '#ffd7d8'][i] }} />{label}</span>)}</div>
+        <p className="spatial-note">{zh ? '图上百分比为该克隆周围非肿瘤细胞中的免疫细胞占比；下表汇总完整队列的对比。' : 'Percentages show immune fractions among non-tumor cells around this clone; the table summarizes the full cohort.'}</p>
+        <Comparison title={zh ? '结果对比 · 三张切片、125 个克隆' : 'Benchmark · three sections, 125 clones'} columns={[method, 'Spearman ρ ↑', zh ? '排序误差中位数 ↓' : 'Median rank error ↓']} rows={[
+          ['SUDOKU', '0.77', '0.12'], ['GeST', '0.49', '0.20'], [zh ? '表达插值' : 'Expression interpolation', '0.11', '0.28'],
+        ]} note={zh ? 'Spearman 为三张切片的平均值，排序误差为克隆层面的中位数；相关性越高、误差越低越好。' : 'Spearman is averaged over three sections; rank error is the median over clones. Higher correlation and lower error are better.'} />
+      </motion.article>
+      <p className="spatial-note">{zh ? '可视化与评测数值来自 SUDOKU 文章；不同任务的评测设置见各卡片说明。' : 'Visualizations and benchmark scores are from the SUDOKU manuscript; evaluation settings are noted with each task.'}</p>
     </section>
     {zoom && <dialog ref={dialog} className="spatial-lightbox" onCancel={() => setZoom(null)} onClick={e => { if (e.target === e.currentTarget) setZoom(null); }} aria-label={zoom.alt}>
       <div><header><span>{zoom.alt}</span><button type="button" onClick={() => setZoom(null)} aria-label={zh ? '关闭图片' : 'Close image'}><X size={22} /></button></header><img src={`${ASSETS}${zoom.name}.png`} alt={zoom.alt} /><a href={`${ASSETS}${zoom.name}.png`} target="_blank" rel="noreferrer">{zh ? '在新标签页查看原图' : 'Open the full-resolution image'}</a></div>
