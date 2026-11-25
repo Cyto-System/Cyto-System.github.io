@@ -653,7 +653,7 @@ export const SPATIAL_GENERATION: MatrixBenchmark[] = [
       { name: SUDOKU, values: [0.563, 0.469, 0.29, 0.344, 0.32, 0.406] },
     ],
     note: {
-      zh: '31 张切片、972 道问题，单个窗口 500 个细胞；指标是掩码细胞的类型准确率，不是表达重建精度。',
+      zh: '31 张切片、972 道问题，单个窗口 500 个细胞；指标是掩码细胞的类型 ACC，不是表达重建精度。',
       en: '31 slices, 972 items, 500-cell windows; the metric is cell-type accuracy of masked cells, not expression reconstruction.',
     },
   },
@@ -706,7 +706,7 @@ export const SPATIAL_OVERVIEW: {
   { task: { zh: 'HESTA 邻域检索 · 8 器官平均 AUPRC', en: 'HESTA retrieval · mean AUPRC (8 organs)' }, zeroShot: '0.486', baseline: '0.303 · scGPT-spatial', fineTuned: '0.496', zeroShotWins: true },
   { task: { zh: 'DLPFC 邻域检索 · 7 类交界平均 Pearson r', en: 'DLPFC retrieval · mean Pearson r (7 boundaries)' }, zeroShot: '0.490', baseline: '0.223 · TERRA', fineTuned: '0.687', zeroShotWins: true },
   { task: { zh: '小鼠脑多尺度聚类 · 3 层级平均 ARI', en: 'Mouse brain clustering · mean ARI (3 levels)' }, zeroShot: '0.408', baseline: '0.255 · scGPT-spatial', fineTuned: '0.452', zeroShotWins: true },
-  { task: { zh: '掩码生成 · 972 题细胞类型准确率', en: 'Masked generation · cell-type accuracy (972)' }, zeroShot: '0.355', baseline: '0.385 · 300-NN', fineTuned: '0.401', zeroShotWins: false },
+  { task: { zh: '掩码生成 · 972 题细胞类型 ACC', en: 'Masked generation · cell-type accuracy (972)' }, zeroShot: '0.355', baseline: '0.385 · 300-NN', fineTuned: '0.401', zeroShotWins: false },
 ];
 
 export const SPATIAL_USAGE: { title: BilingualText; body: BilingualText; command: string }[] = [
@@ -970,7 +970,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 33.55, macroF1: 27.87 },
     ],
     note: {
-      zh: '流形提供器仅在 872 万参考细胞上预训练一次且不针对测试集微调；较最强外部基线 SingleR 准确率提升 +14.86 个百分点、Macro-F1 提升 +11.83 个百分点。',
+      zh: '流形提供器仅在 872 万参考细胞上预训练一次且不针对测试集微调；较最强外部基线 SingleR ACC 提升 +14.86 个百分点、Macro-F1 提升 +11.83 个百分点。',
       en: 'Pretrained once on 8.72M reference cells with zero dataset-specific fine-tuning; gains +14.86 pp accuracy and +11.83 pp Macro-F1 over strongest baseline SingleR.',
     },
   },
@@ -1024,7 +1024,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 33.53, macroF1: 17.02 },
     ],
     note: {
-      zh: '在非小细胞肺癌肿瘤浸润 T 细胞上领先最强基线 SingleR +13.75 个百分点准确率与 +7.66 个百分点 Macro-F1。',
+      zh: '在非小细胞肺癌肿瘤浸润 T 细胞上领先最强基线 SingleR +13.75pp ACC 与 +7.66pp Macro-F1。',
       en: 'Outperforms strongest baseline SingleR by +13.75 pp in accuracy and +7.66 pp in Macro-F1 on tumor-infiltrating NSCLC T cells.',
     },
   },
