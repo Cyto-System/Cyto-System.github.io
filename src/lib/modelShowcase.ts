@@ -894,35 +894,35 @@ export const IDENTITY_STAGES: { code: string; title: BilingualText; body: Biling
     code: '01',
     title: { zh: '自适应流形提供器', en: 'Adaptive Manifold Provider' },
     body: {
-      zh: '融合基因排序、检出支持与基因程序三路编码，借助细胞条件局部度量与多原型匹配保留细粒度亚型边界，为每个细胞输出高召回的候选细胞本体术语。',
-      en: 'Integrates gene-rank, detection-support, and gene-program views with a cell-conditioned local metric and multiple prototypes to propose ranked Cell Ontology candidates per cell.',
+      zh: '集成基因秩次、检出支持与表达程序三路特征编码，利用样本条件局部度量张量与多原型匹配保留亚型判别轴，为每个单细胞生成高召回的 Cell Ontology 候选术语分布。',
+      en: 'Integrates gene-rank, detection-support, and gene-program views with a cell-conditioned Riemannian metric and multiple prototypes to propose ranked Cell Ontology candidates per cell.',
     },
     hotspot: { x: 26.2, y: 1.2, w: 73.0, h: 33.4 },
   },
   {
     code: '02',
-    title: { zh: '分析智能体与分群报告', en: 'Analyst Agent & Per-Cluster Report' },
+    title: { zh: 'Analyst Agent 与分群报告', en: 'Analyst Agent & Per-Cluster Report' },
     body: {
-      zh: '独立于上游候选打分构建无标签邻域与分群，汇总簇内候选分布、标志基因表达、功能程序与质控检查，将每条证据明确区分为支持、未决、矛盾与未测得四类。',
+      zh: '独立于候选预测构建无监督表达图谱与分群，提取簇内标志基因、表达程序与质控特征生成 Per-Cluster Report，将分子证据严格区分为 Supported、Unresolved、Contradicted 与 Unmeasured 四类。',
       en: 'Builds label-free populations independently of provider scores and compiles Per-Cluster Reports separating supported, unresolved, contradicted, and unmeasured evidence.',
     },
     hotspot: { x: 0.7, y: 36.2, w: 50.6, h: 43.2 },
   },
   {
     code: '03',
-    title: { zh: '评审智能体与知识图谱', en: 'Reviewer Agent & Knowledge Graph' },
+    title: { zh: 'Reviewer Agent 与知识图谱', en: 'Reviewer Agent & Knowledge Graph' },
     body: {
-      zh: '结合相关对比簇与细胞本体知识图谱检索竞争解释，按需发起补充检验、局部拆分、合并或回退至上级本体节点；遇到疑难冲突分支时可调用可选专家元评审。',
-      en: 'Combines comparator clusters with Cell Ontology retrieval to inspect missing signals, split or merge clusters, fall back to a supported ancestor, or invoke optional Meta Review.',
+      zh: '检索 Cell Ontology 知识图谱对齐标志基因与组织先验，在相关对比簇间评估竞争解释，自主执行 Inspect、Split、Merge 或 Ancestor Fallback 等闭环动作，并支持 Meta Review 仲裁。',
+      en: 'Queries Cell Ontology knowledge to contextualize marker panels against comparator clusters, executing closed-loop Inspect, Split, Merge, or Ancestor Fallback actions with optional Meta Review adjudication.',
     },
     hotspot: { x: 52.8, y: 36.2, w: 46.5, h: 43.2 },
   },
   {
     code: '04',
-    title: { zh: '本体锚定的可溯源注释', en: 'Ontology-Linked Final Annotation' },
+    title: { zh: '本体锚定的可溯源注释', en: 'Ontology-Constrained Release' },
     body: {
-      zh: '在满足样本实测支持且解决可观测矛盾的前提下，释放最细粒度的本体身份，并同步记录细胞状态、证据强度、反证与备选解释。',
-      en: 'Releases the finest ontology identity backed by query measurements with resolved contradictions, alongside cell state, evidence strength, counterevidence, and alternatives.',
+      zh: '在具备充分分子实测支持且排除观测冲突的前提下，释放证据支持的最细粒度 Cell Ontology 身份，同步记录细胞状态、证据评级与备选假设。',
+      en: 'Releases the finest Cell Ontology identity supported by observed molecular measurements without unresolved contradictions, documenting cellular state, evidence grades, and alternative explanations.',
     },
     hotspot: { x: 0.7, y: 86.2, w: 98.6, h: 13.0 },
   },
@@ -931,10 +931,10 @@ export const IDENTITY_STAGES: { code: string; title: BilingualText; body: Biling
 export type IdentityParadigm = 'ours' | 'foundation' | 'classifier' | 'agent';
 
 export const IDENTITY_PARADIGM_LABEL: Record<IdentityParadigm, BilingualText> = {
-  ours: { zh: 'scVerity (Cyto)', en: 'scVerity (ours)' },
-  foundation: { zh: '单细胞基础模型', en: 'Foundation model' },
-  classifier: { zh: '参考图谱分类器', en: 'Reference classifier' },
-  agent: { zh: 'LLM 智能体', en: 'LLM agent' },
+  ours: { zh: 'scVerity (Ours)', en: 'scVerity (ours)' },
+  foundation: { zh: '单细胞基础模型 (Foundation Model)', en: 'Foundation model' },
+  classifier: { zh: '参考图谱分类器 (Reference Classifier)', en: 'Reference classifier' },
+  agent: { zh: 'LLM 智能体 (LLM Agent)', en: 'LLM agent' },
 };
 
 export interface IdentityBenchmarkRow {
@@ -969,7 +969,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 33.55, macroF1: 27.87 },
     ],
     note: {
-      zh: '流形提供器仅在 872 万参考细胞上预训练一次且不针对测试集微调；较最强外部基线 SingleR ACC 提升 +14.86 个百分点、Macro-F1 提升 +11.83 个百分点。',
+      zh: 'Manifold Provider 仅在 872 万参考细胞上单次预训练且零微调；相比最强外部基线 SingleR，ACC 提升 +14.86 个百分点，Macro-F1 提升 +11.83 个百分点。',
       en: 'Pretrained once on 8.72M reference cells with zero dataset-specific fine-tuning; gains +14.86 pp accuracy and +11.83 pp Macro-F1 over strongest baseline SingleR.',
     },
   },
@@ -987,7 +987,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SingleR', paradigm: 'classifier', acc: 54.78, macroF1: 53.68 },
     ],
     note: {
-      zh: '覆盖上皮、免疫与基质多谱系复杂微环境；scVerity 在准确率（64.91%）与宏平均 F1（69.43%）均居首位。',
+      zh: '涵盖上皮、免疫与基质多谱系复杂微环境；scVerity 在 ACC (64.91%) 与 Macro-F1 (69.43%) 均居首位。',
       en: 'Spans epithelial, immune, and stromal lineages; scVerity leads both ontology accuracy (64.91%) and Macro-F1 (69.43%).',
     },
   },
@@ -1005,7 +1005,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 10.84, macroF1: 15.89 },
     ],
     note: {
-      zh: '细粒度 T 细胞分化亚群共享主谱系程序，全局嵌入检索易坍缩（SCimilarity 10.84%）；scVerity 借助局部度量与循证核验达到 52.98% / 41.67%。',
+      zh: '细粒度 T 细胞亚型共享主导谱系标志，全局嵌入度量易发生表征坍缩（SCimilarity ACC 仅 10.84%）；scVerity 凭借条件局部度量与闭环核验达到 52.98% ACC / 41.67% Macro-F1。',
       en: 'Fine-grained T-cell states share dominant lineage markers that collapse global embedding retrieval (SCimilarity 10.84%); scVerity reaches 52.98% / 41.67%.',
     },
   },
@@ -1023,7 +1023,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 33.53, macroF1: 17.02 },
     ],
     note: {
-      zh: '在非小细胞肺癌肿瘤浸润 T 细胞上领先最强基线 SingleR +13.75pp ACC 与 +7.66pp Macro-F1。',
+      zh: '在非小细胞肺癌肿瘤浸润 T 细胞微环境中，领先最强基线 SingleR +13.75 pp ACC 与 +7.66 pp Macro-F1。',
       en: 'Outperforms strongest baseline SingleR by +13.75 pp in accuracy and +7.66 pp in Macro-F1 on tumor-infiltrating NSCLC T cells.',
     },
   },
@@ -1037,9 +1037,9 @@ export const IDENTITY_CASE_STAGES: {
   revised: number;
   netGain: number;
 }[] = [
-  { stage: { zh: '流形提供器', en: 'Manifold Provider' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
-  { stage: { zh: '智能体评审', en: 'Agent Review' }, acc: 55.85, macroF1Pct: 45.34, revised: 3949, netGain: 2784 },
-  { stage: { zh: '多模态元评审', en: 'Meta Review' }, acc: 56.63, macroF1Pct: 47.61, revised: 611, netGain: 606 },
+  { stage: { zh: 'Manifold Provider', en: 'Manifold Provider' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
+  { stage: { zh: 'Agent Review', en: 'Agent Review' }, acc: 55.85, macroF1Pct: 45.34, revised: 3949, netGain: 2784 },
+  { stage: { zh: 'Meta Review', en: 'Meta Review' }, acc: 56.63, macroF1Pct: 47.61, revised: 611, netGain: 606 },
 ];
 
 /** Fig. 3g: Multimodal MAIT cell recall across decision criteria (constant 23 false positives across all three). */
@@ -1049,9 +1049,9 @@ export const IDENTITY_MAIT_RECALL: {
   addedTrue: number;
   falsePositives: number;
 }[] = [
-  { criterion: { zh: '联合标准（TCR + KLRB1 + SLC4A10）', en: 'Joint (TCR + KLRB1 + SLC4A10)' }, recall: 69.09, addedTrue: 0, falsePositives: 23 },
-  { criterion: { zh: '放宽 SLC4A10 转录本要求', en: 'SLC4A10 optional' }, recall: 84.30, addedTrue: 144, falsePositives: 23 },
-  { criterion: { zh: '仅依据配对 TCR 受体序列', en: 'Paired TCR only' }, recall: 91.91, addedTrue: 85, falsePositives: 23 },
+  { criterion: { zh: '联合判别标准 (TCR + KLRB1 + SLC4A10)', en: 'Joint criteria (TCR + KLRB1 + SLC4A10)' }, recall: 69.09, addedTrue: 0, falsePositives: 23 },
+  { criterion: { zh: '放宽 SLC4A10 表达限制 (TCR + KLRB1)', en: 'SLC4A10 optional (TCR + KLRB1)' }, recall: 84.30, addedTrue: 144, falsePositives: 23 },
+  { criterion: { zh: '仅依赖配对 TCR 序列 (Canonical TRAV1-2)', en: 'Paired TCR alone (Canonical TRAV1-2)' }, recall: 91.91, addedTrue: 85, falsePositives: 23 },
 ];
 
 export function pickText(t: BilingualText, lang: Lang): string {
