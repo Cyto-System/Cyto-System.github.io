@@ -96,7 +96,7 @@ export const PerturbationPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         tagline={zh ? '面向未见扰动判别的稠密响应对比迁移' : 'Dense response-contrast transfer for unseen perturbations'}
         description={
           zh
-            ? '基于知识进行扰动迁移的轻量级预测模型，进一步拆分全局基态响应与基因特异响应，实现全局准确率与基因特异判别能力的同步提升。'
+            ? '基于知识进行扰动迁移的轻量级预测模型，进一步拆分全局基态响应与基因特异响应，实现全局Accuracy与基因特异判别能力的同步提升。'
             : 'A lightweight knowledge-driven transfer model for unseen perturbation prediction that decomposes global baseline responses from gene-specific perturbation signals, jointly improving global accuracy and fine-grained discrimination.'
         }
         subnav={[
