@@ -70,22 +70,23 @@ export interface CoSciComponent {
   gist: BilingualText;
   detail: BilingualText;
   hotspot: Hotspot;
+  relatedHotspot?: Hotspot;
 }
 
 export const COSCI_COMPONENT_GROUPS: Record<CoSciComponent['group'], BilingualText> = {
-  loop: { zh: 'DUAL-LOOP RSI / 内外双环控制', en: 'DUAL-LOOP RSI CONTROL' },
-  support: { zh: 'LONG-HORIZON STATE / 长程演化支撑', en: 'LONG-HORIZON STATE & REUSE' },
+  loop: { zh: '研究行动与评审', en: 'Research actions and review' },
+  support: { zh: '候选探索与经验复用', en: 'Candidate exploration and experience reuse' },
 };
 
 export const COSCI_COMPONENTS: CoSciComponent[] = [
   {
     id: 'agent',
     group: 'loop',
-    name: { zh: '主 Agent', en: 'Main agent' },
-    gist: { zh: '检索文献 / 提出假设 / 编写程序 / 运行分析', en: 'Retrieve / hypothesize / code / analyze' },
+    name: { zh: '主智能体', en: 'Main agent' },
+    gist: { zh: '依据研究目标、已有证据和未决问题选择下一步行动。', en: 'Selects the next action based on the research objectives, available evidence, and open questions.' },
     detail: {
-      zh: '每一步只选一个动作，依据是上一步的结果与评审结论。任务内递归自我改进（RSI）改写的是研究过程，模型权重始终不变。',
-      en: 'Each step picks one action based on the previous result and its review. Within-task recursive self-improvement rewrites the investigation; the weights never change.',
+      zh: '每轮结束后，主智能体将结果和评审意见纳入研究记录，再决定是沿当前方向继续，还是回到先前的问题。',
+      en: 'After each round, the main agent updates the research record with the results and review findings. It can then pursue the current direction or revisit an earlier question.',
     },
     hotspot: { x: 15.4, y: 16.6, w: 69.2, h: 10.6 },
   },
@@ -93,10 +94,10 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
     id: 'activities',
     group: 'loop',
     name: { zh: '研究活动', en: 'Research activities' },
-    gist: { zh: '假设探索 · 生信分析 · 程序演化', en: 'Hypotheses · bioinformatics · programs' },
+    gist: { zh: '按研究需要安排任务，而非依次执行固定流程。', en: 'Research needs determine the order of activities.' },
     detail: {
-      zh: '假设探索交给子 Agent，在隔离上下文中完成生成、比较、修订、累积评审与实验设计，各条路线的中间结论不会互相干扰。',
-      en: 'Sub-agents explore hypotheses in isolated contexts — generate, compare, revise, cumulative review, experimental design — so intermediate conclusions of different routes do not leak into each other.',
+      zh: '可选活动包括获取证据、探索假设与设计实验、改进程序、分析组学数据和撰写论文。子智能体在独立上下文中完成具体任务，向主智能体报告发现和尚待解决的问题。',
+      en: 'Activities include gathering evidence, exploring hypotheses and designing experiments, refining programs, analyzing omics data, and writing manuscripts. Subagents work in separate contexts and report their findings and open questions to the main agent.',
     },
     hotspot: { x: 17.6, y: 36.6, w: 31.2, h: 31.6 },
   },
@@ -104,68 +105,66 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
     id: 'review',
     group: 'loop',
     name: { zh: '分层评审', en: 'Layered review' },
-    gist: {
-      zh: 'R0 执行完整性 · R1 确定性检查 · R2 主 Agent 评估 · R3 LLM 领域评审 · R4 人类专家（可选）',
-      en: 'R0 execution · R1 deterministic · R2 main agent · R3 LLM domain · R4 human (optional)',
-    },
+    gist: { zh: '判断一项结果能支持什么结论，而不只看程序是否运行成功。', en: 'Assesses what a result supports, not just whether the code ran.' },
     detail: {
-      zh: '严格执行确定性校验优先，并将方法学有效性与正向效应解耦：R0–R1 的执行或协议失败不可被语义评判覆盖；方法可靠但呈阴性结果可作为有效证据保留，存在数据泄漏或混杂的高分运行会被直接拒收。',
-      en: 'Enforces deterministic validation first and separates methodological validity from positive effect size: R0–R1 failures cannot be overridden by semantic review; rigorous null findings are retained, while leaky or confounded high-scoring runs are rejected.',
+      zh: '系统按需检查执行状态（R0）和数据与分析规程（R1），由主智能体审查结果（R2），并可引入独立模型进行方法学评审（R3）或请领域专家评审（R4）。方法可靠的阴性结果可以保留；存在数据泄漏的高分不能作为改进的证据。',
+      en: 'Checks depend on the task: execution status (R0), data and protocol checks (R1), main-agent inspection (R2), independent methodological review by a language model (R3), and optional human expert review (R4). A sound null result can inform the study; a high score due to data leakage cannot establish an improvement.',
     },
     hotspot: { x: 50.9, y: 36.6, w: 31.2, h: 31.6 },
   },
   {
     id: 'gate',
     group: 'loop',
-    name: { zh: '前提检查与完成门控', en: 'Preconditions & completion gate' },
-    gist: { zh: '行动之前一道，写入产出之前一道', en: 'One before acting, one before output' },
+    name: { zh: '执行前提与完成判定', en: 'Action preconditions and study completion' },
+    gist: { zh: '执行前检查所需输入；结束前核对研究目标。', en: 'Checks inputs before an action and objective coverage before concluding the study.' },
     detail: {
-      zh: '前提不满足的动作不会执行；未通过完成门控的结果不会写入产出，控制权回到主 Agent。',
-      en: 'Actions with unmet preconditions are not executed; results that fail the gate never reach the outputs and control returns to the main agent.',
+      zh: '缺少必要输入或前置评审尚未完成时，相关行动暂不执行。结束研究前，系统逐项核对证据和已评审的研究产出；尚未回答的问题留待后续处理。',
+      en: 'An action waits if required inputs or reviews are missing. Before concluding the study, the system checks the evidence and reviewed outputs against each objective and identifies any work still needed.',
     },
     hotspot: { x: 17.6, y: 29.4, w: 64.5, h: 5.6 },
   },
   {
     id: 'meta',
     group: 'loop',
-    name: { zh: '外环元评审', en: 'Outer-loop meta-review' },
-    gist: { zh: '跨轮次 · 人类专家评审为可选并列入口', en: 'Across rounds · optional human review alongside' },
+    name: { zh: '外环元评审与可选专家评审', en: 'Outer-loop meta-review and optional expert review' },
+    gist: { zh: '跨轮次审视研究路线，判断是否需要改变方向。', en: 'Reviews decisions across rounds to determine whether to change direction.' },
     detail: {
-      zh: '针对长程自主探索中的策略漂移与无效循环，外环元评审从独立上下文周期性审视历史决策、执行轨迹与证据缺口，触发分析重做、补充验证或研究路线转向（如脓毒症案例中从单次抽血转向患者内纵向轨迹）。',
-      en: 'To counter gradual strategic drift over long horizons, an outer-loop meta-reviewer periodically audits decisions, execution traces, and overlooked evidence from an independent context—triggering re-analysis, added validation, or strategic pivots.',
+      zh: '独立评审者检查一系列决策，识别被忽略的证据、缺乏依据的假设或反复无效的尝试。必要时，领域专家可补充意见，供主智能体调整研究路线时参考。',
+      en: 'An independent reviewer examines a sequence of decisions for overlooked evidence, unsupported assumptions, or repeated ineffective attempts. A human expert can offer an additional assessment to inform the main agent’s decision about whether to change direction.',
     },
-    hotspot: { x: 17.2, y: 6.9, w: 66.0, h: 8.6 },
+    hotspot: { x: 17.7, y: 7.3, w: 31.2, h: 7.6 },
+    relatedHotspot: { x: 51.1, y: 7.3, w: 31.2, h: 7.6 },
   },
   {
     id: 'search',
     group: 'support',
     name: { zh: '候选搜索空间', en: 'Candidate search space' },
-    gist: { zh: '搜索策略 + LLM-as-judge', en: 'Search policy + LLM-as-judge' },
+    gist: { zh: '分支选择决定延续哪个候选，评审反馈指导如何修订。', en: 'Branch selection determines which candidate to extend; review guides the revision.' },
     detail: {
-      zh: '下一步从哪个父节点继续扩展，由搜索策略与 LLM 评判打分共同决定。',
-      en: 'Which parent node to extend next is decided jointly by the search policy and an LLM judge.',
+      zh: '修订假设、程序或分析方案会产生新版本，并保留其来源。新证据也可以改变对已有版本的评价，而不改写其内容。',
+      en: 'Revising a hypothesis, program, or analysis produces a new version linked to its parent. New evidence can also change the assessment of an existing version without changing its content.',
     },
     hotspot: { x: 1.0, y: 72.6, w: 29.4, h: 26.6 },
   },
   {
     id: 'context',
     group: 'support',
-    name: { zh: '长程上下文', en: 'Long-horizon context' },
-    gist: { zh: 'L1 原始产物 · L2 语义 / 情节 / 程序性 · L3 任务综合', en: 'L1 artifacts · L2 semantic / episodic / procedural · L3 synthesis' },
+    name: { zh: '长程研究状态与记忆', en: 'Long-horizon research state and memory' },
+    gist: { zh: '新证据可以修正早期判断，原始依据仍可追溯。', en: 'New evidence can revise an earlier interpretation without erasing its basis.' },
     detail: {
-      zh: '最近步骤全文保留，更早的历史进入可修订时间线。时间线把每个决定链接到支撑它的分析，后来的修正可以向前传递。',
-      en: 'Recent steps stay in full; older history becomes a revisable timeline that links each decision to its supporting analysis, so later corrections carry forward.',
+      zh: '研究时间线记录进展、判断的变化和未决问题。分层记忆将研究层面的综合判断（L3）连接到各次尝试的发现与经验（L2），再追溯到原始数据、代码和评审记录（L1）。',
+      en: 'A revisable timeline tracks progress, changes in interpretation, and open questions. Research memory links the study synthesis (L3) to findings from individual attempts (L2) and to primary records such as data, code, and reviews (L1).',
     },
     hotspot: { x: 30.8, y: 72.6, w: 44.6, h: 26.6 },
   },
   {
     id: 'skills',
     group: 'support',
-    name: { zh: '技能检索与更新', en: 'Skill retrieval & update' },
-    gist: { zh: '本地技能库 · 外部库检索', en: 'Local skills · external libraries' },
+    name: { zh: '方法技能的检索与改进', en: 'Methodological skill retrieval and refinement' },
+    gist: { zh: '按需检索分析方法，并在后续研究中复用经检验的修订版本。', en: 'Retrieves analytical procedures as needed and tests revisions before reuse.' },
     detail: {
-      zh: '为当前任务检索可用技能；技能需要修改时先修订并测试，再写回技能库。',
-      en: 'Retrieves skills for the current task; skills that need changes are revised and tested before being written back.',
+      zh: '主智能体优先检索本地方法库；已有方法不足时，再查找外部资源。执行结果和评审意见用于修订方法，并检验其是否适用于当前研究。',
+      en: 'The main agent searches the local skill library first and consults external sources when local procedures are insufficient. Execution results and review feedback guide revisions, which are tested for suitability in the current study.',
     },
     hotspot: { x: 75.8, y: 72.6, w: 23.2, h: 26.6 },
   },
@@ -653,7 +652,7 @@ export const SPATIAL_GENERATION: MatrixBenchmark[] = [
       { name: SUDOKU, values: [0.563, 0.469, 0.29, 0.344, 0.32, 0.406] },
     ],
     note: {
-      zh: '31 张切片、972 道问题，单个窗口 500 个细胞；指标是掩码细胞的类型准确率，不是表达重建精度。',
+      zh: '31 张切片、972 道问题，单个窗口 500 个细胞；指标是掩码细胞的类型 ACC，不是表达重建精度。',
       en: '31 slices, 972 items, 500-cell windows; the metric is cell-type accuracy of masked cells, not expression reconstruction.',
     },
   },
@@ -706,7 +705,7 @@ export const SPATIAL_OVERVIEW: {
   { task: { zh: 'HESTA 邻域检索 · 8 器官平均 AUPRC', en: 'HESTA retrieval · mean AUPRC (8 organs)' }, zeroShot: '0.486', baseline: '0.303 · scGPT-spatial', fineTuned: '0.496', zeroShotWins: true },
   { task: { zh: 'DLPFC 邻域检索 · 7 类交界平均 Pearson r', en: 'DLPFC retrieval · mean Pearson r (7 boundaries)' }, zeroShot: '0.490', baseline: '0.223 · TERRA', fineTuned: '0.687', zeroShotWins: true },
   { task: { zh: '小鼠脑多尺度聚类 · 3 层级平均 ARI', en: 'Mouse brain clustering · mean ARI (3 levels)' }, zeroShot: '0.408', baseline: '0.255 · scGPT-spatial', fineTuned: '0.452', zeroShotWins: true },
-  { task: { zh: '掩码生成 · 972 题细胞类型准确率', en: 'Masked generation · cell-type accuracy (972)' }, zeroShot: '0.355', baseline: '0.385 · 300-NN', fineTuned: '0.401', zeroShotWins: false },
+  { task: { zh: '掩码生成 · 972 题细胞类型 ACC', en: 'Masked generation · cell-type accuracy (972)' }, zeroShot: '0.355', baseline: '0.385 · 300-NN', fineTuned: '0.401', zeroShotWins: false },
 ];
 
 export const SPATIAL_USAGE: { title: BilingualText; body: BilingualText; command: string }[] = [
@@ -895,35 +894,35 @@ export const IDENTITY_STAGES: { code: string; title: BilingualText; body: Biling
     code: '01',
     title: { zh: '自适应流形提供器', en: 'Adaptive Manifold Provider' },
     body: {
-      zh: '融合基因排序、检出支持与基因程序三路编码，借助细胞条件局部度量与多原型匹配保留细粒度亚型边界，为每个细胞输出高召回的候选细胞本体术语。',
-      en: 'Integrates gene-rank, detection-support, and gene-program views with a cell-conditioned local metric and multiple prototypes to propose ranked Cell Ontology candidates per cell.',
+      zh: '集成基因秩次、检出支持与表达程序三路特征编码，利用样本条件局部度量张量与多原型匹配保留亚型判别轴，为每个单细胞生成高召回的 Cell Ontology 候选术语分布。',
+      en: 'Integrates gene-rank, detection-support, and gene-program views with a cell-conditioned Riemannian metric and multiple prototypes to propose ranked Cell Ontology candidates per cell.',
     },
     hotspot: { x: 26.2, y: 1.2, w: 73.0, h: 33.4 },
   },
   {
     code: '02',
-    title: { zh: '分析智能体与分群报告', en: 'Analyst Agent & Per-Cluster Report' },
+    title: { zh: 'Analyst Agent 与分群报告', en: 'Analyst Agent & Per-Cluster Report' },
     body: {
-      zh: '独立于上游候选打分构建无标签邻域与分群，汇总簇内候选分布、标志基因表达、功能程序与质控检查，将每条证据明确区分为支持、未决、矛盾与未测得四类。',
+      zh: '独立于候选预测构建无监督表达图谱与分群，提取簇内标志基因、表达程序与质控特征生成 Per-Cluster Report，将分子证据严格区分为 Supported、Unresolved、Contradicted 与 Unmeasured 四类。',
       en: 'Builds label-free populations independently of provider scores and compiles Per-Cluster Reports separating supported, unresolved, contradicted, and unmeasured evidence.',
     },
     hotspot: { x: 0.7, y: 36.2, w: 50.6, h: 43.2 },
   },
   {
     code: '03',
-    title: { zh: '评审智能体与知识图谱', en: 'Reviewer Agent & Knowledge Graph' },
+    title: { zh: 'Reviewer Agent 与知识图谱', en: 'Reviewer Agent & Knowledge Graph' },
     body: {
-      zh: '结合相关对比簇与细胞本体知识图谱检索竞争解释，按需发起补充检验、局部拆分、合并或回退至上级本体节点；遇到疑难冲突分支时可调用可选专家元评审。',
-      en: 'Combines comparator clusters with Cell Ontology retrieval to inspect missing signals, split or merge clusters, fall back to a supported ancestor, or invoke optional Meta Review.',
+      zh: '检索 Cell Ontology 知识图谱对齐标志基因与组织先验，在相关对比簇间评估竞争解释，自主执行 Inspect、Split、Merge 或 Ancestor Fallback 等闭环动作，并支持 Meta Review 仲裁。',
+      en: 'Queries Cell Ontology knowledge to contextualize marker panels against comparator clusters, executing closed-loop Inspect, Split, Merge, or Ancestor Fallback actions with optional Meta Review adjudication.',
     },
     hotspot: { x: 52.8, y: 36.2, w: 46.5, h: 43.2 },
   },
   {
     code: '04',
-    title: { zh: '本体锚定的可溯源注释', en: 'Ontology-Linked Final Annotation' },
+    title: { zh: '本体锚定的可溯源注释', en: 'Ontology-Constrained Release' },
     body: {
-      zh: '在满足样本实测支持且解决可观测矛盾的前提下，释放最细粒度的本体身份，并同步记录细胞状态、证据强度、反证与备选解释。',
-      en: 'Releases the finest ontology identity backed by query measurements with resolved contradictions, alongside cell state, evidence strength, counterevidence, and alternatives.',
+      zh: '在具备充分分子实测支持且排除观测冲突的前提下，释放证据支持的最细粒度 Cell Ontology 身份，同步记录细胞状态、证据评级与备选假设。',
+      en: 'Releases the finest Cell Ontology identity supported by observed molecular measurements without unresolved contradictions, documenting cellular state, evidence grades, and alternative explanations.',
     },
     hotspot: { x: 0.7, y: 86.2, w: 98.6, h: 13.0 },
   },
@@ -932,10 +931,10 @@ export const IDENTITY_STAGES: { code: string; title: BilingualText; body: Biling
 export type IdentityParadigm = 'ours' | 'foundation' | 'classifier' | 'agent';
 
 export const IDENTITY_PARADIGM_LABEL: Record<IdentityParadigm, BilingualText> = {
-  ours: { zh: 'scVerity (Cyto)', en: 'scVerity (ours)' },
-  foundation: { zh: '单细胞基础模型', en: 'Foundation model' },
-  classifier: { zh: '参考图谱分类器', en: 'Reference classifier' },
-  agent: { zh: 'LLM 智能体', en: 'LLM agent' },
+  ours: { zh: 'scVerity (Ours)', en: 'scVerity (ours)' },
+  foundation: { zh: '单细胞基础模型 (Foundation Model)', en: 'Foundation model' },
+  classifier: { zh: '参考图谱分类器 (Reference Classifier)', en: 'Reference classifier' },
+  agent: { zh: 'LLM 智能体 (LLM Agent)', en: 'LLM agent' },
 };
 
 export interface IdentityBenchmarkRow {
@@ -970,7 +969,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 33.55, macroF1: 27.87 },
     ],
     note: {
-      zh: '流形提供器仅在 872 万参考细胞上预训练一次且不针对测试集微调；较最强外部基线 SingleR 准确率提升 +14.86 个百分点、Macro-F1 提升 +11.83 个百分点。',
+      zh: 'Manifold Provider 仅在 872 万参考细胞上单次预训练且零微调；相比最强外部基线 SingleR，ACC 提升 +14.86 个百分点，Macro-F1 提升 +11.83 个百分点。',
       en: 'Pretrained once on 8.72M reference cells with zero dataset-specific fine-tuning; gains +14.86 pp accuracy and +11.83 pp Macro-F1 over strongest baseline SingleR.',
     },
   },
@@ -988,7 +987,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SingleR', paradigm: 'classifier', acc: 54.78, macroF1: 53.68 },
     ],
     note: {
-      zh: '覆盖上皮、免疫与基质多谱系复杂微环境；scVerity 在准确率（64.91%）与宏平均 F1（69.43%）均居首位。',
+      zh: '涵盖上皮、免疫与基质多谱系复杂微环境；scVerity 在 ACC (64.91%) 与 Macro-F1 (69.43%) 均居首位。',
       en: 'Spans epithelial, immune, and stromal lineages; scVerity leads both ontology accuracy (64.91%) and Macro-F1 (69.43%).',
     },
   },
@@ -1006,7 +1005,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 10.84, macroF1: 15.89 },
     ],
     note: {
-      zh: '细粒度 T 细胞分化亚群共享主谱系程序，全局嵌入检索易坍缩（SCimilarity 10.84%）；scVerity 借助局部度量与循证核验达到 52.98% / 41.67%。',
+      zh: '细粒度 T 细胞亚型共享主导谱系标志，全局嵌入度量易发生表征坍缩（SCimilarity ACC 仅 10.84%）；scVerity 凭借条件局部度量与闭环核验达到 52.98% ACC / 41.67% Macro-F1。',
       en: 'Fine-grained T-cell states share dominant lineage markers that collapse global embedding retrieval (SCimilarity 10.84%); scVerity reaches 52.98% / 41.67%.',
     },
   },
@@ -1024,7 +1023,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 33.53, macroF1: 17.02 },
     ],
     note: {
-      zh: '在非小细胞肺癌肿瘤浸润 T 细胞上领先最强基线 SingleR +13.75 个百分点准确率与 +7.66 个百分点 Macro-F1。',
+      zh: '在非小细胞肺癌肿瘤浸润 T 细胞微环境中，领先最强基线 SingleR +13.75 pp ACC 与 +7.66 pp Macro-F1。',
       en: 'Outperforms strongest baseline SingleR by +13.75 pp in accuracy and +7.66 pp in Macro-F1 on tumor-infiltrating NSCLC T cells.',
     },
   },
@@ -1038,9 +1037,9 @@ export const IDENTITY_CASE_STAGES: {
   revised: number;
   netGain: number;
 }[] = [
-  { stage: { zh: '流形提供器', en: 'Manifold Provider' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
-  { stage: { zh: '智能体评审', en: 'Agent Review' }, acc: 55.85, macroF1Pct: 45.34, revised: 3949, netGain: 2784 },
-  { stage: { zh: '多模态元评审', en: 'Meta Review' }, acc: 56.63, macroF1Pct: 47.61, revised: 611, netGain: 606 },
+  { stage: { zh: 'Manifold Provider', en: 'Manifold Provider' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
+  { stage: { zh: 'Agent Review', en: 'Agent Review' }, acc: 55.85, macroF1Pct: 45.34, revised: 3949, netGain: 2784 },
+  { stage: { zh: 'Meta Review', en: 'Meta Review' }, acc: 56.63, macroF1Pct: 47.61, revised: 611, netGain: 606 },
 ];
 
 /** Fig. 3g: Multimodal MAIT cell recall across decision criteria (constant 23 false positives across all three). */
@@ -1050,9 +1049,9 @@ export const IDENTITY_MAIT_RECALL: {
   addedTrue: number;
   falsePositives: number;
 }[] = [
-  { criterion: { zh: '联合标准（TCR + KLRB1 + SLC4A10）', en: 'Joint (TCR + KLRB1 + SLC4A10)' }, recall: 69.09, addedTrue: 0, falsePositives: 23 },
-  { criterion: { zh: '放宽 SLC4A10 转录本要求', en: 'SLC4A10 optional' }, recall: 84.30, addedTrue: 144, falsePositives: 23 },
-  { criterion: { zh: '仅依据配对 TCR 受体序列', en: 'Paired TCR only' }, recall: 91.91, addedTrue: 85, falsePositives: 23 },
+  { criterion: { zh: '联合判别标准 (TCR + KLRB1 + SLC4A10)', en: 'Joint criteria (TCR + KLRB1 + SLC4A10)' }, recall: 69.09, addedTrue: 0, falsePositives: 23 },
+  { criterion: { zh: '放宽 SLC4A10 表达限制 (TCR + KLRB1)', en: 'SLC4A10 optional (TCR + KLRB1)' }, recall: 84.30, addedTrue: 144, falsePositives: 23 },
+  { criterion: { zh: '仅依赖配对 TCR 序列 (Canonical TRAV1-2)', en: 'Paired TCR alone (Canonical TRAV1-2)' }, recall: 91.91, addedTrue: 85, falsePositives: 23 },
 ];
 
 export function pickText(t: BilingualText, lang: Lang): string {
