@@ -110,7 +110,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         lang={lang}
         eyebrow="02 / CYTO.IDENTITY · SCVERITY"
         name="Cyto.Identity"
-        tagline={zh ? '面向开放世界单细胞注释的循证推理' : 'Evidence-grounded reasoning for open-world single-cell annotation'}
+        tagline={zh ? '面向开放世界单细胞注释的循证推理' : 'Sample-grounded, multi-modal T-cell identity verification'}
         description={
           zh
             ? '将细胞级候选假设生成与样本内生物学证据验证解耦。自适应流形提供器保留相近亚型的竞争假设，分析与评审智能体结合细胞本体知识图谱与局部分群实测证据逐层核验，输出可溯源的细胞身份与状态。'
