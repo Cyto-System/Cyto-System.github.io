@@ -917,7 +917,7 @@ export type IdentityParadigm = 'ours' | 'foundation' | 'classifier' | 'agent';
 
 export const IDENTITY_PARADIGM_LABEL: Record<IdentityParadigm, BilingualText> = {
   ours: { zh: 'scVerity (本文方法)', en: 'scVerity (Ours)' },
-  foundation: { zh: '基础模型', en: 'Foundation model' },
+  foundation: { zh: '单细胞基础模型', en: 'Single-cell foundation model' },
   classifier: { zh: '参考分类器', en: 'Reference classifier' },
   agent: { zh: 'LLM 智能体', en: 'LLM agent' },
 };

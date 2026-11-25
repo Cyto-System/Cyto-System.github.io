@@ -194,7 +194,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           index="02"
           kicker="IDENTITY BENCHMARK"
           title={zh ? '涵盖实体器官与泛癌 T 细胞微环境，' : 'Across diverse tissues and complex T-cell contexts,'}
-          accent={zh ? '系统对比基础模型、参考分类器与 LLM 智能体。' : 'systematically benchmarked against foundation models, reference classifiers, and LLM agents.'}
+          accent={zh ? '系统对比单细胞基础模型、参考分类器与 LLM 智能体。' : 'systematically benchmarked against single-cell foundation models, reference classifiers, and LLM agents.'}
         />
 
         <BenchControlsBar
