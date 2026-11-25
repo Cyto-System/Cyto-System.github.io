@@ -952,7 +952,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 33.55, macroF1: 27.87 },
     ],
     note: {
-      zh: '流形表征模型仅在 872 万参考细胞上预训练一次且零微调；相比最强外部基线 SingleR，ACC 提升 +14.86 个百分点，Macro-F1 提升 +11.83 个百分点。',
+      zh: 'scVerity 仅在 872 万参考细胞上预训练一次且零微调；相比最强外部基线 SingleR，ACC 提升 +14.86 个百分点，Macro-F1 提升 +11.83 个百分点。',
       en: 'Pretrained once on 8.72M reference cells with zero dataset-specific fine-tuning; gains +14.86 pp accuracy and +11.83 pp Macro-F1 over strongest baseline SingleR.',
     },
   },
