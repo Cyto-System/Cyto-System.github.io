@@ -25,7 +25,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       className="cyto-hero-canvas text-[#0C261B] relative lg:min-h-[calc(100vh-3.5rem)] flex items-center border-b border-emerald-950/[0.08]"
     >
       <div className="w-full max-w-[1320px] mx-auto px-5 sm:px-8 py-8 sm:py-10 lg:py-8 flex-1">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(320px,380px)_1fr] gap-8 xl:gap-12 items-stretch lg:min-h-[640px] lg:h-[calc(100vh-7.5rem)] lg:max-h-[780px]">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(340px,410px)_1fr] gap-8 xl:gap-12 items-stretch lg:min-h-[640px] lg:h-[calc(100vh-7.5rem)] lg:max-h-[780px]">
           {/* LEFT COLUMN: Clean Minimal Brand Title, Single Concise Introduction & 2 Preserved Jump Buttons */}
           <div className="flex flex-col justify-center gap-6 sm:gap-7 py-2 lg:py-6">
             {/* Compact Language Switch */}
@@ -66,7 +66,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="space-y-4">
               <h1 className="text-[clamp(2.35rem,3.6vw,3.45rem)] font-bold tracking-tight leading-[1.08] text-[#0C261B] [text-wrap:balance]">
                 <span className="block">Cyto</span>
-                <span className="cyto-emerald-text-gradient block mt-1.5">
+                <span
+                  className={`cyto-emerald-text-gradient block mt-1.5 ${
+                    lang === 'en' ? 'text-[clamp(1.85rem,2.65vw,2.65rem)] leading-[1.12]' : ''
+                  }`}
+                >
                   {lang === 'zh' ? '时空细胞系统' : 'Spatiotemporal Cell System'}
                 </span>
               </h1>

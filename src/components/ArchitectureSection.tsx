@@ -46,7 +46,7 @@ const TIER_STYLE: Record<
     badge: 'bg-emerald-900/[0.06] text-emerald-900/60',
   },
   '03': {
-    box: 'border-emerald-800/80 bg-[radial-gradient(circle_at_88%_14%,rgba(16,185,129,0.22),transparent_55%),linear-gradient(165deg,#083526_0%,#052118_100%)] shadow-[0_16px_38px_-22px_rgba(5,33,24,0.65)]',
+    box: 'cyto-dark-surface border-emerald-800/80 bg-[radial-gradient(circle_at_88%_14%,rgba(16,185,129,0.22),transparent_55%),linear-gradient(165deg,#083526_0%,#052118_100%)] shadow-[0_16px_38px_-22px_rgba(5,33,24,0.65)]',
     title: 'text-white',
     question: 'text-emerald-100/75',
     divider: 'border-white/10',

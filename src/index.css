@@ -65,6 +65,23 @@
   color: transparent;
 }
 
+.cyto-emerald-text-gradient::selection {
+  background-color: rgba(16, 185, 129, 0.25);
+  color: #064e3b;
+  -webkit-text-fill-color: #064e3b;
+}
+
+.cyto-emerald-deep-grid ::selection,
+.cyto-emerald-deep-grid::selection,
+footer ::selection,
+footer::selection,
+.cyto-dark-surface ::selection,
+.cyto-dark-surface::selection {
+  background-color: rgba(110, 231, 183, 0.35);
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+}
+
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }
