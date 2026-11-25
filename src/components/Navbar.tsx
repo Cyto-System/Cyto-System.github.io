@@ -85,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({ lang }) => {
             className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white bg-[#0C261B] hover:bg-emerald-800 rounded-lg shadow-[0_1px_2px_rgba(6,78,59,0.2)] transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-600"
           >
             <Github className="w-3.5 h-3.5 text-emerald-300" aria-hidden="true" />
-            <span>{lang === 'zh' ? 'GitHub 组织' : 'GitHub'}</span>
+            <span>GitHub</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-emerald-300" aria-hidden="true" />
           </a>
 

@@ -48,7 +48,7 @@ export const EcosystemAndFooter: React.FC<EcosystemAndFooterProps> = React.memo(
               className="inline-flex items-center gap-2 px-5 py-3 bg-emerald-400 hover:bg-emerald-300 text-[#05261C] text-sm font-semibold rounded-lg shadow-[0_10px_28px_-10px_rgba(52,211,153,0.48)] transition-colors whitespace-nowrap"
             >
               <Github className="w-4 h-4" aria-hidden="true" />
-              <span>{lang === 'zh' ? '访问 Cyto GitHub 组织' : 'Visit Cyto on GitHub'}</span>
+              <span>{lang === 'zh' ? '访问 Cyto GitHub' : 'Visit Cyto on GitHub'}</span>
               <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
             </a>
             <a

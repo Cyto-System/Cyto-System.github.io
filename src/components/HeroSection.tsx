@@ -87,7 +87,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#0C261B] hover:bg-emerald-800 text-white text-sm font-medium shadow-[0_6px_18px_-10px_rgba(6,78,59,0.55)] transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-600"
               >
                 <Github className="w-4 h-4 text-emerald-300" aria-hidden="true" />
-                <span>{lang === 'zh' ? '访问 GitHub 组织' : 'Explore on GitHub'}</span>
+                <span>{lang === 'zh' ? '访问 GitHub' : 'Explore on GitHub'}</span>
                 <ArrowUpRight className="w-4 h-4 text-emerald-300" aria-hidden="true" />
               </a>
 
