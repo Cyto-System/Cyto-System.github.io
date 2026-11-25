@@ -19,21 +19,21 @@ export const EcosystemAndFooter: React.FC<EcosystemAndFooterProps> = React.memo(
         <div className="max-w-[1320px] mx-auto px-5 sm:px-8 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="space-y-4 max-w-2xl">
             <p className="font-mono text-xs tracking-[0.2em] text-emerald-200/75">
-              03. KEEP EXPLORING VIRTUAL CELLS
+              03. KEEP EXPLORING SPATIOTEMPORAL CELLS
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-[1.18] [text-wrap:balance]">
               {lang === 'zh' ? (
                 <>
                   <span className="block text-white">下一次生命科学发现，</span>
                   <span className="block text-emerald-300 mt-1">
-                    始于可推演的多尺度虚拟细胞。
+                    始于可推演的多尺度时空细胞。
                   </span>
                 </>
               ) : (
                 <>
                   <span className="block text-white">The next biological discovery</span>
                   <span className="block text-emerald-300 mt-1">
-                    begins with simulatable virtual cells.
+                    begins with simulatable spatiotemporal cells.
                   </span>
                 </>
               )}
@@ -71,7 +71,7 @@ export const EcosystemAndFooter: React.FC<EcosystemAndFooterProps> = React.memo(
         <div className="max-w-[1320px] mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 text-xs">
           <div className="space-y-1.5">
             <div className="text-sm font-bold text-white">
-              Cyto · {lang === 'zh' ? '多尺度时空细胞模型家族' : 'Multi-Scale Virtual Cell Family'}
+              Cyto · {lang === 'zh' ? '多尺度时空细胞模型家族' : 'Multi-Scale Spatiotemporal Cell Family'}
             </div>
             <p className="text-emerald-100/60">
               {lang === 'zh'

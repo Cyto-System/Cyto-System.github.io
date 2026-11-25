@@ -1,4 +1,4 @@
-# Cyto — Multi-Scale Virtual Cell Model Family
+# Cyto — Multi-Scale Spatiotemporal Cell Model Family
 
 Official website for **Cyto System**, jointly developed by **BGI Research (华大研究院)** and **Beijing Zhongguancun Academy (北京中关村学院)**.
 

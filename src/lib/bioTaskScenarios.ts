@@ -58,8 +58,8 @@ export const CYTO_TASK_SCENARIOS: BioTaskScenario[] = [
       en: 'Tumor Immunotherapy',
     },
     title: {
-      zh: '多尺度虚拟细胞真实评测与闭环发现流程',
-      en: 'Multi-Scale Virtual Cell Benchmarks & Closed-Loop Discovery',
+      zh: '多尺度时空细胞真实评测与闭环发现流程',
+      en: 'Multi-Scale Spatiotemporal Cell Benchmarks & Closed-Loop Discovery',
     },
     shortSubtitle: {
       zh: 'Cyto.Spatial · Cyto.Identity · Cyto.Perturbation · Cyto.CoScientist',
@@ -333,7 +333,7 @@ export const CYTO_TASK_SCENARIOS: BioTaskScenario[] = [
         accentHex: 0x047857,
         windowZone: 'bottom-center',
         targetElementLabel: {
-          zh: '虚拟细胞表型重塑闭环',
+          zh: '时空细胞表型重塑闭环',
           en: 'Whole-Cell Phenotype',
         },
         boardPos: [0.36, -1.14, 0.78],
@@ -471,7 +471,7 @@ export const CYTO_TASK_SCENARIOS: BioTaskScenario[] = [
           en: 'Alveolar Repair Validation',
         },
         roleDetail: {
-          zh: '经 3 轮闭环迭代验证，核心虚拟细胞 SFTPC+ AT2 功能再生占比由 8.2% 跃升至 54.0%',
+          zh: '经 3 轮闭环迭代验证，核心时空细胞 SFTPC+ AT2 功能再生占比由 8.2% 跃升至 54.0%',
           en: 'Validates SFTPC+ AT2 regeneration jumping from 8.2% to 54.0% across cell state',
         },
         readoutMetric: 'AT2 = 54.0%',

@@ -323,7 +323,7 @@ function drawMainWindowOverlay(
       h * 0.67,
       w * 0.52,
       h * 0.88,
-      lang === 'zh' ? '虚拟细胞' : 'Virtual Cell',
+      lang === 'zh' ? '时空细胞' : 'Spatiotemporal Cell',
       'rgba(5, 150, 105, 0.65)'
     );
   }
@@ -1697,8 +1697,8 @@ export const ThreeTaskWindowStage: React.FC<ThreeTaskWindowStageProps> = ({
           ref={canvasMountRef}
           aria-label={
             lang === 'zh'
-              ? 'Cyto 三维透明玻璃虚拟细胞主模型视窗'
-              : 'Cyto 3D Transparent Glass Virtual Cell Main Model Stage'
+              ? 'Cyto 三维透明玻璃时空细胞主模型视窗'
+              : 'Cyto 3D Transparent Glass Spatiotemporal Cell Main Model Stage'
           }
           className="w-full h-full cursor-grab active:cursor-grabbing"
         />

@@ -67,14 +67,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <h1 className="text-[clamp(2.35rem,3.6vw,3.45rem)] font-bold tracking-tight leading-[1.08] text-[#0C261B] [text-wrap:balance]">
                 <span className="block">Cyto</span>
                 <span className="cyto-emerald-text-gradient block mt-1.5">
-                  {lang === 'zh' ? '虚拟细胞系统' : 'Virtual Cell System'}
+                  {lang === 'zh' ? '时空细胞系统' : 'Spatiotemporal Cell System'}
                 </span>
               </h1>
 
               <p className="text-[15px] sm:text-base text-slate-600 leading-[1.7] max-w-[36ch] [text-wrap:pretty]">
                 {lang === 'zh'
                   ? '面向生命科学的多尺度时空细胞模型家族——读懂细胞的状态，推演它的变化与干预响应，自主提出并验证科学问题。'
-                  : 'A multi-scale spatiotemporal virtual cell model family—decoding cellular states, simulating intervention responses, and autonomously validating scientific questions.'}
+                  : 'A multi-scale spatiotemporal cell model family—decoding cellular states, simulating intervention responses, and autonomously validating scientific questions.'}
               </p>
             </div>
 
@@ -110,7 +110,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   className="w-full flex-1 h-full min-h-[320px] sm:min-h-[420px] lg:min-h-[540px] rounded-2xl border border-emerald-900/12 bg-gradient-to-b from-[#E8F7F0] via-[#F4FBF7] to-white flex items-center justify-center p-6"
                 >
                   <div className="text-xs font-mono text-emerald-800/70">
-                    {lang === 'zh' ? '正在加载三维虚拟细胞视窗…' : 'Loading 3D Virtual Cell Stage…'}
+                    {lang === 'zh' ? '正在加载三维时空细胞视窗…' : 'Loading 3D Spatiotemporal Cell Stage…'}
                   </div>
                 </div>
               }
