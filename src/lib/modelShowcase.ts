@@ -875,37 +875,37 @@ export const IDENTITY_CASE_GIF = {
 export const IDENTITY_STAGES: { code: string; title: BilingualText; body: BilingualText; hotspot: Hotspot }[] = [
   {
     code: '01',
-    title: { zh: '自适应流形候选生成', en: 'Adaptive Manifold (Candidate Generation)' },
+    title: { zh: 'Manifold (候选生成)', en: 'Adaptive Manifold (Candidate Generation)' },
     body: {
-      zh: '集成基因秩次、检出支持与表达程序多视角表征，结合细胞条件局部度量与原型匹配，为每个单细胞输出高召回的候选细胞类型。',
-      en: 'Integrates gene-rank, detection-support, and expression-programme representations with local metrics and prototypes to propose high-recall candidate cell types per cell.',
+      zh: '利用多视角表达特征与自适应流形度量，捕捉细胞连续状态与细微表型差异，为每个单细胞输出高召回的候选细胞类型。',
+      en: 'Integrates multi-view representations with adaptive manifold metrics to capture continuous cell states and phenotypic differences, proposing high-recall candidate cell types per cell.',
     },
     hotspot: { x: 26.2, y: 1.2, w: 73.0, h: 33.4 },
   },
   {
     code: '02',
-    title: { zh: '分群分子证据提取', en: 'Analyst Agent (Evidence Profiling)' },
+    title: { zh: 'Analyst Agent (证据分析)', en: 'Analyst Agent (Evidence Profiling)' },
     body: {
-      zh: '独立构建无监督细胞分群，系统检验标志基因表达、细胞异质性与质控特征，严格区分阳性支持、冲突矛盾与未测基因。',
-      en: 'Constructs unsupervised cell clusters independently and profiles marker expression, functional programmes, and data quality to distinguish supported, contradicted, and unmeasured features.',
+      zh: '独立对样本构建无监督分群，系统检验标志基因表达、细胞异质性及质控特征，全面提取支持或矛盾的生物学实测证据。',
+      en: 'Constructs unsupervised cell clusters independently from candidate predictions, systematically profiling marker expression, cell heterogeneity, and quality metrics to compile verifiable biological evidence.',
     },
     hotspot: { x: 0.7, y: 36.2, w: 50.6, h: 43.2 },
   },
   {
     code: '03',
-    title: { zh: '知识图谱闭环审阅', en: 'Reviewer Agent & Knowledge Graph' },
+    title: { zh: 'Reviewer Agent、KG 与 Meta Review', en: 'Reviewer Agent, KG & Meta Review' },
     body: {
-      zh: '检索细胞本体知识图谱对齐标志基因与组织先验，在相近亚群间对比分子差异，自主执行特征复核、亚群细分、同质合并或祖先回退。',
-      en: 'Contextualizes candidate markers against Cell Ontology knowledge and neighbouring populations, executing targeted evidence requests, subpopulation splitting, merging, or ancestor fallback.',
+      zh: '结合细胞本体知识图谱 (KG) 对齐先验与对比分群，闭环决策细分、合并或回退；对疑难亚群开展 Meta Review，引入单细胞配对 TCR 等多模态受体序列终审。',
+      en: 'Queries Cell Ontology Knowledge Graph (KG) to evaluate competing hypotheses against comparator clusters, executing closed-loop decisions; invokes Meta Review to resolve challenging lineages using multimodal single-cell paired TCR sequences.',
     },
     hotspot: { x: 52.8, y: 36.2, w: 46.5, h: 43.2 },
   },
   {
     code: '04',
-    title: { zh: '多模态终审与细胞注释', en: 'Multimodal Meta-Review & Annotation' },
+    title: { zh: 'Release (确定性注释输出)', en: 'Ontology Release' },
     body: {
-      zh: '在具备充分分子实测支持且排除冲突的前提下，输出最细粒度的标准细胞本体注释；疑难谱系引入单细胞配对受体序列完成多模态终审。',
-      en: 'Assigns the finest Cell Ontology identity supported by observed molecular evidence, incorporating single-cell paired antigen receptor sequences for multimodal final adjudication.',
+      zh: '在具备充分分子实测支持且排除冲突的前提下，确定输出最细粒度的标准细胞本体身份，并同步保留完整的细胞状态与证据溯源链。',
+      en: 'Outputs the finest verified Cell Ontology identity supported by observed molecular evidence without contradictions, maintaining cellular states and fully traceable evidence chains.',
     },
     hotspot: { x: 0.7, y: 86.2, w: 98.6, h: 13.0 },
   },
@@ -1020,9 +1020,9 @@ export const IDENTITY_CASE_STAGES: {
   revised: number;
   netGain: number;
 }[] = [
-  { stage: { zh: '流形候选生成', en: 'Adaptive Manifold' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
-  { stage: { zh: '智能体审阅', en: 'Agent Review' }, acc: 55.85, macroF1Pct: 45.34, revised: 3949, netGain: 2784 },
-  { stage: { zh: '多模态终审', en: 'Meta Review' }, acc: 56.63, macroF1Pct: 47.61, revised: 611, netGain: 606 },
+  { stage: { zh: 'Manifold', en: 'Manifold' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
+  { stage: { zh: 'Agent Review', en: 'Agent Review' }, acc: 55.85, macroF1Pct: 45.34, revised: 3949, netGain: 2784 },
+  { stage: { zh: 'Meta Review', en: 'Meta Review' }, acc: 56.63, macroF1Pct: 47.61, revised: 611, netGain: 606 },
 ];
 
 /** Fig. 3g: Multimodal MAIT cell recall across decision criteria (constant 23 false positives across all three). */

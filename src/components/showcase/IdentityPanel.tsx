@@ -373,19 +373,19 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
             </div>
             <figcaption className="px-4 sm:px-5 py-3 border-t border-emerald-950/[0.06] text-xs text-slate-500 leading-relaxed bg-[#FAFDFB]">
               {zh
-                ? '基于 13 位健康供体胸腺与外周血 T 细胞配对单细胞 RNA 及 TCR-seq 数据，展示智能体审阅解决 CD4/CD8 谱系混淆并局部细分胸腺 γδ 发育分支，以及多模态终审结合配对 TCR 高精度召回罕见 MAIT 与 iNKT 亚群。'
+                ? '基于 13 位健康供体胸腺与外周血 T 细胞配对单细胞 RNA 及 TCR-seq 数据，展示 Agent Review 解决 CD4/CD8 谱系混淆并局部细分胸腺 γδ 分支，以及 Meta Review 结合配对 TCR 高精度召回罕见 MAIT 与 iNKT 亚群。'
                 : 'On paired scRNA-seq and TCR profiles from 13 healthy donors, Agent Review resolves CD4/CD8 conflicts and splits hidden thymic γδ trajectories, while Meta Review recovers rare MAIT and iNKT populations backed by paired TCRs.'}
             </figcaption>
           </figure>
 
           <div className="lg:col-span-5 flex flex-col gap-5">
             <BenchCard
-              title={zh ? '三阶段分期核验性能演进' : 'Staged verification against FACS ground truth'}
-              meta={zh ? '对照物理 FACS 分选真值 (5 大 T 细胞主谱系)' : '5 major T-cell lineages (FACS sorted)'}
+              title={zh ? 'T 细胞谱系逐阶段注释精度' : 'Staged annotation accuracy on T-cell lineages'}
+              meta={zh ? 'FACS 物理分选金标准 (5 大主谱系)' : 'FACS-sorted ground truth (5 major lineages)'}
               footer={
                 zh
-                  ? '智能体审阅重新注释 3,949 个细胞（净增 +2,784 个正确标注）；多模态终审结合配对 TCR 复核 611 个细胞（净增 +606 个正确标注）。'
-                  : 'Agent Review revises 3,949 cells (+2,784 net correct); Meta Review revises 611 rare cells (+606 net correct).'
+                  ? 'Agent Review 重新注释 3,949 个细胞，正确标注净增 +2,784 个；Meta Review 结合配对 TCR 复核 611 个细胞，正确标注净增 +606 个。'
+                  : 'Agent Review reclassifies 3,949 cells (+2,784 net correct); Meta Review verifies 611 rare cells via paired TCRs (+606 net correct).'
               }
             >
               <VerticalColumnChart
@@ -415,12 +415,12 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
 
             <BenchCard
               className="flex-1"
-              title={zh ? '多模态配对 TCR 罕见谱系核验' : 'Multimodal paired-TCR rare-lineage verification'}
+              title={zh ? '配对 TCR 罕见亚群多模态确证' : 'Multimodal verification of rare lineages via paired TCR'}
               meta={zh ? '四聚体物理分选对照' : 'Tetramer sorting ground truth'}
               footer={
                 zh
-                  ? '针对单细胞测序中常见的 SLC4A10 技术性 Dropout，引入单细胞配对 TCR 重排后，MAIT 召回率 (Recall) 由 69.09% 跃升至 91.91%，且假阳性严格恒定在 23 个细胞（经 Scirpy 共享克隆型确证）。'
-                  : 'Relaxing RNA dropout constraints via paired TCR raises MAIT recall from 69.09% to 91.91% while false positives stay fixed at 23 cells.'
+                  ? '针对单细胞测序中常见的 SLC4A10 基因技术性 Dropout，引入配对 TCR 确证后，MAIT Recall 由 69.09% 跃升至 91.91%，且假阳性严格维持在 23 个细胞不变（经 Scirpy 共享克隆型确证）。'
+                  : 'Overcoming SLC4A10 technical dropout via paired TCR sequences raises MAIT Recall from 69.09% to 91.91% while false positives stay strictly fixed at 23 cells.'
               }
             >
               <div className="space-y-3.5">
