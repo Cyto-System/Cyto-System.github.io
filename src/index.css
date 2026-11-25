@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-display: "Plus Jakarta Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    --font-sans: "Plus Jakarta Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  html {
+    scroll-padding-top: 3.5rem;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: #0c261b;
+    background-color: #ffffff;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Crisp Green-White Hero Laboratory Field */
+.cyto-hero-canvas {
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(ellipse 68% 54% at 50% 0%, rgba(16, 185, 129, 0.11), transparent 70%),
+    radial-gradient(circle at 82% 52%, rgba(52, 211, 153, 0.09), transparent 46%),
+    linear-gradient(to right, rgba(6, 95, 70, 0.032) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(6, 95, 70, 0.032) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px;
+}
+
+/* Soft Botanical Glass Showcase Container */
+.cyto-showcase-stage {
+  background:
+    radial-gradient(circle at 74% 38%, rgba(16, 185, 129, 0.12), transparent 54%),
+    radial-gradient(circle at 22% 85%, rgba(110, 231, 183, 0.10), transparent 48%),
+    linear-gradient(180deg, #f2faf6 0%, #f8fcfa 58%, #ffffff 100%);
+}
+
+/* Deep Emerald Closing Banner */
+.cyto-emerald-deep-grid {
+  background-color: #07291e;
+  background-image:
+    radial-gradient(circle at 75% 38%, rgba(16, 185, 129, 0.22), transparent 50%),
+    radial-gradient(circle at 18% 20%, rgba(110, 231, 183, 0.10), transparent 40%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 64px 64px, 64px 64px;
+}
+
+.cyto-emerald-text-gradient {
+  background: linear-gradient(95deg, #059669 0%, #10b981 48%, #0d9488 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.cyto-defer-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 840px;
+}
+
+/* Hide scrollbars cleanly for horizontal mobile strips */
+.cyto-no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.cyto-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Subtle, restrained panel reveal on model tab switch */
+@keyframes cyto-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cyto-panel-enter {
+  animation: cyto-panel-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
