@@ -75,8 +75,8 @@ export const EcosystemAndFooter: React.FC<EcosystemAndFooterProps> = React.memo(
             </div>
             <p className="text-emerald-100/60">
               {lang === 'zh'
-                ? '华大研究院 × 北京中关村学院 联合发布'
-                : 'Jointly Released by BGI Research × Beijing Zhongguancun Academy'}
+                ? '北京中关村学院 × 华大研究院 联合发布'
+                : 'Jointly Released by Beijing Zhongguancun Academy × BGI Research'}
             </p>
           </div>
 

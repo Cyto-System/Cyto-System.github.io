@@ -1105,8 +1105,8 @@ export function getSortedBenchmarkEntries(suite: BenchmarkSuite): BenchmarkEntry
 
 export const CYTO_BIBTEX = `@article{cyto2026spatiotemporalcell,
   title   = {Cyto: A Multi-Scale Spatiotemporal Cell Model Family for Reading, Simulating, and Autonomous Scientific Discovery},
-  author  = {{BGI Research} and {Beijing Zhongguancun Academy}},
+  author  = {{Beijing Zhongguancun Academy} and {BGI Research}},
   journal = {arXiv preprint / Cyto Technical Overview Report},
   year    = {2026},
-  note    = {Jointly released by BGI Research and Beijing Zhongguancun Academy. Organization: https://github.com/Cyto-System}
+  note    = {Jointly released by Beijing Zhongguancun Academy and BGI Research. Organization: https://github.com/Cyto-System}
 }`;
