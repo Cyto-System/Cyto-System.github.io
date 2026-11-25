@@ -212,13 +212,13 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           <div className="lg:col-span-5 flex flex-col">
             <BenchCard
               className="flex-1"
-              title={zh ? '本体准确率 vs 宏平均 F1 前沿' : 'Ontology accuracy vs Macro-F1 frontier'}
+              title={zh ? 'Ontology ACC vs Macro-F1' : 'Ontology accuracy vs Macro-F1 frontier'}
               meta={cohort.cohortMeta[lang]}
               footer={cohort.note[lang]}
             >
               <ScatterPlot
                 points={scatterPoints}
-                xLabel={zh ? '本体兼容准确率 (%) ↑' : 'Ontology accuracy (%) ↑'}
+                xLabel={zh ? 'Ontology ACC (%) ↑' : 'Ontology accuracy (%) ↑'}
                 yLabel={zh ? 'Macro-F1 (%) ↑' : 'Macro-F1 (%) ↑'}
                 xDomain={scatterXDomain}
                 yDomain={scatterYDomain}
@@ -236,7 +236,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           {/* RIGHT: Side-by-side Accuracy & Macro-F1 Leaderboards */}
           <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-5">
             <BenchCard
-              title={zh ? '本体兼容准确率' : 'Ontology-compatible accuracy'}
+              title={zh ? 'Ontology ACC' : 'Ontology-compatible accuracy'}
               meta={cohort.tab[lang]}
               footer={
                 zh
@@ -315,7 +315,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
                 </div>
                 <div className="mt-2.5 grid grid-cols-2 gap-3 text-[11.5px]">
                   <div>
-                    <div className="text-slate-400">{zh ? '准确率' : 'Accuracy'}</div>
+                    <div className="text-slate-400">{zh ? 'ACC' : 'Accuracy'}</div>
                     <div className="font-mono font-bold text-emerald-700 tabular-nums mt-0.5">
                       {ours.acc.toFixed(2)}%
                     </div>
@@ -392,7 +392,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
                 groups={IDENTITY_CASE_STAGES.map((s) => ({
                   label: s.stage[lang],
                   bars: [
-                    { name: zh ? '准确率' : 'Acc', value: s.acc, ours: true },
+                    { name: zh ? 'ACC' : 'Acc', value: s.acc, ours: true },
                     { name: 'Macro-F1', value: s.macroF1Pct, color: '#0D9488' },
                   ],
                 }))}
@@ -404,7 +404,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               <div className="mt-3 flex items-center justify-center gap-5 text-[11px] text-slate-600">
                 <span className="inline-flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-xs bg-emerald-600" aria-hidden="true" />
-                  <span className="font-semibold text-emerald-800">{zh ? '准确率 (%)' : 'Accuracy (%)'}</span>
+                  <span className="font-semibold text-emerald-800">{zh ? 'ACC (%)' : 'Accuracy (%)'}</span>
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-xs bg-teal-600" aria-hidden="true" />
@@ -419,7 +419,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               meta={zh ? '四聚体物理分选对照' : 'Tetramer sorting ground truth'}
               footer={
                 zh
-                  ? '放宽转录本丢失导致的 SLC4A10 门槛后，MAIT 召回率由 69.09% 升至 91.91%，而假阳性始终维持 23 个细胞不变。'
+                  ? '放宽转录本丢失导致的 SLC4A10 门槛后，MAIT Recall由 69.09% 升至 91.91%，而假阳性始终维持 23 个细胞不变。'
                   : 'Relaxing RNA dropout constraints via paired TCR raises MAIT recall from 69.09% to 91.91% while false positives stay fixed at 23 cells.'
               }
             >
