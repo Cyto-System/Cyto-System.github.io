@@ -747,8 +747,8 @@ export const PERTURBATION_STAGES: { code: string; title: BilingualText; body: Bi
     code: 'A',
     title: { zh: '生物知识特征与相似度核', en: 'Biological knowledge & similarity kernel' },
     body: {
-      zh: '整合 GO、Reactome、CORUM、STRING 和 BioPlex 五个生物知识库，按来源均衡加权构建扰动的生物知识特征，并计算扰动之间的相似度核；对于小分子药物，通过聚合对应靶蛋白的特征进行编码，单一来源缺失时由其余来源均分权重。',
-      en: 'Integrates GO, Reactome, CORUM, STRING, and BioPlex with balanced per-source weighting to build biological knowledge features and compute perturbation similarity kernels; small-molecule drugs are encoded by aggregating their target-protein features, re-weighting across remaining sources when one is missing.',
+      zh: '整合 GO、Reactome、CORUM、STRING 和 BioPlex 五个生物知识库，按来源均衡加权构建扰动的生物知识特征，并计算扰动之间的相似度核；对于小分子药物，通过聚合对应靶蛋白的特征进行编码。',
+      en: 'Integrates GO, Reactome, CORUM, STRING, and BioPlex with balanced per-source weighting to build biological knowledge features and compute perturbation similarity kernels; small-molecule drugs are encoded by aggregating their target-protein features.',
     },
     hotspot: { x: 0.4, y: 0.4, w: 47.4, h: 99.2 },
   },
