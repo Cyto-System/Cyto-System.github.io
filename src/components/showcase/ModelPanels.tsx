@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CYTO_MODULES, Lang } from '../../lib/cytoDomain';
+import type { Lang } from '../../lib/cytoDomain';
 import {
   PERTURBATION_DRUG,
   PERTURBATION_FIGURE,
@@ -19,6 +19,7 @@ import {
 import { EyebrowHeading, HotspotFigure, ModelIntro, prefersReducedMotion, useAutoStep, useInView } from './shared';
 
 export { SpatialPanel } from './SpatialPanel';
+export { IdentityPanel } from './IdentityPanel';
 
 const PARADIGM_COLOR: Record<PerturbParadigm, string> = {
   prior: '#94A3B8',
@@ -508,33 +509,6 @@ export const PerturbationPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
             )}
           </div>
         </div>
-      </div>
-    </div>
-  );
-};
-
-/** Cyto.Identity: unreleased placeholder. */
-export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
-  const zh = lang === 'zh';
-  const mod = CYTO_MODULES.find((m) => m.id === 'cyto-identity');
-  return (
-    <div className="space-y-10 sm:space-y-12">
-      <ModelIntro
-        lang={lang}
-        eyebrow="02 / CYTO.IDENTITY"
-        name="Cyto.Identity"
-        tagline={zh ? '可推理的细胞身份鉴定' : 'Reasoned cell identity'}
-        description={mod ? mod.summary[lang] : ''}
-      />
-      <div className="rounded-2xl border border-dashed border-emerald-900/20 bg-white/80 grid grid-cols-1 md:grid-cols-12 md:divide-x md:divide-emerald-950/[0.08] overflow-hidden">
-        <div className="md:col-span-7 p-6 sm:p-7 flex items-center font-mono text-xs sm:text-[13px] text-[#0C261B]/80 leading-relaxed">
-          {mod?.inputOutput[lang]}
-        </div>
-        <p className="md:col-span-5 p-6 sm:p-7 border-t md:border-t-0 border-emerald-950/[0.08] flex items-center text-sm text-slate-600 leading-relaxed bg-[#FAFDFB]/70">
-          {zh
-            ? '架构图与基准评测材料整理中，发布后按统一规格呈现。'
-            : 'Architecture figures and benchmark evaluations are in preparation and will appear in the same specification upon release.'}
-        </p>
       </div>
     </div>
   );

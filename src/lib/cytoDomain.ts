@@ -275,13 +275,14 @@ export const CYTO_MODULES: CytoModule[] = [
       en: 'Input: Single-cell profile & tissue context → Output: Hierarchical cell identity + explicit molecular reasoning chain',
     },
     summary: {
-      zh: '突破传统黑盒分类器局限，结合基因表达定量信号与生物学通路先验进行多步可解释推理，精确鉴定罕见亚群、过渡态细胞与疾病异常表型。',
-      en: 'Moves beyond black-box classification by combining quantitative expression profiles with biological pathway priors to produce auditable multi-step cell identity reasoning.',
+      zh: 'scVerity 将细胞级候选假设生成与样本内生物学证据验证解耦，依托自适应流形提供器、分析/评审双智能体与细胞本体知识图谱，实现开放世界细粒度单细胞注释与罕见亚群验证。',
+      en: 'scVerity decouples per-cell candidate generation from sample-grounded biological verification via an Adaptive Manifold Provider, Analyst/Reviewer agents, and Cell Ontology knowledge graph for open-world annotation.',
     },
     reportLabel: 'arXiv',
     reportUrl: '#report-viewer',
-    codeWeightsLabel: { zh: '即将开源', en: 'Opening soon' },
-    status: 'report_only',
+    codeWeightsLabel: { zh: 'GitHub (Cyto.Identity)', en: 'GitHub (Cyto.Identity)' },
+    repoSlug: 'Cyto.Identity',
+    status: 'open_source',
     inMainTable: true,
     highlights: {
       zh: ['输出完整标志基因与通路推理链', '零样本发现罕见与疾病特异亚群', 'Cell Ontology 层级一致性校验'],

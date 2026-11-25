@@ -109,10 +109,11 @@ export const TaiyiBarList: React.FC<{
   fullAxis?: [number, number];
   axisMode?: 'zoom' | 'full';
   digits: number;
+  suffix?: string;
   better: 'lower' | 'higher';
   play: boolean;
   compact?: boolean;
-}> = ({ title, entries, zoomAxis, fullAxis = [0, 1], axisMode = 'zoom', digits, better, play, compact = false }) => {
+}> = ({ title, entries, zoomAxis, fullAxis = [0, 1], axisMode = 'zoom', digits, suffix = '', better, play, compact = false }) => {
   const [lo, hi] = axisMode === 'full' ? fullAxis : zoomAxis;
   const rows = [...entries].sort((a, b) => (better === 'lower' ? a.value - b.value : b.value - a.value));
   return (
@@ -165,6 +166,7 @@ export const TaiyiBarList: React.FC<{
                 }`}
               >
                 {e.value.toFixed(digits)}
+                {suffix}
               </span>
             </div>
           );
@@ -435,7 +437,23 @@ export const ScatterPlot: React.FC<{
   yChance?: number;
   idealCorner?: 'top-right' | 'top-left';
   legend?: { label: string; color: string }[];
-}> = ({ points, xLabel, yLabel, xDomain, yDomain, xChance, yChance, idealCorner = 'top-right', legend }) => {
+  tickDigits?: number;
+  valueDigits?: number;
+  suffix?: string;
+}> = ({
+  points,
+  xLabel,
+  yLabel,
+  xDomain,
+  yDomain,
+  xChance,
+  yChance,
+  idealCorner = 'top-right',
+  legend,
+  tickDigits = 2,
+  valueDigits = 4,
+  suffix = '',
+}) => {
   const [hoverId, setHoverId] = useState<string | null>(null);
   const padL = 42;
   const padR = 20;
@@ -460,7 +478,8 @@ export const ScatterPlot: React.FC<{
           <g key={`y-${t}`}>
             <line x1={padL} y1={sy(t)} x2={W - padR} y2={sy(t)} stroke="rgba(6,78,59,0.08)" strokeWidth="1" />
             <text x={padL - 6} y={sy(t) + 3} textAnchor="end" className="fill-slate-400 font-mono text-[9px]">
-              {t.toFixed(2)}
+              {t.toFixed(tickDigits)}
+              {suffix}
             </text>
           </g>
         ))}
@@ -468,7 +487,8 @@ export const ScatterPlot: React.FC<{
           <g key={`x-${t}`}>
             <line x1={sx(t)} y1={padT} x2={sx(t)} y2={H - padB} stroke="rgba(6,78,59,0.08)" strokeWidth="1" />
             <text x={sx(t)} y={H - padB + 13} textAnchor="middle" className="fill-slate-400 font-mono text-[9px]">
-              {t.toFixed(2)}
+              {t.toFixed(tickDigits)}
+              {suffix}
             </text>
           </g>
         ))}
@@ -544,7 +564,9 @@ export const ScatterPlot: React.FC<{
       <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 min-h-[1.25rem]">
         {hovered ? (
           <span className="font-mono text-[#0C261B]">
-            <strong>{hovered.label}</strong>: {hovered.x.toFixed(4)} / {hovered.y.toFixed(4)}
+            <strong>{hovered.label}</strong>: {hovered.x.toFixed(valueDigits)}
+            {suffix} / {hovered.y.toFixed(valueDigits)}
+            {suffix}
           </span>
         ) : legend ? (
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -568,9 +590,10 @@ export const VerticalColumnChart: React.FC<{
   groups: { label: string; bars: { name: string; value: number; ours?: boolean; color?: string }[] }[];
   yDomain: [number, number];
   digits: number;
+  suffix?: string;
   play: boolean;
   refLine?: { value: number; label: string; align?: 'left' | 'right' };
-}> = ({ groups, yDomain, digits, play, refLine }) => {
+}> = ({ groups, yDomain, digits, suffix = '', play, refLine }) => {
   const [lo, hi] = yDomain;
   const pct = (v: number) => Math.max(4, Math.min(100, ((v - lo) / Math.max(0.0001, hi - lo)) * 100));
 
@@ -595,6 +618,7 @@ export const VerticalColumnChart: React.FC<{
                 <div key={b.name} className="flex-1 max-w-[40px] h-full flex flex-col justify-end items-center gap-1">
                   <span className={`font-mono text-[10.5px] tabular-nums ${b.ours ? 'font-bold text-emerald-700' : 'text-slate-500'}`}>
                     {b.value.toFixed(digits)}
+                    {suffix}
                   </span>
                   <div className="w-full h-full flex items-end">
                     <span

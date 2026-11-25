@@ -6,6 +6,9 @@ import {
   COSCI_TRAJECTORY,
   SHOWCASE_MODELS,
   SPATIAL_PARTS,
+  IDENTITY_STAGES,
+  IDENTITY_BENCHMARKS,
+  IDENTITY_CASE_STAGES,
   PERTURBATION_STAGES,
   PERTURBATION_MAIN,
   PERTURBATION_BUILDUP,
@@ -38,6 +41,7 @@ test('hotspots stay inside their figure', () => {
     ...COSCI_COMPONENTS.map((c) => c.hotspot),
     ...COSCI_TRAJECTORY.map((s) => s.hotspot),
     ...SPATIAL_PARTS.map((p) => p.hotspot),
+    ...IDENTITY_STAGES.map((p) => p.hotspot),
     ...PERTURBATION_STAGES.map((p) => p.hotspot),
   ];
   for (const h of all) {
@@ -99,4 +103,20 @@ test('RELAY perturbation benchmarks lead all primary PerturbQA metrics and cover
   assert.equal(PERTURBATION_BUILDUP.length, 7);
   assert.equal(PERTURBATION_OOD.length, 3);
   assert.equal(PERTURBATION_DRUG.length, 5);
+});
+
+test('scVerity identity benchmarks lead every cohort in both accuracy and Macro-F1 and improve across verification stages', () => {
+  assert.equal(IDENTITY_BENCHMARKS.length, 4);
+  for (const cohort of IDENTITY_BENCHMARKS) {
+    const ours = cohort.rows.find((r) => r.paradigm === 'ours');
+    assert.ok(ours, cohort.id);
+    for (const row of cohort.rows) {
+      assert.ok(ours.acc >= row.acc, `${cohort.id} acc vs ${row.method}`);
+      assert.ok(ours.macroF1 >= row.macroF1, `${cohort.id} f1 vs ${row.method}`);
+    }
+  }
+  assert.equal(IDENTITY_CASE_STAGES.length, 3);
+  assert.ok(IDENTITY_CASE_STAGES[1].acc > IDENTITY_CASE_STAGES[0].acc);
+  assert.ok(IDENTITY_CASE_STAGES[2].acc > IDENTITY_CASE_STAGES[1].acc);
+  assert.ok(IDENTITY_CASE_STAGES[2].macroF1Pct > IDENTITY_CASE_STAGES[1].macroF1Pct);
 });

@@ -18,7 +18,7 @@ export interface ShowcaseModel {
 
 export const SHOWCASE_MODELS: ShowcaseModel[] = [
   { id: 'spatial', index: '01', name: 'Cyto.Spatial', release: { zh: 'SUDOKU · 空间基座', en: 'SUDOKU · Spatial' } },
-  { id: 'identity', index: '02', name: 'Cyto.Identity', release: { zh: '未发布', en: 'Unreleased' } },
+  { id: 'identity', index: '02', name: 'Cyto.Identity', release: { zh: 'scVerity · 身份推理', en: 'scVerity · Identity' } },
   { id: 'perturbation', index: '03', name: 'Cyto.Perturbation', release: { zh: 'RELAY · 扰动迁移', en: 'RELAY · Transfer' } },
   { id: 'coscientist', index: '04', name: 'Cyto.CoScientist', release: { zh: '案例展示', en: 'Case showcase' } },
 ];
@@ -871,6 +871,188 @@ export const COSCI_OPENPROBLEMS_TISSUES: { label: BilingualText; count: number; 
   { label: { zh: '肺 (Lung)', en: 'Lung' }, count: 24540, color: '#059669' },
   { label: { zh: '胰腺 (Pancreas)', en: 'Pancreas' }, count: 1937, color: '#0D9488' },
   { label: { zh: '外周血 (PBMC)', en: 'PBMC' }, count: 1087, color: '#34D399' },
+];
+
+// ---------------------------------------------------------------------------
+// Cyto.Identity (scVerity) · Architecture, Benchmark Table 1, and T-Cell Case Study (Table 2 & Fig. 3)
+// Source: Cyto-System/Cyto.Identity README.md & scVerity manuscript
+// ---------------------------------------------------------------------------
+
+export const IDENTITY_FIGURE = {
+  src: '/assets/identity/scverity-fig1.png',
+  width: 3839,
+  height: 1864,
+};
+
+export const IDENTITY_CASE_GIF = {
+  src: '/assets/identity/case-animation.gif',
+  width: 1320,
+  height: 1217,
+};
+
+export const IDENTITY_STAGES: { code: string; title: BilingualText; body: BilingualText; hotspot: Hotspot }[] = [
+  {
+    code: '01',
+    title: { zh: '自适应流形提供器', en: 'Adaptive Manifold Provider' },
+    body: {
+      zh: '融合基因排序、检出支持与基因程序三路编码，借助细胞条件局部度量与多原型匹配保留细粒度亚型边界，为每个细胞输出高召回的候选细胞本体术语。',
+      en: 'Integrates gene-rank, detection-support, and gene-program views with a cell-conditioned local metric and multiple prototypes to propose ranked Cell Ontology candidates per cell.',
+    },
+    hotspot: { x: 26.2, y: 1.2, w: 73.0, h: 33.4 },
+  },
+  {
+    code: '02',
+    title: { zh: '分析智能体与分群报告', en: 'Analyst Agent & Per-Cluster Report' },
+    body: {
+      zh: '独立于上游候选打分构建无标签邻域与分群，汇总簇内候选分布、标志基因表达、功能程序与质控检查，将每条证据明确区分为支持、未决、矛盾与未测得四类。',
+      en: 'Builds label-free populations independently of provider scores and compiles Per-Cluster Reports separating supported, unresolved, contradicted, and unmeasured evidence.',
+    },
+    hotspot: { x: 0.7, y: 36.2, w: 50.6, h: 43.2 },
+  },
+  {
+    code: '03',
+    title: { zh: '评审智能体与知识图谱', en: 'Reviewer Agent & Knowledge Graph' },
+    body: {
+      zh: '结合相关对比簇与细胞本体知识图谱检索竞争解释，按需发起补充检验、局部拆分、合并或回退至上级本体节点；遇到疑难冲突分支时可调用可选专家元评审。',
+      en: 'Combines comparator clusters with Cell Ontology retrieval to inspect missing signals, split or merge clusters, fall back to a supported ancestor, or invoke optional Meta Review.',
+    },
+    hotspot: { x: 52.8, y: 36.2, w: 46.5, h: 43.2 },
+  },
+  {
+    code: '04',
+    title: { zh: '本体锚定的可溯源注释', en: 'Ontology-Linked Final Annotation' },
+    body: {
+      zh: '在满足样本实测支持且解决可观测矛盾的前提下，释放最细粒度的本体身份，并同步记录细胞状态、证据强度、反证与备选解释。',
+      en: 'Releases the finest ontology identity backed by query measurements with resolved contradictions, alongside cell state, evidence strength, counterevidence, and alternatives.',
+    },
+    hotspot: { x: 0.7, y: 86.2, w: 98.6, h: 13.0 },
+  },
+];
+
+export type IdentityParadigm = 'ours' | 'foundation' | 'classifier' | 'agent';
+
+export const IDENTITY_PARADIGM_LABEL: Record<IdentityParadigm, BilingualText> = {
+  ours: { zh: 'scVerity (Cyto)', en: 'scVerity (ours)' },
+  foundation: { zh: '单细胞基础模型', en: 'Foundation model' },
+  classifier: { zh: '参考图谱分类器', en: 'Reference classifier' },
+  agent: { zh: 'LLM 智能体', en: 'LLM agent' },
+};
+
+export interface IdentityBenchmarkRow {
+  method: string;
+  paradigm: IdentityParadigm;
+  acc: number;
+  macroF1: number;
+}
+
+export interface IdentityCohortBenchmark {
+  id: 'mean' | 'small-intestine' | 'pan-cancer-t' | 'nsclc-t';
+  tab: BilingualText;
+  title: BilingualText;
+  cohortMeta: BilingualText;
+  rows: IdentityBenchmarkRow[];
+  note: BilingualText;
+}
+
+/** Table 1: Ontology-compatible Accuracy / Macro-F1 (%) across three disjoint cohorts (577,063 cells). */
+export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
+  {
+    id: 'mean',
+    tab: { zh: '三队列均分', en: 'Dataset-equal mean' },
+    title: { zh: '三队列等权均值（577,063 细胞）', en: 'Dataset-equal mean (577,063 cells)' },
+    cohortMeta: { zh: '3 个独立队列 · 305 位供体', en: '3 disjoint cohorts · 305 donors' },
+    rows: [
+      { method: 'scVerity', paradigm: 'ours', acc: 61.36, macroF1: 49.76 },
+      { method: 'SingleR', paradigm: 'classifier', acc: 46.50, macroF1: 37.93 },
+      { method: 'CASSIA', paradigm: 'agent', acc: 43.64, macroF1: 26.65 },
+      { method: 'CellTypist', paradigm: 'classifier', acc: 41.59, macroF1: 32.46 },
+      { method: 'mLLMCelltype', paradigm: 'agent', acc: 40.49, macroF1: 25.01 },
+      { method: 'SCimilarity', paradigm: 'foundation', acc: 33.55, macroF1: 27.87 },
+    ],
+    note: {
+      zh: '流形提供器仅在 872 万参考细胞上预训练一次且不针对测试集微调；较最强外部基线 SingleR 准确率提升 +14.86 个百分点、Macro-F1 提升 +11.83 个百分点。',
+      en: 'Pretrained once on 8.72M reference cells with zero dataset-specific fine-tuning; gains +14.86 pp accuracy and +11.83 pp Macro-F1 over strongest baseline SingleR.',
+    },
+  },
+  {
+    id: 'small-intestine',
+    tab: { zh: '人小肠', en: 'Small intestine' },
+    title: { zh: '人小肠复杂组织队列', en: 'Human small intestine' },
+    cohortMeta: { zh: '89,849 细胞 · 13 位供体', en: '89,849 cells · 13 donors' },
+    rows: [
+      { method: 'scVerity', paradigm: 'ours', acc: 64.91, macroF1: 69.43 },
+      { method: 'CASSIA', paradigm: 'agent', acc: 61.83, macroF1: 46.80 },
+      { method: 'mLLMCelltype', paradigm: 'agent', acc: 61.27, macroF1: 38.49 },
+      { method: 'CellTypist', paradigm: 'classifier', acc: 60.81, macroF1: 61.90 },
+      { method: 'SCimilarity', paradigm: 'foundation', acc: 56.28, macroF1: 50.69 },
+      { method: 'SingleR', paradigm: 'classifier', acc: 54.78, macroF1: 53.68 },
+    ],
+    note: {
+      zh: '覆盖上皮、免疫与基质多谱系复杂微环境；scVerity 在准确率（64.91%）与宏平均 F1（69.43%）均居首位。',
+      en: 'Spans epithelial, immune, and stromal lineages; scVerity leads both ontology accuracy (64.91%) and Macro-F1 (69.43%).',
+    },
+  },
+  {
+    id: 'pan-cancer-t',
+    tab: { zh: '泛癌 T 细胞', en: 'Pan-cancer T-cell' },
+    title: { zh: '泛癌细粒度 T 细胞队列', en: 'Pan-cancer T-cell atlas' },
+    cohortMeta: { zh: '368,852 细胞 · 256 位供体', en: '368,852 cells · 256 donors' },
+    rows: [
+      { method: 'scVerity', paradigm: 'ours', acc: 52.98, macroF1: 41.67 },
+      { method: 'SingleR', paradigm: 'classifier', acc: 32.29, macroF1: 29.61 },
+      { method: 'CASSIA', paradigm: 'agent', acc: 19.47, macroF1: 11.16 },
+      { method: 'CellTypist', paradigm: 'classifier', acc: 19.22, macroF1: 13.88 },
+      { method: 'mLLMCelltype', paradigm: 'agent', acc: 16.89, macroF1: 12.45 },
+      { method: 'SCimilarity', paradigm: 'foundation', acc: 10.84, macroF1: 15.89 },
+    ],
+    note: {
+      zh: '细粒度 T 细胞分化亚群共享主谱系程序，全局嵌入检索易坍缩（SCimilarity 10.84%）；scVerity 借助局部度量与循证核验达到 52.98% / 41.67%。',
+      en: 'Fine-grained T-cell states share dominant lineage markers that collapse global embedding retrieval (SCimilarity 10.84%); scVerity reaches 52.98% / 41.67%.',
+    },
+  },
+  {
+    id: 'nsclc-t',
+    tab: { zh: 'NSCLC T 细胞', en: 'NSCLC T-cell' },
+    title: { zh: '非小细胞肺癌 T 细胞队列', en: 'NSCLC T-cell cohort' },
+    cohortMeta: { zh: '118,362 细胞 · 36 位供体', en: '118,362 cells · 36 donors' },
+    rows: [
+      { method: 'scVerity', paradigm: 'ours', acc: 66.18, macroF1: 38.17 },
+      { method: 'SingleR', paradigm: 'classifier', acc: 52.43, macroF1: 30.51 },
+      { method: 'CASSIA', paradigm: 'agent', acc: 49.63, macroF1: 22.00 },
+      { method: 'CellTypist', paradigm: 'classifier', acc: 44.75, macroF1: 21.59 },
+      { method: 'mLLMCelltype', paradigm: 'agent', acc: 43.30, macroF1: 24.10 },
+      { method: 'SCimilarity', paradigm: 'foundation', acc: 33.53, macroF1: 17.02 },
+    ],
+    note: {
+      zh: '在非小细胞肺癌肿瘤浸润 T 细胞上领先最强基线 SingleR +13.75 个百分点准确率与 +7.66 个百分点 Macro-F1。',
+      en: 'Outperforms strongest baseline SingleR by +13.75 pp in accuracy and +7.66 pp in Macro-F1 on tumor-infiltrating NSCLC T cells.',
+    },
+  },
+];
+
+/** Table 2: Staged verification on 78,228 human thymic & peripheral blood T cells (13 donors, FACS ground truth). */
+export const IDENTITY_CASE_STAGES: {
+  stage: BilingualText;
+  acc: number;
+  macroF1Pct: number;
+  revised: number;
+  netGain: number;
+}[] = [
+  { stage: { zh: '流形提供器', en: 'Manifold Provider' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
+  { stage: { zh: '智能体评审', en: 'Agent Review' }, acc: 55.85, macroF1Pct: 45.34, revised: 3949, netGain: 2784 },
+  { stage: { zh: '多模态元评审', en: 'Meta Review' }, acc: 56.63, macroF1Pct: 47.61, revised: 611, netGain: 606 },
+];
+
+/** Fig. 3g: Multimodal MAIT cell recall across decision criteria (constant 23 false positives across all three). */
+export const IDENTITY_MAIT_RECALL: {
+  criterion: BilingualText;
+  recall: number;
+  addedTrue: number;
+  falsePositives: number;
+}[] = [
+  { criterion: { zh: '联合标准（TCR + KLRB1 + SLC4A10）', en: 'Joint (TCR + KLRB1 + SLC4A10)' }, recall: 69.09, addedTrue: 0, falsePositives: 23 },
+  { criterion: { zh: '放宽 SLC4A10 转录本要求', en: 'SLC4A10 optional' }, recall: 84.30, addedTrue: 144, falsePositives: 23 },
+  { criterion: { zh: '仅依据配对 TCR 受体序列', en: 'Paired TCR only' }, recall: 91.91, addedTrue: 85, falsePositives: 23 },
 ];
 
 export function pickText(t: BilingualText, lang: Lang): string {

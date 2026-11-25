@@ -26,7 +26,7 @@ test('filterCytoModules filters accurately by tier, availability, and search que
   const available = filterCytoModules(CYTO_MODULES, 'available', '');
   assert.deepEqual(
     available.map((m) => m.name),
-    ['Cyto.Spatial', 'Cyto.Perturbation', 'Cyto.CoScientist']
+    ['Cyto.Spatial', 'Cyto.Identity', 'Cyto.Perturbation', 'Cyto.CoScientist']
   );
 
   const nicheSearch = filterCytoModules(CYTO_MODULES, 'all', 'niche');
