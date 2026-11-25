@@ -1041,7 +1041,7 @@ export function synthesizeCoScientistTrace(input: CustomHypothesisInput): CoScie
       en: `Predicted steady-state conversion under ${gene} (${modeText.en})`,
     },
     significance: {
-      zh: `Cyto.CoScientist 针对「${tissue}」上下文调用 Cyto.Genome 评估 ${gene} 上游顺式可及性，结合 Cyto.Spatial 定位关键互作邻域，并通过 Cyto.Perturbation 完成剂量响应推演与反事实对照实验设计。`,
+      zh: `Cyto.CoScientist 针对“${tissue}”上下文调用 Cyto.Genome 评估 ${gene} 上游顺式可及性，结合 Cyto.Spatial 定位关键互作邻域，并通过 Cyto.Perturbation 完成剂量响应推演与反事实对照实验设计。`,
       en: `Cyto.CoScientist evaluated upstream cis-accessibility of ${gene} via Cyto.Genome, localized interacting micro-niches in "${tissue}" with Cyto.Spatial, and executed dose-response counterfactuals via Cyto.Perturbation.`,
     },
     steps: [
