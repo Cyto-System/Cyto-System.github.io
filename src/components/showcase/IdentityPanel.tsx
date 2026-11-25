@@ -240,8 +240,8 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               meta={cohort.tab[lang]}
               footer={
                 zh
-                  ? '依据细胞本体层级严格判定：同时满足作者全部金标准断言方可计分，严惩跨谱系偏离。'
-                  : 'Evaluated under multi-assertion ontology compatibility, awarding credit for verified specificity while penalizing cross-branch divergence.'
+                  ? '依据细胞本体层级严格判定：要求同时满足金标准的所有本体断言，严惩跨谱系误判。'
+                  : 'Evaluated under multi-assertion ontology compatibility: requires satisfying all ground-truth ontology claims, penalizing cross-lineage divergence.'
               }
             >
               <TaiyiBarList
@@ -267,8 +267,8 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               meta={cohort.tab[lang]}
               footer={
                 zh
-                  ? '各类细胞 F1 的严格非加权平均，全面兼顾多数谱系与稀有亚群，避免样本量不均衡掩盖误判。'
-                  : 'Unweighted mean across all target classes, penalizing sample imbalance to rigorously test rare subtype recognition.'
+                  ? '对全部目标细胞类别进行非加权平均，全面评估多数谱系与罕见亚群的识别能力。'
+                  : 'Unweighted harmonic mean across all target classes, balancing abundant lineages and rare subtypes.'
               }
             >
               <TaiyiBarList
@@ -346,7 +346,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           index="03"
           kicker="STAGED CASE STUDY"
           title={zh ? '78,228 个原代人胸腺与外周血 T 细胞，' : '78,228 primary human thymic and peripheral blood T cells,'}
-          accent={zh ? '逐阶段纠偏分化混淆并高精度找回罕见亚群。' : 'resolving lineage discordance stage by stage to recover rare invariant subsets.'}
+          accent={zh ? '多阶段循证核验与罕见亚群精准召回。' : 'staged verification and precision recovery of rare invariant lineages.'}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
@@ -360,11 +360,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
             <div className="flex-1 bg-white p-3 sm:p-4 flex items-center justify-center">
               <img
                 src={IDENTITY_CASE_GIF.src}
-                alt={
-                  zh
-                    ? '人胸腺与外周血 T 细胞证据审阅、重标注与局部拆分动态演示'
-                    : 'Animated scVerity case study showing evidence review, relabeling, and cluster splitting'
-                }
+                alt={zh ? '人胸腺与外周血 T 细胞证据审阅、再注释与局部细分动态演示' : 'Animated scVerity case study showing evidence review, re-annotation, and localized sub-clustering'}
                 width={IDENTITY_CASE_GIF.width}
                 height={IDENTITY_CASE_GIF.height}
                 loading="lazy"
@@ -373,7 +369,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
             </div>
             <figcaption className="px-4 sm:px-5 py-3 border-t border-emerald-950/[0.06] text-xs text-slate-500 leading-relaxed bg-[#FAFDFB]">
               {zh
-                ? '基于 13 位健康供体胸腺与外周血 T 细胞配对单细胞 RNA 及 TCR-seq 数据，展示 Agent Review 解决 CD4/CD8 谱系混淆并局部细分胸腺 γδ 分支，以及 Meta Review 结合配对 TCR 高精度召回罕见 MAIT 与 iNKT 亚群。'
+                ? '基于 13 位健康供体胸腺与外周血 T 细胞配对单细胞 RNA 及 TCR-seq 数据，展示 Agent Review 纠正 CD4/CD8 谱系混淆并细分胸腺 γδ 分支，以及 Meta Review 结合配对 TCR 高精度召回罕见 MAIT 与 iNKT 亚群。'
                 : 'On paired scRNA-seq and TCR profiles from 13 healthy donors, Agent Review resolves CD4/CD8 conflicts and splits hidden thymic γδ trajectories, while Meta Review recovers rare MAIT and iNKT populations backed by paired TCRs.'}
             </figcaption>
           </figure>
@@ -419,7 +415,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               meta={zh ? '四聚体物理分选对照' : 'Tetramer sorting ground truth'}
               footer={
                 zh
-                  ? '针对单细胞测序中常见的 SLC4A10 基因技术性 Dropout，引入配对 TCR 确证后，MAIT Recall 由 69.09% 跃升至 91.91%，且假阳性严格维持在 23 个细胞不变（经 Scirpy 共享克隆型确证）。'
+                  ? '针对单细胞测序中常见的 SLC4A10 基因技术性 Dropout，引入配对 TCR 确证后，MAIT Recall 从 69.09% 跃升至 91.91%，且假阳性严格恒定在 23 个细胞（经 Scirpy 共享克隆型确证）。'
                   : 'Overcoming SLC4A10 technical dropout via paired TCR sequences raises MAIT Recall from 69.09% to 91.91% while false positives stay strictly fixed at 23 cells.'
               }
             >

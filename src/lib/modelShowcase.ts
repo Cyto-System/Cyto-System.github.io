@@ -877,18 +877,18 @@ export const IDENTITY_CASE_GIF = {
 export const IDENTITY_STAGES: { code: string; title: BilingualText; body: BilingualText; hotspot: Hotspot }[] = [
   {
     code: '01',
-    title: { zh: 'Manifold (候选生成)', en: 'Adaptive Manifold (Candidate Generation)' },
+    title: { zh: 'Manifold 候选生成', en: 'Adaptive Manifold (Candidate Generation)' },
     body: {
-      zh: '利用多视角表达特征与自适应流形度量，捕捉细胞连续状态与细微表型差异，为每个单细胞输出高召回的候选细胞类型。',
-      en: 'Integrates multi-view representations with adaptive manifold metrics to capture continuous cell states and phenotypic differences, proposing high-recall candidate cell types per cell.',
+      zh: '融合多视角表达表征与细胞自适应局部度量，捕捉连续分化轨迹与细微状态差异，为每个单细胞提供高召回的候选类型分布。',
+      en: 'Integrates multi-view representations with adaptive manifold metrics to capture continuous differentiation and state variations, proposing high-recall candidate cell types per cell.',
     },
     hotspot: { x: 26.2, y: 1.2, w: 73.0, h: 33.4 },
   },
   {
     code: '02',
-    title: { zh: 'Analyst Agent (证据分析)', en: 'Analyst Agent (Evidence Profiling)' },
+    title: { zh: 'Analyst Agent 证据分析', en: 'Analyst Agent & Evidence Profiling' },
     body: {
-      zh: '独立对样本构建无监督分群，系统检验标志基因表达、细胞异质性及质控特征，全面提取支持或矛盾的生物学实测证据。',
+      zh: '独立于预测结果构建样本分群，全面检测标志基因、表达程序与质控特征，提取客观的分子实测证据。',
       en: 'Constructs unsupervised cell clusters independently from candidate predictions, systematically profiling marker expression, cell heterogeneity, and quality metrics to compile verifiable biological evidence.',
     },
     hotspot: { x: 0.7, y: 36.2, w: 50.6, h: 43.2 },
@@ -897,17 +897,17 @@ export const IDENTITY_STAGES: { code: string; title: BilingualText; body: Biling
     code: '03',
     title: { zh: 'Reviewer Agent、KG 与 Meta Review', en: 'Reviewer Agent, KG & Meta Review' },
     body: {
-      zh: '结合细胞本体知识图谱 (KG) 对齐先验与对比分群，闭环决策细分、合并或回退；对疑难亚群开展 Meta Review，引入单细胞配对 TCR 等多模态受体序列终审。',
-      en: 'Queries Cell Ontology Knowledge Graph (KG) to evaluate competing hypotheses against comparator clusters, executing closed-loop decisions; invokes Meta Review to resolve challenging lineages using multimodal single-cell paired TCR sequences.',
+      zh: '结合知识图谱 (KG) 与对比亚群评估假设，闭环决策细分、合并或回退；疑难谱系引入单细胞配对 TCR 进行多模态 Meta Review 终审。',
+      en: 'Contextualizes candidate markers against Cell Ontology knowledge and neighbouring populations, executing targeted evidence requests, subpopulation splitting, merging, or ancestor fallback, with Meta Review incorporating multimodal data like paired TCRs for difficult populations.',
     },
     hotspot: { x: 52.8, y: 36.2, w: 46.5, h: 43.2 },
   },
   {
     code: '04',
-    title: { zh: 'Release (确定性注释输出)', en: 'Ontology Release' },
+    title: { zh: 'Release 最终注释输出', en: 'Ontology-Constrained Release' },
     body: {
-      zh: '在具备充分分子实测支持且排除冲突的前提下，确定输出最细粒度的标准细胞本体身份，并同步保留完整的细胞状态与证据溯源链。',
-      en: 'Outputs the finest verified Cell Ontology identity supported by observed molecular evidence without contradictions, maintaining cellular states and fully traceable evidence chains.',
+      zh: '在实测证据充分且无冲突的前提下，输出最具体的标准细胞本体注释，并保留完整的细胞状态与证据溯源链。',
+      en: 'Releases the finest Cell Ontology identity supported by observed molecular evidence without unresolved contradictions, documenting cellular state and traceable evidence chains.',
     },
     hotspot: { x: 0.7, y: 86.2, w: 98.6, h: 13.0 },
   },
