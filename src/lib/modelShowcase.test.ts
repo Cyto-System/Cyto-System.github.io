@@ -36,9 +36,17 @@ test('model hash parsing accepts only known ids', () => {
   assert.equal(modelIdFromHash('#models'), null);
 });
 
+test('CoScientist presents five mechanisms and highlights the optional human reviewer separately', () => {
+  assert.deepEqual(COSCI_COMPONENTS.map((c) => c.id), ['agent', 'search', 'control', 'context', 'skills']);
+  const [agent, , control] = COSCI_COMPONENTS;
+  assert.equal(agent.relatedRegions?.filter((r) => r.optional).length, 1);
+  assert.equal(control.relatedRegions?.length, 2);
+  assert.ok(control.relatedRegions?.every((r) => !r.optional));
+});
+
 test('hotspots stay inside their figure', () => {
   const all = [
-    ...COSCI_COMPONENTS.map((c) => c.hotspot),
+    ...COSCI_COMPONENTS.flatMap((c) => [c.hotspot, ...(c.relatedRegions ?? [])]),
     ...COSCI_TRAJECTORY.map((s) => s.hotspot),
     ...SPATIAL_PARTS.map((p) => p.hotspot),
     ...IDENTITY_STAGES.map((p) => p.hotspot),
