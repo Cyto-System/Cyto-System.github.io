@@ -93,7 +93,11 @@ export const PerturbationPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         lang={lang}
         eyebrow="03 / CYTO.PERTURBATION · RELAY"
         name="Cyto.Perturbation"
-        tagline={zh ? '面向未见扰动判别的稠密响应对比迁移' : 'Dense response-contrast transfer for unseen perturbations'}
+        tagline={
+          zh
+            ? '通过迁移连续响应差异区分未见扰动'
+            : 'Transferring dense response contrasts to distinguish unseen perturbations'
+        }
         description={
           zh
             ? '基于知识进行扰动迁移的轻量级预测模型，进一步拆分全局基态响应与基因特异响应，实现全局准确率与基因特异判别能力的同步提升。'
