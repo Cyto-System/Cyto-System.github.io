@@ -71,7 +71,7 @@ function Architecture({ lang, paused, reduced }: { lang: Lang; paused: boolean; 
   const [ref, visible] = useInView<HTMLDivElement>(false, .2);
   const [picked, setPicked] = useState(false);
   // Use the same shared auto-step + HotspotFigure sliding spotlight as Cyto.Identity.
-  const [stage, setStage] = useAutoStep(4, 4200, visible && !picked && !paused && !reduced);
+  const [stage, setStage] = useAutoStep(4, 3300, visible && !picked && !paused && !reduced);
   const titles = zh ? ['VQ-VAE 细胞状态编码器', '空间坐标感知 Transformer', '表征提取 · t = 0', '状态生成 · t > 0'] : ['VQ-VAE cell-state tokenizer', 'Coordinate-aware Transformer', 'Representation · t = 0', 'Generation · t > 0'];
   const tags = zh ? ['第一阶段 · 表达编码', '第二阶段 · 空间建模', '推理模式 · 表征', '推理模式 · 生成'] : ['Stage 1 · Expression', 'Stage 2 · Spatial context', 'Inference · Representation', 'Inference · Generation'];
   const descriptions = zh ? [
@@ -184,7 +184,7 @@ export const SpatialPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
       <div className="spatial-task-toolbar"><TaskTabs id="spatial-gen" labels={genLabels} value={genTab} onChange={setGenTab} /><button type="button" className="spatial-replay" disabled={reduced} onClick={() => { setReplay(n => n + 1); setPaused(false); }}><RotateCcw size={13} />{zh ? '重播生成动效' : 'Replay generation'}</button></div>
       <div id="spatial-gen-panel" role="tabpanel" aria-labelledby={`spatial-gen-tab-${genTab}`} tabIndex={0} key={genTab} className="spatial-task-panel">
         {genTab === 0 ? <><p className="spatial-task-intro">{zh ? '保留空间坐标，以可见细胞为条件恢复缺失状态；31 张切片，972 道补全题。' : 'Keep coordinates fixed and recover missing states from visible cells: 31 sections and 972 completion questions.'}</p>
-          <div className="spatial-board spatial-board-four" data-task="G1">{completion.map((item, i) => <article key={item.image} className="spatial-card spatial-completion-card" style={{ '--spatial-delay': `${i * .35}s` } as React.CSSProperties}>
+          <div className="spatial-board spatial-board-four" data-task="G1">{completion.map((item, i) => <article key={item.image} className="spatial-card spatial-completion-card" style={{ '--spatial-delay': `${i * .25}s` } as React.CSSProperties}>
             <header><span className="spatial-kicker">MASK 0{i + 1}</span><h4>{zh ? item.zh : item.en}</h4></header>
             <MapImage name={`mask-${item.image}`} context={`mask-${item.image}-context`} alt={`${zh ? item.zh : item.en} · ${zh ? '待补全位置的真实类型' : 'ground-truth types at masked positions'}`} onZoom={onZoom} animation="spatial-completion-reveal" replay={replay} />
             <div className="spatial-flow-label"><span>{zh ? '已知上下文' : 'Context'}</span><ArrowRight size={13} /><span>{zh ? '缺失状态显现' : 'Reveal missing states'}</span></div>
