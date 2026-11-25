@@ -1,567 +1,180 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { motion } from 'motion/react';
+import { ArrowDown, ArrowRight, Maximize2, RotateCcw, X } from 'lucide-react';
 import type { Lang } from '../../lib/cytoDomain';
-import {
-  SPATIAL_GENERATION,
-  SPATIAL_OVERVIEW,
-  SPATIAL_PARTS,
-  SPATIAL_REPRESENTATION,
-  SPATIAL_SPAC,
-  matrixAxis,
-} from '../../lib/modelShowcase';
-import {
-  BenchCard,
-  BenchControlsBar,
-  HeatmapMatrix,
-  RadarChart,
-  ScatterPlot,
-  TaiyiBarList,
-} from './BenchCharts';
-import { EyebrowHeading, HotspotFigure, ModelIntro, prefersReducedMotion, useAutoStep, useInView } from './shared';
+import { EyebrowHeading, ModelIntro, useInView } from './shared';
+import { SpatialBenchmarks } from './SpatialBenchmarks';
+import './spatial.css';
 
-type SpatialBenchMode = 'hesta' | 'dlpfc' | 'mouse' | 'generation' | 'spac';
+const ASSETS = '/assets/spatial/';
+type Task = 'representation' | 'generation';
 
-const GEOMETRY_ROWS_ZH = ['散点', '内部块', '外壳', '多块'];
-const GEOMETRY_ROWS_EN = ['Scatter', 'Inner block', 'Shell', 'Multi-block'];
-const DIFFICULTY_COLS_ZH = ['简单', '中等', '困难'];
-const DIFFICULTY_COLS_EN = ['Easy', 'Medium', 'Hard'];
+// Subscribe locally so changing the OS preference also stops an active walkthrough.
+const motionQuery = '(prefers-reduced-motion: reduce)';
+const subscribeMotion = (notify: () => void) => {
+  const query = window.matchMedia(motionQuery);
+  query.addEventListener('change', notify);
+  return () => query.removeEventListener('change', notify);
+};
+const readMotion = () => window.matchMedia(motionQuery).matches;
+const useReducedMotion = () => useSyncExternalStore(subscribeMotion, readMotion, () => true);
+
+/** Only illustrations are animated. Paper images remain unchanged. */
+function TaskWalkthrough({ lang }: { lang: Lang }) {
+  const zh = lang === 'zh';
+  const reduced = useReducedMotion();
+  const [ref, visible] = useInView<HTMLDivElement>(false, 0.25);
+  const [task, setTask] = useState<Task>('representation');
+  const [step, setStep] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const stages = task === 'representation'
+    ? (zh ? ['读取表达与位置', '结合周围细胞', '识别组织结构', '聚类与跨片检索'] : ['Read expression + position', 'Read the neighborhood', 'Resolve tissue structure', 'Cluster and retrieve'])
+    : (zh ? ['保留已测细胞', '预测缺失状态', '逐轮补全', '得到空间分布'] : ['Keep observed cells', 'Predict missing states', 'Fill iteratively', 'Read spatial patterns']);
+  useEffect(() => {
+    if (!visible || !playing || reduced) return;
+    const timer = window.setInterval(() => setStep(s => {
+      if (s >= 3) return s;
+      return s + 1;
+    }), 1500);
+    return () => window.clearInterval(timer);
+  }, [visible, playing, reduced, task]);
+  useEffect(() => { if (step === 3) setPlaying(false); }, [step]);
+  const change = (next: Task) => { setTask(next); setStep(0); setPlaying(true); };
+  const shown = reduced ? 3 : step;
+  const colors = ['#2f7cc4', '#daaf49', '#dc768c'];
+  return <div ref={ref} className="spatial-demo">
+    <div className="spatial-demo-top">
+      <div className="spatial-choice" aria-label={zh ? '任务演示' : 'Task demonstration'}>
+        {(['representation', 'generation'] as const).map((t, i) => <button key={t} type="button" aria-pressed={task === t} onClick={() => change(t)}>
+          <span>0{i + 1}</span>{t === 'representation' ? (zh ? '表征 · 看懂组织' : 'Represent · understand') : (zh ? '生成 · 补全状态' : 'Generate · complete')}
+        </button>)}
+      </div>
+      <span className="spatial-note">{zh ? '流程示意，不是模型运行结果' : 'Illustration, not a model output'}</span>
+    </div>
+    <div className="spatial-demo-body">
+      <div className="spatial-demo-copy">
+        <span className="spatial-kicker">{task === 'representation' ? 'REPRESENTATION' : 'GENERATION'}</span>
+        <h4>{task === 'representation' ? (zh ? '给一张切片，读出它的结构。' : 'Read the organization of a tissue.') : (zh ? '给周围细胞，补全缺失的状态。' : 'Use neighboring cells to fill missing states.')}</h4>
+        <p>{task === 'representation' ? (zh ? '哪些细胞相似？哪些区域属于同一类邻域？从细胞到组织区域，用同一个模型理解。' : 'Which cells are alike? Which regions share a niche? Use one model across cells and tissue regions.') : (zh ? '保留细胞位置，用周围已测信息逐步补全。预测的是细胞状态，不是新坐标。' : 'Keep cell positions fixed. Complete missing states using observed neighbors, without inventing coordinates.')}</p>
+        <a className="spatial-text-link" href={task === 'representation' ? '#spatial-representation' : '#spatial-generation'}>{zh ? '查看真实结果' : 'Explore the results'} <ArrowDown size={14} /></a>
+      </div>
+      <div className="spatial-demo-map">
+        <svg viewBox="0 0 560 225" role="img" aria-label={zh ? '固定坐标的细胞示意，从输入到空间表征或状态补全' : 'Illustrative cells at fixed positions, from input to representations or completed states'}>
+          <rect x="8" y="8" width="232" height="205" rx="18" fill="#fff" stroke="#d9e7df" />
+          <rect x="320" y="8" width="232" height="205" rx="18" fill="#fff" stroke="#d9e7df" />
+          {[0, 1].map(side => <g key={side} transform={`translate(${side * 312},0)`}>
+            {Array.from({ length: 80 }, (_, i) => {
+              const col = i % 10, row = Math.floor(i / 10);
+              const x = 30 + col * 20 + Math.sin(i * 7) * 3, y = 31 + row * 22 + Math.cos(i * 3) * 3;
+              const group = Math.min(2, Math.floor((row + col * 0.25) / 3.5));
+              const masked = col >= 3 && col <= 6 && row >= 2 && row <= 6;
+              const complete = task === 'representation' ? side === 0 || shown >= 1 : !masked || side === 1 && shown >= 1 + i % 3;
+              const fill = complete ? colors[group] : '#d6dfdb';
+              return <motion.circle key={i} cx={x} cy={y} r={5.3} animate={{ fill, opacity: side === 1 && shown === 0 ? 0.42 : 1 }} transition={{ duration: reduced ? 0 : 0.55, delay: reduced ? 0 : (i % 10) * .025 }} />;
+            })}
+            {task === 'representation' && <motion.rect x="64" y="43" width="92" height="85" rx="28" fill="none" stroke="#007a57" strokeWidth="2" strokeDasharray="5 4" animate={{ opacity: side === 0 || shown >= 2 ? 1 : 0 }} transition={{ duration: reduced ? 0 : .5 }} />}
+          </g>)}
+          <path d="M262 111h34m-7-7 7 7-7 7" fill="none" stroke="#00996e" strokeWidth="2" />
+        </svg>
+        <div className="spatial-demo-labels"><span>{zh ? '输入' : 'Input'}</span><span>{task === 'representation' ? (zh ? '相似细胞与邻域' : 'Related cells and niches') : (zh ? '固定位置，补全状态' : 'Fixed positions, completed states')}</span></div>
+      </div>
+    </div>
+    <div className="spatial-stepbar">
+      {stages.map((s, i) => <button key={s} type="button" aria-pressed={shown === i} onClick={() => { setStep(i); setPlaying(false); }} disabled={!!reduced} className={shown >= i ? 'is-reached' : ''}><span>0{i + 1}</span>{s}</button>)}
+      <button type="button" className="spatial-replay" onClick={() => { setStep(0); setPlaying(true); }} disabled={!!reduced} aria-label={zh ? '重播流程演示' : 'Replay demonstration'}><RotateCcw size={16} /></button>
+    </div>
+  </div>;
+}
+
+function PaperFigure({ name, alt, className = '', onZoom }: { name: string; alt: string; className?: string; onZoom: (name: string, alt: string) => void }) {
+  return <button type="button" className={`spatial-image ${className}`} onClick={() => onZoom(name, alt)} aria-label={`${alt} · Zoom`}>
+    <img src={`${ASSETS}${name}.png`} alt={alt} loading="lazy" decoding="async" />
+    <span className="spatial-zoom" aria-hidden="true"><Maximize2 size={14} /></span>
+  </button>;
+}
 
 export const SpatialPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
   const zh = lang === 'zh';
-  const [archRef, archInView] = useInView<HTMLDivElement>(false, 0.25);
-  const [benchRef, benchInView] = useInView<HTMLDivElement>(true, 0.2);
-  const [userPicked, setUserPicked] = useState(false);
-  const [part, setPart] = useAutoStep(SPATIAL_PARTS.length, 3800, archInView && !userPicked && !prefersReducedMotion());
-
-  const [mode, setMode] = useState<SpatialBenchMode>('hesta');
-  const [axisMode, setAxisMode] = useState<'zoom' | 'full'>('zoom');
-  const [organIdx, setOrganIdx] = useState(0);
-  const [boundaryIdx, setBoundaryIdx] = useState(0);
-  const [mouseColIdx, setMouseColIdx] = useState(5);
-  const [genView, setGenView] = useState<'geometry' | 'tissue'>('geometry');
-  const [geoCell, setGeoCell] = useState<[number, number]>([1, 0]);
-  const [tissueIdx, setTissueIdx] = useState(0);
-  const [play, setPlay] = useState(false);
-  const [replayNonce, setReplayNonce] = useState(0);
-
+  const reduced = useReducedMotion();
+  const [representation, setRepresentation] = useState<'hesta' | 'dlpfc' | 'cluster'>('hesta');
+  const [details, setDetails] = useState(false);
+  const [zoom, setZoom] = useState<{ name: string; alt: string } | null>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const zoomFigure = (name: string, alt: string) => setZoom({ name, alt });
   useEffect(() => {
-    if (!benchInView) return;
-    setPlay(false);
-    const id = window.requestAnimationFrame(() => window.requestAnimationFrame(() => setPlay(true)));
-    return () => window.cancelAnimationFrame(id);
-  }, [benchInView, mode, axisMode, organIdx, boundaryIdx, mouseColIdx, genView, geoCell, tissueIdx, replayNonce]);
+    if (!zoom || !dialog.current) return;
+    const previous = document.activeElement as HTMLElement | null;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    dialog.current.showModal();
+    return () => { document.body.style.overflow = overflow; previous?.focus(); };
+  }, [zoom]);
+  const reveal = { initial: reduced ? false as const : { opacity: 0, y: 18 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: .08 }, transition: { duration: reduced ? 0 : .5 } };
+  return <div className="spatial-story space-y-12 sm:space-y-16">
+    <ModelIntro lang={lang} eyebrow="01 / CYTO.SPATIAL · SUDOKU" name="Cyto.Spatial"
+      tagline={zh ? '看懂组织结构，补全细胞状态。' : 'Understand tissue. Complete cell states.'}
+      description={zh ? '输入基因表达和细胞位置，完成两类任务：用表征识别相似细胞与邻域，用生成补全缺失的细胞状态。适用于人和小鼠空间转录组。' : 'Start with gene expression and cell positions. Representations identify related cells and niches; generation completes missing cell states. Built for human and mouse spatial transcriptomics.'}
+      subnav={[{ href: '#spatial-representation', label: zh ? '表征任务' : 'Representation' }, { href: '#spatial-generation', label: zh ? '生成任务' : 'Generation' }, { href: '#spatial-architecture', label: zh ? '模型原理' : 'How it works' }, { href: '#spatial-benchmark', label: zh ? '完整评测' : 'All benchmarks' }]}
+      githubUrl="https://github.com/Cyto-System/Cyto.Spatial" />
+    <TaskWalkthrough lang={lang} />
 
-  const hesta = SPATIAL_REPRESENTATION[0];
-  const dlpfc = SPATIAL_REPRESENTATION[1];
-  const mouse = SPATIAL_REPRESENTATION[2];
-  const genTissue = SPATIAL_GENERATION[0];
-  const genGeo = SPATIAL_GENERATION[1];
-
-  // Radar series for HESTA 8 organs (SUDOKU vs GeST & QueST)
-  const hestaSudoku = hesta.methods.find((m) => m.name === 'SUDOKU')!.values;
-  const hestaGest = hesta.methods.find((m) => m.name === 'GeST')!.values;
-  const hestaQuest = hesta.methods.find((m) => m.name === 'QueST')!.values;
-
-  // Dumbbell rows from SPATIAL_OVERVIEW
-  const dumbbellRows = SPATIAL_OVERVIEW.map((r) => {
-    const [baseScoreStr, baseName] = r.baseline.split(' · ');
-    return {
-      label: r.task[lang].split(' · ')[0],
-      baseline: Number(baseScoreStr),
-      baselineName: baseName ?? 'Baseline',
-      zeroShot: Number(r.zeroShot),
-      fineTuned: Number(r.fineTuned),
-      zeroShotWins: r.zeroShotWins,
-    };
-  });
-
-  // 4x3 mask geometry heatmap matrices (SUDOKU vs best baseline per cell)
-  const geoSudokuVals = genGeo.methods.find((m) => m.name === 'SUDOKU')!.values;
-  const geoBaselines = genGeo.methods.filter((m) => m.name !== 'SUDOKU');
-  const heatValues: number[][] = [0, 1, 2, 3].map((r) => [0, 1, 2].map((c) => geoSudokuVals[r * 3 + c]));
-  const heatBestBase: number[][] = [0, 1, 2, 3].map((r) =>
-    [0, 1, 2].map((c) => Math.max(...geoBaselines.map((m) => m.values[r * 3 + c])))
-  );
-  const selectedGeoFlatIdx = geoCell[0] * 3 + geoCell[1];
-
-  return (
-    <div className="space-y-14 sm:space-y-16">
-      <ModelIntro
-        lang={lang}
-        eyebrow="01 / CYTO.SPATIAL · SUDOKU"
-        name="Cyto.Spatial"
-        tagline={zh ? '通过生成学习理解组织空间结构' : 'Understanding tissue structure through generative learning'}
-        description={
-          zh
-            ? '将人类与小鼠空间转录组映射到共享直系同源基因空间，通过两级离散量化与 2D-RoPE 去噪 Transformer 联合完成跨切片邻域表征、多尺度聚类与掩码细胞状态补全。'
-            : 'Maps human and mouse spatial transcriptomics into a shared ortholog space, combining two-level quantization and a 2D-RoPE denoising Transformer for cross-slice niche representation, multi-scale clustering, and masked cell-state completion.'
-        }
-        subnav={[
-          { href: '#spatial-architecture', label: zh ? '模型架构' : 'Architecture' },
-          { href: '#spatial-benchmark', label: zh ? '基准评测' : 'Benchmarks' },
-        ]}
-        githubUrl="https://github.com/Cyto-System/Cyto.Spatial"
-      />
-
-      {/* 01 Architecture */}
-      <div ref={archRef} className="pt-12 sm:pt-14 border-t border-emerald-950/[0.08] space-y-8">
-        <EyebrowHeading
-          id="spatial-architecture"
-          index="01"
-          kicker="THE ARCHITECTURE"
-          title={zh ? '一个表达编码器加一个空间主干，' : 'One expression encoder, one spatial backbone;'}
-          accent={zh ? '同一套权重既做表征也做生成。' : 'the same weights embed and generate.'}
-        />
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-          <ol className="lg:col-span-4 space-y-1.5">
-            {SPATIAL_PARTS.map((p, i) => {
-              const active = i === part;
-              return (
-                <li key={i}>
-                  <button
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => {
-                      setUserPicked(true);
-                      setPart(i);
-                    }}
-                    onMouseEnter={() => {
-                      setUserPicked(true);
-                      setPart(i);
-                    }}
-                    className={`relative w-full text-left flex gap-3 px-3.5 py-3 rounded-xl border transition-all duration-200 cursor-pointer ${
-                      active
-                        ? 'bg-white border-emerald-600/35 shadow-[0_6px_18px_-12px_rgba(5,150,105,0.35)]'
-                        : 'bg-transparent border-transparent hover:bg-white/65 hover:border-emerald-950/[0.08]'
-                    }`}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className={`absolute left-0 top-3 bottom-3 w-[3px] rounded-r-full transition-colors ${
-                        active ? 'bg-emerald-600' : 'bg-transparent'
-                      }`}
-                    />
-                    <span className={`font-mono text-xs pt-0.5 tabular-nums ${active ? 'text-emerald-700 font-semibold' : 'text-slate-400'}`}>
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span>
-                      <span className="block text-sm font-semibold text-[#0C261B]">{p.title[lang]}</span>
-                      <span className="block mt-1 text-[13px] text-slate-600 leading-[1.6]">{p.body[lang]}</span>
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-          <div className="lg:col-span-8">
-            <HotspotFigure
-              src="/assets/spatial/sudoku-architecture.png"
-              alt={zh ? 'SUDOKU 模型架构' : 'SUDOKU architecture'}
-              width={2271}
-              height={1138}
-              hotspot={SPATIAL_PARTS[part].hotspot}
-              lang={lang}
-            />
-          </div>
-        </div>
+    <motion.section {...reveal} className="spatial-section" aria-labelledby="spatial-representation">
+      <EyebrowHeading id="spatial-representation" index="01" kicker="REPRESENTATION" title={zh ? '表征：找到相似的细胞和区域。' : 'Representation: find related cells and regions.'} accent={zh ? '跨切片检索，也能读出多尺度结构。' : 'Across sections. Across spatial scales.'} />
+      <p className="spatial-lead">{zh ? '给定一个邻域，在另一张切片寻找相似区域；或者将整张切片按细胞类型、层带与脑区分组。' : 'Query a neighborhood in another section, or group a tissue by cell type, laminar band, and brain region.'}</p>
+      <div className="spatial-choice" aria-label={zh ? '表征任务案例' : 'Representation cases'}>
+        {(['hesta', 'dlpfc', 'cluster'] as const).map((id, i) => <button key={id} type="button" aria-pressed={representation === id} onClick={() => setRepresentation(id)}>{(zh ? ['心脏邻域检索', '皮层交界检索', '多尺度聚类'] : ['Heart niche retrieval', 'Cortical junction retrieval', 'Multi-scale clustering'])[i]}</button>)}
       </div>
-
-      {/* 02 Taiyi-Style Multi-Chart Benchmark Suite */}
-      <div ref={benchRef} className="pt-12 sm:pt-14 border-t border-emerald-950/[0.08] space-y-6">
-        <EyebrowHeading
-          id="spatial-benchmark"
-          index="02"
-          kicker="SPATIAL BENCHMARK"
-          title={zh ? '跨表征与生成的系统基准，' : 'Systematic benchmarks across embedding and generation,'}
-          accent={zh ? '与 9 个空间模型逐维对比。' : 'compared against nine spatial models.'}
-        />
-
-        <div className="pb-1">
-          <BenchControlsBar
-            lang={lang}
-            activeTab={mode}
-            onSelectTab={(id) => setMode(id as SpatialBenchMode)}
-            axisMode={mode === 'spac' ? undefined : axisMode}
-            onAxisMode={mode === 'spac' ? undefined : setAxisMode}
-            onReplay={() => setReplayNonce((n) => n + 1)}
-            tabs={[
-              { id: 'hesta', label: zh ? 'HESTA 检索' : 'HESTA' },
-              { id: 'dlpfc', label: zh ? 'DLPFC 交界' : 'DLPFC' },
-              { id: 'mouse', label: zh ? '小鼠脑聚类' : 'Mouse brain' },
-              { id: 'generation', label: zh ? '掩码生成' : 'Generation' },
-              { id: 'spac', label: 'SPAC-seq' },
-            ]}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-          {/* LEFT COLUMN: 8-Organ Radar Profile (height-balanced with right board) */}
-          <div className="lg:col-span-5 flex flex-col">
-            <BenchCard
-              className="flex-1"
-              title={zh ? 'HESTA 8 器官检索指纹' : 'HESTA 8-organ retrieval radar'}
-              meta={zh ? 'AUPRC · 点击顶点联动' : 'AUPRC · click vertex'}
-              footer={
-                zh
-                  ? '对比 SUDOKU 与排名前二的空间基线 GeST、QueST 在 8 个器官上的跨切片检索 AUPRC。'
-                  : 'Cross-slice retrieval AUPRC across 8 organs comparing SUDOKU with top baselines GeST and QueST.'
-              }
-            >
-              <div className="h-full flex items-center justify-center py-2">
-                <RadarChart
-                  axes={hesta.columns.map((c) => c[lang])}
-                  maxVal={1.0}
-                  activeAxis={mode === 'hesta' ? organIdx : undefined}
-                  onSelectAxis={(idx) => {
-                    setMode('hesta');
-                    setOrganIdx(idx);
-                  }}
-                  series={[
-                    { name: 'SUDOKU', values: hestaSudoku, color: '#059669', fill: true },
-                    { name: 'GeST', values: hestaGest, color: '#0F766E', dashed: true },
-                    { name: 'QueST', values: hestaQuest, color: '#94A3B8', dashed: true },
-                  ]}
-                />
-              </div>
-            </BenchCard>
+      <motion.div key={representation} initial={reduced ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduced ? 0 : .3 }} className="spatial-paper-card">
+        {representation !== 'cluster' ? <>
+          <div className="spatial-result-heading"><div><span className="spatial-kicker">{representation === 'hesta' ? 'HESTA · STEREO-SEQ' : 'DLPFC · VISIUM'}</span><h4>{representation === 'hesta' ? (zh ? '在另一张切片中，找到心脏。' : 'Find the heart in another section.') : (zh ? '识别另一张切片上的 L4/L5 交界。' : 'Locate the L4/L5 junction in another section.')}</h4></div><span className="spatial-badge">{zh ? '论文单例 · 非全队列均值' : 'Paper example · not a cohort average'}</span></div>
+          <div className="spatial-map-grid">
+            {['query', 'reference', 'sudoku', 'cellplm'].map((kind, i) => <figure key={kind} className={kind === 'sudoku' ? 'spatial-highlight' : ''}>
+              <figcaption><span>0{i + 1}</span>{(zh ? ['查询邻域', representation === 'hesta' ? '目标心脏标签' : '目标匹配分数', 'SUDOKU 相似度', 'CellPLM 相似度'] : ['Query niche', representation === 'hesta' ? 'Target heart labels' : 'Target matching score', 'SUDOKU similarity', 'CellPLM similarity'])[i]}</figcaption>
+              <PaperFigure name={`${representation}-${kind}`} alt={`${representation.toUpperCase()} · ${(zh ? ['查询邻域', '目标参考', 'SUDOKU 相似度', 'CellPLM 相似度'] : ['Query niche', 'Target reference', 'SUDOKU similarity', 'CellPLM similarity'])[i]}`} onZoom={zoomFigure} />
+            </figure>)}
           </div>
+          <div className="spatial-result-foot"><p>{zh ? '从左到右：查询、目标参考、两种模型的检索图。相似度图中蓝色越深，匹配程度越高；各模型颜色按自身分位数缩放。' : 'Left to right: query, target reference, and two retrieval maps. Darker blue indicates stronger similarity; each model uses its own percentile color scale.'}</p><div className="spatial-score"><span>{representation === 'hesta' ? 'AUPRC' : 'Pearson r'} <small>{zh ? '单例' : 'example'}</small></span><strong>{representation === 'hesta' ? '0.99' : '0.87'}</strong><span>vs {representation === 'hesta' ? '0.61' : '0.24'}<small>CellPLM</small></span></div></div>
+          <button className="spatial-text-link" type="button" onClick={() => zoomFigure('niche-retrieval', zh ? '邻域检索完整原图' : 'Full niche retrieval figure')}>{zh ? '查看完整原图与评测曲线' : 'View the full figure and evaluation curves'} <Maximize2 size={14} /></button>
+        </> : <>
+          <div className="spatial-result-heading"><div><span className="spatial-kicker">MOUSE BRAIN · MERFISH</span><h4>{zh ? '同一张组织，从三个尺度理解。' : 'One tissue, three levels of organization.'}</h4></div><span className="spatial-badge">{zh ? '参考标签示例，不是预测图' : 'Reference labels, not predictions'}</span></div>
+          <PaperFigure name="multiscale-labels" alt={zh ? '脑区、层带、细胞类型三个层级的参考标签' : 'Reference labels at region, band, and cell-type levels'} className="spatial-label-figure" onZoom={zoomFigure} />
+          <div className="spatial-metric-row">{(zh ? ['脑区', '层带', '细胞类型'] : ['Region', 'Band', 'Cell type']).map((label, i) => <div key={label}><span>{label}</span><strong>{['0.342', '0.493', '0.520'][i]} <small>ARI</small></strong></div>)}</div>
+          <p className="spatial-note">{zh ? '图为一张切片的评测参考标签。分数为 SUDOKU 微调后在 6 张切片上的 ARI 中位数，并非这张图的单例分数。灰色为该层级未定义的细胞。' : 'The figure shows reference labels on one section. Scores are median ARI across six sections after task fine-tuning, not scores for this example. Gray cells are undefined at that level.'}</p>
+        </>}
+      </motion.div>
+    </motion.section>
 
-          {/* RIGHT COLUMN: Task-Specific Interactive Board */}
-          <div className="lg:col-span-7 flex flex-col">
-
-            {mode === 'hesta' && (
-              <BenchCard
-                className="flex-1"
-                title={`${hesta.title[lang]} · ${hesta.columns[organIdx][lang]}`}
-                meta={hesta.metric}
-                footer={hesta.note[lang]}
-              >
-                <div className="space-y-4">
-                  <div className="flex flex-wrap gap-1.5">
-                    {hesta.columns.map((c, i) => (
-                      <button
-                        key={c.en}
-                        type="button"
-                        aria-pressed={i === organIdx}
-                        onClick={() => setOrganIdx(i)}
-                        className={`px-2.5 py-1 text-xs rounded-full border transition-colors cursor-pointer ${
-                          i === organIdx
-                            ? 'border-emerald-600 bg-emerald-50 text-emerald-800 font-semibold'
-                            : 'border-emerald-950/10 text-slate-600 hover:border-emerald-600/40'
-                        }`}
-                      >
-                        {c[lang]}
-                      </button>
-                    ))}
-                  </div>
-                  <TaiyiBarList
-                    entries={hesta.methods.map((m) => ({
-                      label: m.name,
-                      value: m.values[organIdx],
-                      ours: m.name === 'SUDOKU',
-                    }))}
-                    zoomAxis={matrixAxis(hesta.methods.map((m) => m.values[organIdx]))}
-                    fullAxis={[0, 1]}
-                    axisMode={axisMode}
-                    digits={3}
-                    better="higher"
-                    play={play}
-                  />
-                </div>
-              </BenchCard>
-            )}
-
-            {mode === 'dlpfc' && (
-              <BenchCard
-                title={`${dlpfc.title[lang]} · ${dlpfc.columns[boundaryIdx][lang]}`}
-                meta={dlpfc.metric}
-                footer={dlpfc.note[lang]}
-              >
-                <div className="space-y-4">
-                  <div className="flex flex-wrap gap-1.5">
-                    {dlpfc.columns.map((c, i) => (
-                      <button
-                        key={c.en}
-                        type="button"
-                        aria-pressed={i === boundaryIdx}
-                        onClick={() => setBoundaryIdx(i)}
-                        className={`px-2.5 py-1 text-xs rounded-full border transition-colors cursor-pointer ${
-                          i === boundaryIdx
-                            ? 'border-emerald-600 bg-emerald-50 text-emerald-800 font-semibold'
-                            : 'border-emerald-950/10 text-slate-600 hover:border-emerald-600/40'
-                        }`}
-                      >
-                        {c[lang]}
-                      </button>
-                    ))}
-                  </div>
-                  <TaiyiBarList
-                    entries={dlpfc.methods.map((m) => ({
-                      label: m.name,
-                      value: m.values[boundaryIdx],
-                      ours: m.name === 'SUDOKU',
-                    }))}
-                    zoomAxis={matrixAxis(dlpfc.methods.map((m) => m.values[boundaryIdx]))}
-                    fullAxis={[-0.1, 1]}
-                    axisMode={axisMode}
-                    digits={3}
-                    better="higher"
-                    play={play}
-                  />
-                </div>
-              </BenchCard>
-            )}
-
-            {mode === 'mouse' && (
-              <BenchCard
-                title={`${mouse.title[lang]} · ${mouse.columns[mouseColIdx][lang]}`}
-                meta={mouse.metric}
-                footer={mouse.note[lang]}
-              >
-                <div className="space-y-4">
-                  <div className="flex flex-wrap gap-1.5">
-                    {mouse.columns.map((c, i) => (
-                      <button
-                        key={c.en}
-                        type="button"
-                        aria-pressed={i === mouseColIdx}
-                        onClick={() => setMouseColIdx(i)}
-                        className={`px-2.5 py-1 text-xs rounded-full border transition-colors cursor-pointer ${
-                          i === mouseColIdx
-                            ? 'border-emerald-600 bg-emerald-50 text-emerald-800 font-semibold'
-                            : 'border-emerald-950/10 text-slate-600 hover:border-emerald-600/40'
-                        }`}
-                      >
-                        {c[lang]}
-                      </button>
-                    ))}
-                  </div>
-                  <TaiyiBarList
-                    entries={mouse.methods.map((m) => ({
-                      label: m.name,
-                      value: m.values[mouseColIdx],
-                      ours: m.name === 'SUDOKU',
-                    }))}
-                    zoomAxis={matrixAxis(mouse.methods.map((m) => m.values[mouseColIdx]))}
-                    fullAxis={[0, 1]}
-                    axisMode={axisMode}
-                    digits={3}
-                    better="higher"
-                    play={play}
-                  />
-                </div>
-              </BenchCard>
-            )}
-
-            {mode === 'generation' && (
-              <div className="space-y-4">
-                <BenchCard
-                  title={genView === 'geometry' ? genGeo.title[lang] : genTissue.title[lang]}
-                  meta={genView === 'geometry' ? (zh ? '点击格点查看明细 · 相对最佳基线差值' : 'Click cell · Δ vs best baseline') : genTissue.metric}
-                  footer={genView === 'geometry' ? genGeo.note[lang] : genTissue.note[lang]}
-                >
-                  <div className="space-y-4">
-                    <div className="inline-flex p-0.5 rounded-lg bg-[#F2F8F5] border border-emerald-950/[0.06]">
-                      <button
-                        type="button"
-                        aria-pressed={genView === 'geometry'}
-                        onClick={() => setGenView('geometry')}
-                        className={`px-3 py-1 text-xs rounded-md transition-colors cursor-pointer ${
-                          genView === 'geometry' ? 'bg-white text-[#0C261B] font-semibold shadow-2xs' : 'text-slate-500'
-                        }`}
-                      >
-                        {zh ? '遮蔽几何 × 难度热力图' : 'Geometry × difficulty heatmap'}
-                      </button>
-                      <button
-                        type="button"
-                        aria-pressed={genView === 'tissue'}
-                        onClick={() => setGenView('tissue')}
-                        className={`px-3 py-1 text-xs rounded-md transition-colors cursor-pointer ${
-                          genView === 'tissue' ? 'bg-white text-[#0C261B] font-semibold shadow-2xs' : 'text-slate-500'
-                        }`}
-                      >
-                        {zh ? '按 6 个组织组别' : 'By 6 tissue groups'}
-                      </button>
-                    </div>
-
-                    {genView === 'geometry' ? (
-                      <div className="space-y-4">
-                        <HeatmapMatrix
-                          rows={zh ? GEOMETRY_ROWS_ZH : GEOMETRY_ROWS_EN}
-                          cols={zh ? DIFFICULTY_COLS_ZH : DIFFICULTY_COLS_EN}
-                          values={heatValues}
-                          baselines={heatBestBase}
-                          selectedCell={geoCell}
-                          onSelectCell={(r, c) => setGeoCell([r, c])}
-                        />
-                        <div className="pt-3 border-t border-emerald-950/[0.06]">
-                          <TaiyiBarList
-                            title={genGeo.columns[selectedGeoFlatIdx][lang]}
-                            entries={genGeo.methods.map((m) => ({
-                              label: m.name,
-                              value: m.values[selectedGeoFlatIdx],
-                              ours: m.name === 'SUDOKU',
-                            }))}
-                            zoomAxis={matrixAxis(genGeo.methods.map((m) => m.values[selectedGeoFlatIdx]))}
-                            fullAxis={[0, 0.7]}
-                            axisMode={axisMode}
-                            digits={3}
-                            better="higher"
-                            play={play}
-                          />
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="flex flex-wrap gap-1.5">
-                          {genTissue.columns.map((c, i) => (
-                            <button
-                              key={c.en}
-                              type="button"
-                              aria-pressed={i === tissueIdx}
-                              onClick={() => setTissueIdx(i)}
-                              className={`px-2.5 py-1 text-xs rounded-full border transition-colors cursor-pointer ${
-                                i === tissueIdx
-                                  ? 'border-emerald-600 bg-emerald-50 text-emerald-800 font-semibold'
-                                  : 'border-emerald-950/10 text-slate-600 hover:border-emerald-600/40'
-                              }`}
-                            >
-                              {c[lang]}
-                            </button>
-                          ))}
-                        </div>
-                        <TaiyiBarList
-                          entries={genTissue.methods.map((m) => ({
-                            label: m.name,
-                            value: m.values[tissueIdx],
-                            ours: m.name === 'SUDOKU',
-                          }))}
-                          zoomAxis={matrixAxis(genTissue.methods.map((m) => m.values[tissueIdx]))}
-                          fullAxis={[0, 0.7]}
-                          axisMode={axisMode}
-                          digits={3}
-                          better="higher"
-                          play={play}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </BenchCard>
-              </div>
-            )}
-
-            {mode === 'spac' && (
-              <BenchCard
-                className="flex-1"
-                title={zh ? 'SPAC-seq 免疫募集 · 相关性与排名误差权衡' : 'SPAC-seq immune recruitment · correlation vs rank error'}
-                meta={zh ? '左上更优 · 3 张切片平均' : 'Top-left is better · mean of 3 slices'}
-              >
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
-                  <div className="md:col-span-7">
-                    <ScatterPlot
-                      xLabel={zh ? '排名误差 ↓ (越低越好)' : 'Rank error ↓'}
-                      yLabel="Spearman ↑"
-                      xDomain={[0.08, 0.32]}
-                      yDomain={[0, 0.9]}
-                      idealCorner="top-left"
-                      points={SPATIAL_SPAC.map((r) => ({
-                        id: r.method,
-                        label: zh ? r.method.split(' / ')[0] : r.method.split(' / ').pop()!,
-                        x: Number(r.rankErr),
-                        y: Number(r.spearman),
-                        color: r.ours ? '#059669' : '#64748B',
-                        ours: r.ours,
-                        dx: r.ours ? 10 : -8,
-                        dy: r.ours ? 4 : -6,
-                      }))}
-                    />
-                  </div>
-                  <div className="md:col-span-5 space-y-2.5">
-                    {SPATIAL_SPAC.map((r) => (
-                      <div
-                        key={r.method}
-                        className={`rounded-xl border px-3.5 py-2.5 flex items-center justify-between gap-2 text-xs ${
-                          r.ours
-                            ? 'bg-emerald-50/85 border-emerald-600/30 text-emerald-900 font-semibold'
-                            : 'bg-[#F8FCFA] border-emerald-950/[0.07] text-slate-600'
-                        }`}
-                      >
-                        <span className="truncate">{zh ? r.method.split(' / ')[0] : r.method.split(' / ').pop()}</span>
-                        <span className="font-mono tabular-nums shrink-0">
-                          r {r.spearman} · err {r.rankErr}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </BenchCard>
-            )}
-          </div>
-        </div>
-
-        {/* Compact 4-column horizontal strip: Zero-shot vs Fine-tuned across all 4 suites */}
-        <div className="rounded-2xl border border-emerald-950/[0.09] bg-white shadow-[0_1px_2px_rgba(6,78,59,0.04)] p-4 sm:p-5 space-y-3.5">
-          <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-emerald-950/[0.06]">
-            <span className="text-[13.5px] sm:text-sm font-semibold text-[#0C261B]">
-              {zh ? '零样本与微调对照 · 4 项主基准' : 'Zero-shot vs fine-tuned · 4 primary suites'}
-            </span>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500">
-              <span className="inline-flex items-center gap-1.5">
-                <span className="w-2.5 h-2 rounded-xs bg-slate-300 inline-block" />
-                {zh ? '最佳零样本基线' : 'Best zero-shot baseline'}
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="w-2.5 h-2 rounded-xs bg-emerald-400/80 inline-block" />
-                {zh ? 'SUDOKU 零样本' : 'SUDOKU zero-shot'}
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="w-2.5 h-2 rounded-xs bg-emerald-700 inline-block" />
-                {zh ? 'SUDOKU 微调' : 'SUDOKU fine-tuned'}
-              </span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-            {dumbbellRows.map((r) => {
-              const scale = Math.max(r.baseline, r.zeroShot, r.fineTuned, 0.5) * 1.08;
-              const items = [
-                { label: r.baselineName, val: r.baseline, barClass: 'bg-slate-300/90', textClass: 'text-slate-500' },
-                {
-                  label: zh ? '零样本' : 'Zero-shot',
-                  val: r.zeroShot,
-                  barClass: 'bg-emerald-400',
-                  textClass: r.zeroShotWins ? 'text-emerald-700 font-semibold' : 'text-slate-600',
-                },
-                { label: zh ? '微调' : 'Fine-tuned', val: r.fineTuned, barClass: 'bg-emerald-700', textClass: 'text-[#0C261B] font-bold' },
-              ];
-              return (
-                <div
-                  key={r.label}
-                  className="rounded-xl border border-emerald-950/[0.07] bg-[#F8FCFA] px-3.5 py-3 space-y-2.5"
-                >
-                  <div className="text-xs font-semibold text-[#0C261B] truncate">{r.label}</div>
-                  <div className="space-y-1.5">
-                    {items.map((it) => (
-                      <div key={it.label} className="grid grid-cols-[64px_1fr_38px] items-center gap-2 text-[11px]">
-                        <span className="text-slate-500 truncate">{it.label}</span>
-                        <span className="h-1.5 rounded-full bg-emerald-950/[0.07] overflow-hidden">
-                          <span
-                            className={`block h-full rounded-full ${it.barClass}`}
-                            style={{
-                              width: play ? `${Math.max(6, (it.val / scale) * 100)}%` : '0%',
-                              transition: 'width 700ms cubic-bezier(0.22, 1, 0.36, 1)',
-                            }}
-                          />
-                        </span>
-                        <span className={`font-mono tabular-nums text-right ${it.textClass}`}>{it.val.toFixed(3)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+    <motion.section {...reveal} className="spatial-section" aria-labelledby="spatial-generation">
+      <EyebrowHeading id="spatial-generation" index="02" kicker="GENERATION" title={zh ? '生成：从已知邻域，补全缺失状态。' : 'Generation: complete states from known neighbors.'} accent={zh ? '位置不变，预测细胞如何分布。' : 'Keep positions fixed. Predict the cellular pattern.'} />
+      <p className="spatial-lead">{zh ? '隐藏部分细胞的表达，保留它们的位置。模型读取周围可见细胞，再逐轮填入缺失的状态。' : 'Hide some expression profiles while keeping their positions. Read the visible neighbors, then fill missing states iteratively.'}</p>
+      <div className="spatial-paper-card">
+        <div className="spatial-result-heading"><div><span className="spatial-kicker">SPATIAL COMPLETION</span><h4>{zh ? '四种缺失形态，同一个补全任务。' : 'Four missing geometries, one completion task.'}</h4></div><span className="spatial-badge">{zh ? '评测题目示例' : 'Benchmark inputs'}</span></div>
+        <div className="spatial-map-grid spatial-mask-grid">{['scattered', 'block', 'shell', 'multiple'].map((name, i) => <figure key={name}><figcaption>{(zh ? ['散点缺失', '内部块状', '外围环带', '多块缺失'] : ['Scattered', 'Interior block', 'Shell', 'Multiple blocks'])[i]}</figcaption><PaperFigure name={`mask-${name}`} alt={`${zh ? '掩码题目' : 'Mask example'}: ${name}`} onZoom={zoomFigure} /></figure>)}</div>
+        <div className="spatial-result-foot"><p>{zh ? '灰点是提供给模型的可见细胞；彩点是待补全位置的真实类型，不是模型预测。图示遮蔽比例为 40%。' : 'Gray cells are visible inputs. Colored cells show true types at masked positions, not model predictions. Examples use 40% masking.'}</p><div className="spatial-score"><span>{zh ? '类型准确率' : 'Type accuracy'}<small>{zh ? '微调后' : 'fine-tuned'}</small></span><strong>0.401</strong></div></div>
+        <div className="spatial-inline-facts"><span>{zh ? '31 张切片' : '31 sections'}</span><span>{zh ? '972 道题' : '972 questions'}</span><span>{zh ? '人脑 · 小鼠脑 · 小鼠肾' : 'Human brain · mouse brain · mouse kidney'}</span><button type="button" className="spatial-text-link" onClick={() => zoomFigure('generation-questions', zh ? '生成评测题目完整图' : 'Full generation benchmark inputs')}>{zh ? '查看全部示例' : 'All examples'} <ArrowRight size={14} /></button></div>
       </div>
-    </div>
-  );
+      <div className="spatial-paper-card">
+        <div className="spatial-result-heading"><div><span className="spatial-kicker">SPAC-SEQ · CD274 (PD-L1)</span><h4>{zh ? '生成肿瘤克隆周围的细胞分布。' : 'Generate the cells surrounding a tumor clone.'}</h4></div><span className="spatial-badge">{zh ? '论文生成结果' : 'Generation result from the paper'}</span></div>
+        <p className="spatial-lead">{zh ? '给定实测肿瘤克隆，补全周围 50 μm 环带，再估计免疫细胞占比。下面是一个 Cd274 敲除克隆的实测与预测对照。' : 'Condition on a measured tumor clone, complete its 50 μm surrounding band, and estimate the immune fraction. Below is a measured-versus-generated Cd274-knockout example.'}</p>
+        <div className="spatial-map-grid spatial-generation-grid">{['reference', 'sudoku', 'gest'].map((name, i) => <figure key={name} className={name === 'sudoku' ? 'spatial-highlight' : ''}><figcaption>{i === 0 ? (zh ? '实测' : 'Measured') : i === 1 ? 'SUDOKU' : 'GeST'}<strong>{['65%', '63%', '10%'][i]}</strong></figcaption><PaperFigure name={`spac-${name}`} alt={`${name}: ${['65%', '63%', '10%'][i]} ${zh ? '免疫细胞占比' : 'immune fraction'}`} onZoom={zoomFigure} /></figure>)}</div>
+        <div className="spatial-legend">{(zh ? ['免疫细胞', '肿瘤细胞', '其他细胞', '肿瘤克隆'] : ['Immune', 'Tumor', 'Other cells', 'Tumor clone']).map((label, i) => <span key={label}><i style={{ background: ['#2f7cc4', '#ed3b48', '#3ba64b', '#ffd7d8'][i] }} />{label}</span>)}</div>
+        <div className="spatial-result-foot"><p>{zh ? '这是一例空间分布对照，不代表全队列。全队列包含 3 张切片、125 个克隆，SUDOKU 的平均 Spearman ρ 为 0.77。克隆条件生成是论文实验，当前推理包不含该工作流。' : 'This spatial comparison is one example, not the full cohort. Across three sections and 125 clones, SUDOKU achieves mean Spearman ρ = 0.77. Clone-conditioned generation is a paper experiment, not a workflow included in the inference package.'}</p><button type="button" className="spatial-text-link" onClick={() => zoomFigure('spac-generation', zh ? 'SPAC-seq 完整评测图' : 'Full SPAC-seq evaluation')}>{zh ? '查看完整原图' : 'Full figure'} <Maximize2 size={14} /></button></div>
+      </div>
+    </motion.section>
+
+    <motion.section {...reveal} className="spatial-section" aria-labelledby="spatial-architecture">
+      <EyebrowHeading id="spatial-architecture" index="03" kicker="HOW IT WORKS" title={zh ? '先读懂细胞，再联系它的邻居。' : 'Encode a cell, then read its neighborhood.'} accent={zh ? '同一个空间主干，两种用法。' : 'One spatial backbone, two ways to use it.'} />
+      <div className="spatial-process">{(zh ? [['输入', '基因表达 + 细胞位置'], ['空间模型', '结合周围细胞理解当前细胞'], ['两种输出', '读取表征，或补全状态']] : [['Input', 'Expression + cell positions'], ['Spatial model', 'Interpret a cell in its neighborhood'], ['Two outputs', 'Read embeddings or complete states']]).map(([title, body], i) => <div key={title}><span>0{i + 1}</span><h4>{title}</h4><p>{body}</p></div>)}</div>
+      <details className="spatial-details"><summary>{zh ? '展开模型架构图与技术说明' : 'Explore the architecture and technical details'}</summary><div className="spatial-details-body"><PaperFigure name="sudoku-architecture" alt={zh ? 'SUDOKU 模型架构' : 'SUDOKU architecture'} onZoom={zoomFigure} /><p className="spatial-note">{zh ? '表达编码器将细胞表达压缩为向量和两级离散编码；空间 Transformer 结合二维坐标，读取上下文或预测缺失编码。图中的随机掩码、重构解码器和损失函数描述预训练，当前代码只发布推理与评测。' : 'The encoder maps expression to vectors and two-level codes. A spatial Transformer incorporates 2D coordinates to read context or predict missing codes. Random masking, the reconstruction decoder, and losses describe pretraining; the released code supports inference and evaluation only.'}</p></div></details>
+    </motion.section>
+
+    <section id="spatial-benchmark" className="spatial-section spatial-benchmark-details">
+      <div className="spatial-result-heading"><div><span className="spatial-kicker">BENCHMARK DETAILS</span><h4>{zh ? '想看更多？展开完整对比。' : 'Go deeper with the full comparisons.'}</h4></div></div>
+      <p className="spatial-note">{zh ? '以上图与分数均来自论文，不是本网页实时运行结果。保留零样本与微调的区别：生成任务零样本准确率为 0.355，低于距离加权 300-NN 的 0.385；微调后为 0.401。任务微调权重与完整评测数据不包含在发布包中。' : 'Figures and scores come from the manuscript, not live inference on this page. Zero-shot generation accuracy is 0.355, below distance-weighted 300-NN at 0.385; fine-tuning reaches 0.401. Task-fine-tuned weights and complete evaluation inputs are not included in the release.'}</p>
+      <details className="spatial-details" onToggle={e => setDetails(e.currentTarget.open)}><summary>{zh ? '完整模型对比 · 零样本与微调 · 分任务结果' : 'All models · zero-shot vs fine-tuned · task-level scores'}</summary>{details && <div className="spatial-details-body"><SpatialBenchmarks lang={lang} /></div>}</details>
+    </section>
+    {zoom && <dialog ref={dialog} className="spatial-lightbox" onCancel={() => setZoom(null)} onClick={e => { if (e.target === e.currentTarget) setZoom(null); }} aria-label={zoom.alt}>
+      <div><header><span>{zoom.alt}</span><button type="button" onClick={() => setZoom(null)} aria-label={zh ? '关闭图片' : 'Close image'}><X size={22} /></button></header><img src={`${ASSETS}${zoom.name}.png`} alt={zoom.alt} /><a href={`${ASSETS}${zoom.name}.png`} target="_blank" rel="noreferrer">{zh ? '在新标签页查看原图' : 'Open the full-resolution image'}</a></div>
+    </dialog>}
+  </div>;
 };
