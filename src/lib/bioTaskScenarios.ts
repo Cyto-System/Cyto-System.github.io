@@ -127,10 +127,10 @@ export const CYTO_TASK_SCENARIOS: BioTaskScenario[] = [
           en: 'Evidence-Grounded Identity',
         },
         roleDetail: {
-          zh: 'scVerity 解耦候选流形与样本内循证核验，三队列均分领先最强基线 +14.86 pp 并精准找回罕见亚群',
+          zh: 'scVerity 解耦候选流形生成与样本内分子表达核验，三队列 ACC 均值领先最强外部基线 +14.86 个百分点并高精度找回罕见 T 细胞亚群',
           en: 'scVerity decouples manifold candidates from sample-grounded verification (+14.86 pp over best baseline)',
         },
-        readoutMetric: 'scVerity · Ontology Acc',
+        readoutMetric: 'scVerity · Ontology ACC',
         accentColorCss: '#059669',
         accentHex: 0x059669,
         windowZone: 'bottom-center',

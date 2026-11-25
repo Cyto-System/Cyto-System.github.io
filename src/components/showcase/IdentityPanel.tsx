@@ -110,7 +110,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         lang={lang}
         eyebrow="02 / CYTO.IDENTITY · SCVERITY"
         name="Cyto.Identity"
-        tagline={zh ? '面向开放世界单细胞注释的循证推理' : 'Sample-grounded, multi-modal T-cell identity verification'}
+        tagline={zh ? '单细胞身份假设生成与样本生物学实测核验' : 'Sample-grounded, multi-modal T-cell identity verification'}
         description={
           zh
             ? '将细胞级候选假设生成与样本内生物学证据验证解耦。自适应流形提供器保留相近亚型的竞争假设，分析与评审智能体结合细胞本体知识图谱与局部分群实测证据逐层核验，输出可溯源的细胞身份与状态。'
@@ -119,7 +119,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         subnav={[
           { href: '#identity-architecture', label: zh ? '模型架构' : 'Architecture' },
           { href: '#identity-benchmark', label: zh ? '基准评测' : 'Benchmarks' },
-          { href: '#identity-case', label: zh ? '阶段验证案例' : 'Case study' },
+          { href: '#identity-case', label: zh ? 'T 细胞分期案例' : 'Case study' },
         ]}
         githubUrl="https://github.com/Cyto-System/Cyto.Identity"
       />
@@ -212,7 +212,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           <div className="lg:col-span-5 flex flex-col">
             <BenchCard
               className="flex-1"
-              title={zh ? 'Ontology ACC vs Macro-F1' : 'Ontology accuracy vs Macro-F1 frontier'}
+              title={zh ? 'Ontology ACC vs Macro-F1 分布前沿' : 'Ontology ACC vs Macro-F1 frontier'}
               meta={cohort.cohortMeta[lang]}
               footer={cohort.note[lang]}
             >
@@ -236,7 +236,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           {/* RIGHT: Side-by-side Accuracy & Macro-F1 Leaderboards */}
           <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-5">
             <BenchCard
-              title={zh ? 'Ontology ACC' : 'Ontology-compatible accuracy'}
+              title="Ontology ACC"
               meta={cohort.tab[lang]}
               footer={
                 zh
@@ -267,7 +267,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               meta={cohort.tab[lang]}
               footer={
                 zh
-                  ? '对全部评估目标细胞类别等权计算，重点检验罕见亚型与细粒度分化状态的召回能力。'
+                  ? '对全部目标细胞类别等权平均，重点检验罕见亚型与细粒度分化状态的识别精度。'
                   : 'Unweighted harmonic mean across all target classes, highlighting fine-grained and rare subtype recall.'
               }
             >
@@ -373,18 +373,18 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
             </div>
             <figcaption className="px-4 sm:px-5 py-3 border-t border-emerald-950/[0.06] text-xs text-slate-500 leading-relaxed bg-[#FAFDFB]">
               {zh
-                ? '基于 Loh et al. (2024) 13 位健康供体胸腺与外周血 T 细胞配对单细胞 RNA 及 TCR 数据，展示智能体评审解决 CD4/CD8 谱系混淆、局部拆分胸腺 γδ 分支，并经配对 TCR 复核找回罕见 MAIT 与 iNKT 亚群。'
-                : 'On Loh et al. (2024) paired scRNA-seq and TCR profiles from 13 healthy donors, Agent Review resolves CD4/CD8 conflicts and splits hidden thymic γδ sub-branches, while Meta Review recovers rare MAIT and iNKT populations confirmed by paired TCRs.'}
+                ? '基于 13 位健康供体胸腺与外周血 T 细胞配对单细胞 RNA 及 TCR-seq 数据，展示 Agent Review 解决 CD4/CD8 谱系混淆并局部拆分胸腺 γδ 分支，以及 Meta Review 结合配对 TCR 高精度召回罕见 MAIT 与 iNKT 亚群。'
+                : 'On paired scRNA-seq and TCR profiles from 13 healthy donors, Agent Review resolves CD4/CD8 conflicts and splits hidden thymic γδ trajectories, while Meta Review recovers rare MAIT and iNKT populations backed by paired TCRs.'}
             </figcaption>
           </figure>
 
           <div className="lg:col-span-5 flex flex-col gap-5">
             <BenchCard
               title={zh ? '三阶段 FACS 分选真值演进' : 'Staged verification against FACS ground truth'}
-              meta={zh ? '5 大 T 细胞谱系' : '5 T-cell lineages'}
+              meta={zh ? '5 大 T 细胞主谱系' : '5 major T-cell lineages'}
               footer={
                 zh
-                  ? 'Agent Review 修订 3,949 个细胞并净增 +2,784 正确注释；Meta Review 进一步修订 611 个罕见细胞并净增 +606 正确注释。'
+                  ? 'Agent Review 修订 3,949 个细胞并净增 +2,784 正确标注；Meta Review 进一步修订 611 个细胞并净增 +606 正确标注。'
                   : 'Agent Review revises 3,949 cells (+2,784 net correct); Meta Review revises 611 rare cells (+606 net correct).'
               }
             >
@@ -392,7 +392,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
                 groups={IDENTITY_CASE_STAGES.map((s) => ({
                   label: s.stage[lang],
                   bars: [
-                    { name: zh ? 'ACC' : 'Acc', value: s.acc, ours: true },
+                    { name: 'ACC', value: s.acc, ours: true },
                     { name: 'Macro-F1', value: s.macroF1Pct, color: '#0D9488' },
                   ],
                 }))}
@@ -404,7 +404,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               <div className="mt-3 flex items-center justify-center gap-5 text-[11px] text-slate-600">
                 <span className="inline-flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-xs bg-emerald-600" aria-hidden="true" />
-                  <span className="font-semibold text-emerald-800">{zh ? 'ACC (%)' : 'Accuracy (%)'}</span>
+                  <span className="font-semibold text-emerald-800">ACC (%)</span>
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-xs bg-teal-600" aria-hidden="true" />
@@ -419,7 +419,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               meta={zh ? '四聚体物理分选对照' : 'Tetramer sorting ground truth'}
               footer={
                 zh
-                  ? '放宽转录本丢失导致的 SLC4A10 门槛后，MAIT Recall由 69.09% 升至 91.91%，而假阳性始终维持 23 个细胞不变。'
+                  ? '放宽因技术性基因丢失受阻的 SLC4A10 表达限制后，MAIT Recall 由 69.09% 升至 91.91%，而假阳性始终恒定为 23 个细胞。'
                   : 'Relaxing RNA dropout constraints via paired TCR raises MAIT recall from 69.09% to 91.91% while false positives stay fixed at 23 cells.'
               }
             >

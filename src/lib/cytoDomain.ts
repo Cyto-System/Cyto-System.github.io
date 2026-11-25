@@ -275,7 +275,7 @@ export const CYTO_MODULES: CytoModule[] = [
       en: 'Input: Single-cell profile & tissue context → Output: Hierarchical cell identity + explicit molecular reasoning chain',
     },
     summary: {
-      zh: 'scVerity 将细胞级候选假设生成与样本内生物学证据验证解耦，依托自适应流形提供器、分析/评审双智能体与细胞本体知识图谱，实现开放世界细粒度单细胞注释与罕见亚群验证。',
+      zh: 'scVerity 将单细胞候选假设生成与样本内生物学证据核验解耦，结合 Adaptive Manifold Provider、Analyst 与 Reviewer 双智能体及 Cell Ontology 知识图谱，实现细粒度单细胞身份注释与多模态罕见亚群核验。',
       en: 'scVerity decouples per-cell candidate generation from sample-grounded biological verification via an Adaptive Manifold Provider, Analyst/Reviewer agents, and Cell Ontology knowledge graph for open-world annotation.',
     },
     reportLabel: 'arXiv',
@@ -663,7 +663,7 @@ export const CYTO_BENCHMARK_SUITES: BenchmarkSuite[] = [
   },
   {
     id: 'identity-reasoning',
-    tabLabel: { zh: '可推理细胞鉴定 (Identity)', en: 'Reasoning Cell Identity' },
+    tabLabel: { zh: '细胞身份与亚型核验 (Identity)', en: 'Cell Identity Verification' },
     metricName: {
       zh: '跨器官零样本罕见亚群鉴定 Macro-F1 (含证据链一致性)',
       en: 'Cross-organ zero-shot rare cell subtype Macro-F1',
