@@ -63,14 +63,14 @@ export interface Hotspot {
 // gist = what the component contains; detail = what it is for. They must not overlap.
 // ---------------------------------------------------------------------------
 
-export type CoSciRegion = Hotspot & { optional?: boolean };
+export type CoSciRegion = Hotspot & { optional?: boolean; secondary?: boolean; outline?: string };
 
 export interface CoSciComponent {
   id: string;
   name: BilingualText;
   gist: BilingualText;
   detail: BilingualText;
-  hotspot: Hotspot;
+  hotspot: CoSciRegion;
   relatedRegions?: CoSciRegion[];
   roles?: { name: BilingualText; responsibility: BilingualText }[];
 }
@@ -125,11 +125,11 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
       zh: '缺少必要输入或前置评审时，行动暂不执行。分层评审（R0–R4）判断结果能支持哪些结论；完成判定则检查证据和已评审的研究产出是否覆盖研究目标。',
       en: 'An action waits if required inputs or reviews are missing. Layered review (R0–R4) determines what each result supports; the completion check asks whether the evidence and reviewed deliverables address the research objectives.',
     },
-    hotspot: { x: 50.9, y: 36.6, w: 31.2, h: 31.6 },
-    relatedRegions: [
-      { x: 18.2, y: 29.8, w: 30.3, h: 4.7 },
-      { x: 51.5, y: 29.8, w: 30.4, h: 4.7 },
-    ],
+    // One L-shaped outline follows the two gates and the review panel in Fig. 1a.
+    hotspot: {
+      x: 17.9, y: 29.5, w: 64.4, h: 38.6,
+      outline: 'M17.9 29.5 H82.3 V68.1 H51.2 V35 H17.9 Z',
+    },
   },
   {
     id: 'context',
@@ -139,7 +139,9 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
       zh: '研究时间线记录哪些判断已修正、哪些问题尚待解决。分层记忆将研究层面的综合判断（L3）连接到各次尝试的发现与经验（L2），再追溯到数据、代码和评审记录（L1）。',
       en: 'A revisable timeline tracks changes in interpretation and unresolved questions. Hierarchical memory links the study synthesis (L3) to findings from individual attempts (L2) and to primary records such as data, code, and reviews (L1).',
     },
-    hotspot: { x: 30.8, y: 72.6, w: 44.6, h: 26.6 },
+    hotspot: { x: 30.9, y: 72.8, w: 44.4, h: 26.3 },
+    // Only the “subagents in isolated contexts” label within Research activities.
+    relatedRegions: [{ x: 23.7, y: 49.95, w: 16.9, h: 2.45, secondary: true }],
   },
   {
     id: 'skills',

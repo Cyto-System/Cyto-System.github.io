@@ -38,10 +38,11 @@ test('model hash parsing accepts only known ids', () => {
 
 test('CoScientist presents five mechanisms and highlights the optional human reviewer separately', () => {
   assert.deepEqual(COSCI_COMPONENTS.map((c) => c.id), ['agent', 'search', 'control', 'context', 'skills']);
-  const [agent, , control] = COSCI_COMPONENTS;
+  const [agent, , control, context] = COSCI_COMPONENTS;
   assert.equal(agent.relatedRegions?.filter((r) => r.optional).length, 1);
-  assert.equal(control.relatedRegions?.length, 2);
-  assert.ok(control.relatedRegions?.every((r) => !r.optional));
+  assert.ok(control.hotspot.outline);
+  assert.equal(control.relatedRegions?.length ?? 0, 0);
+  assert.equal(context.relatedRegions?.filter((r) => r.secondary).length, 1);
 });
 
 test('hotspots stay inside their figure', () => {

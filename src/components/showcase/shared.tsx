@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, FileText, Github, Maximize2, X } from 'lucide-react';
 import type { Lang } from '../../lib/cytoDomain';
-import type { CoSciRegion, Hotspot } from '../../lib/modelShowcase';
+import type { CoSciRegion } from '../../lib/modelShowcase';
 
 /** True once the element has scrolled into view (stays true afterwards when `once`). */
 export function useInView<T extends Element>(once = true, threshold = 0.25) {
@@ -251,7 +251,7 @@ interface HotspotFigureProps {
   alt: string;
   width: number;
   height: number;
-  hotspot?: Hotspot | null;
+  hotspot?: CoSciRegion | null;
   relatedRegions?: CoSciRegion[];
   lang: Lang;
   caption?: string;
@@ -260,7 +260,7 @@ interface HotspotFigureProps {
 /** Figure with an optional highlighted region (everything else dimmed) and a zoom button. */
 export const HotspotFigure: React.FC<HotspotFigureProps> = ({ src, alt, width, height, hotspot, relatedRegions, lang, caption }) => {
   const [zoom, setZoom] = useState(false);
-  const regions: CoSciRegion[] | null = hotspot && relatedRegions?.length ? [hotspot, ...relatedRegions] : null;
+  const regions: CoSciRegion[] | null = hotspot && (hotspot.outline || relatedRegions?.length) ? [hotspot, ...(relatedRegions ?? [])] : null;
   return (
     <figure className="bg-white rounded-2xl border border-emerald-950/[0.09] shadow-[0_1px_2px_rgba(6,78,59,0.04),0_18px_42px_-28px_rgba(6,78,59,0.2)] p-3 sm:p-4 lg:p-5">
       <div className="relative overflow-hidden rounded-xl bg-white">
@@ -277,10 +277,12 @@ export const HotspotFigure: React.FC<HotspotFigureProps> = ({ src, alt, width, h
         {regions && (
           <svg aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full pointer-events-none">
             <path fill="rgba(244, 250, 246, 0.56)" fillRule="evenodd" d={
-              'M0 0H100V100H0Z ' + regions.map(({ x, y, w, h }) => `M${x} ${y}h${w}v${h}h-${w}Z`).join(' ')
+              'M0 0H100V100H0Z ' + regions.map(({ x, y, w, h, outline }) => outline ?? `M${x} ${y}h${w}v${h}h-${w}Z`).join(' ')
             } />
-            {regions.map(({ x, y, w, h, optional }, i) => (
-              <rect key={i} x={x} y={y} width={w} height={h} rx="0.9" ry="1.5" fill="none" className="stroke-emerald-600" strokeWidth="2" strokeDasharray={optional ? '5 3' : undefined} vectorEffect="non-scaling-stroke" />
+            {regions.map(({ x, y, w, h, optional, secondary, outline }, i) => outline ? (
+              <path key={i} d={outline} fill="none" className="stroke-emerald-600" strokeWidth="2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+            ) : (
+              <rect key={i} x={x} y={y} width={w} height={h} rx={secondary ? 0.3 : 0.9} ry={secondary ? 0.4 : 1.5} fill="none" className="stroke-emerald-600" strokeWidth={secondary ? 1 : 2} strokeDasharray={optional ? '5 3' : undefined} vectorEffect="non-scaling-stroke" />
             ))}
           </svg>
         )}
