@@ -74,15 +74,26 @@ const ModuleTile: React.FC<{ mod: CytoModule; tier: TierId; lang: Lang; stretch?
       <span className="flex items-center justify-between gap-2">
         <span className={`text-sm font-semibold tracking-tight ${style.tileName}`}>{mod.name}</span>
         {target ? (
-          <span
-            className={`inline-flex items-center justify-center w-6 h-6 rounded-md transition-all duration-200 shrink-0 ${
-              tier === '03'
-                ? 'bg-emerald-400/15 text-emerald-300 group-hover:bg-emerald-400/25'
-                : 'bg-emerald-600/[0.08] text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white'
-            }`}
-            aria-hidden="true"
-          >
-            <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <span className="inline-flex items-center gap-1.5 shrink-0">
+            <span
+              className={`px-2 py-0.5 rounded text-[10.5px] font-medium border ${
+                tier === '03'
+                  ? 'bg-emerald-400/15 text-emerald-200 border-emerald-400/30'
+                  : 'bg-emerald-50 text-emerald-700 border-emerald-600/20'
+              }`}
+            >
+              {zh ? '已发布' : 'Released'}
+            </span>
+            <span
+              className={`inline-flex items-center justify-center w-6 h-6 rounded-md transition-all duration-200 shrink-0 ${
+                tier === '03'
+                  ? 'bg-emerald-400/15 text-emerald-300 group-hover:bg-emerald-400/25'
+                  : 'bg-emerald-600/[0.08] text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white'
+              }`}
+              aria-hidden="true"
+            >
+              <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </span>
           </span>
         ) : (
           <span className={`px-2 py-0.5 rounded text-[10.5px] font-mono shrink-0 ${style.badge}`}>
