@@ -99,7 +99,7 @@ export const SpatialPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           { href: '#spatial-architecture', label: zh ? '模型架构' : 'Architecture' },
           { href: '#spatial-benchmark', label: zh ? '基准评测' : 'Benchmarks' },
         ]}
-        githubUrl="https://github.com/Cyto-System/SUDOKU"
+        githubUrl="https://github.com/Cyto-System/Cyto.Spatial"
       />
 
       {/* 01 Architecture */}
