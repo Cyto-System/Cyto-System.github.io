@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, Github, Maximize2, X } from 'lucide-react';
+import { ArrowUpRight, FileText, Github, Maximize2, X } from 'lucide-react';
 import type { Lang } from '../../lib/cytoDomain';
 import type { Hotspot } from '../../lib/modelShowcase';
 
@@ -82,12 +82,13 @@ interface ModelIntroProps {
   logo?: string;
   subnav?: { href: string; label: string }[];
   githubUrl?: string;
+  paperUrl?: string;
   lang: Lang;
 }
 
 const DEFAULT_CYTO_LOGO = '/assets/coscientist/cytoco-logo.png';
 
-/** Shared opening block for every model panel: name, one-line positioning, scope, section index & GitHub link. */
+/** Shared opening block for every model panel: name, one-line positioning, scope, section index & resource links. */
 export const ModelIntro: React.FC<ModelIntroProps> = ({
   eyebrow,
   name,
@@ -96,10 +97,12 @@ export const ModelIntro: React.FC<ModelIntroProps> = ({
   logo = DEFAULT_CYTO_LOGO,
   subnav,
   githubUrl,
+  paperUrl,
   lang,
 }) => {
   const zh = lang === 'zh';
-  const showFooterBar = Boolean((subnav && subnav.length > 0) || githubUrl);
+  const hasLinks = Boolean(githubUrl || paperUrl !== undefined);
+  const showFooterBar = Boolean((subnav && subnav.length > 0) || hasLinks);
 
   return (
     <div className="space-y-7">
@@ -119,11 +122,11 @@ export const ModelIntro: React.FC<ModelIntroProps> = ({
         </p>
       </div>
       {showFooterBar && (
-        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 border-t border-emerald-950/[0.08]">
-          {subnav && subnav.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-2.5 pt-5 border-t border-emerald-950/[0.08]">
+          {subnav && subnav.length > 0 && (
             <nav
               aria-label={zh ? `${name} 章节` : `${name} sections`}
-              className="flex flex-wrap gap-x-2 gap-y-1.5 text-sm"
+              className="flex flex-wrap items-center gap-x-1.5 gap-y-1.5 text-sm"
             >
               {subnav.map((s, i) => (
                 <a
@@ -136,21 +139,50 @@ export const ModelIntro: React.FC<ModelIntroProps> = ({
                 </a>
               ))}
             </nav>
-          ) : (
-            <span />
           )}
 
-          {githubUrl && (
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-950/12 bg-white hover:border-emerald-600/50 hover:text-emerald-800 text-xs font-medium text-[#0C261B] shadow-[0_1px_2px_rgba(6,78,59,0.04)] transition-colors whitespace-nowrap shrink-0"
-            >
-              <Github className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
-              <span>GitHub</span>
-              <ArrowUpRight className="w-3 h-3 text-slate-400" aria-hidden="true" />
-            </a>
+          {hasLinks && (
+            <>
+              {subnav && subnav.length > 0 && (
+                <span className="hidden sm:inline-block h-4 w-px bg-emerald-950/12 mx-2" aria-hidden="true" />
+              )}
+              <div className="flex flex-wrap items-center gap-2">
+                {githubUrl && (
+                  <a
+                    href={githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-950/12 bg-white hover:border-emerald-600/50 hover:text-emerald-800 text-xs font-medium text-[#0C261B] shadow-[0_1px_2px_rgba(6,78,59,0.04)] transition-colors whitespace-nowrap"
+                  >
+                    <Github className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
+                    <span>GitHub</span>
+                    <ArrowUpRight className="w-3 h-3 text-slate-400" aria-hidden="true" />
+                  </a>
+                )}
+
+                {paperUrl ? (
+                  <a
+                    href={paperUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-950/12 bg-white hover:border-emerald-600/50 hover:text-emerald-800 text-xs font-medium text-[#0C261B] shadow-[0_1px_2px_rgba(6,78,59,0.04)] transition-colors whitespace-nowrap"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-emerald-700" aria-hidden="true" />
+                    <span>{zh ? '论文 PDF' : 'Paper (PDF)'}</span>
+                    <ArrowUpRight className="w-3 h-3 text-slate-400" aria-hidden="true" />
+                  </a>
+                ) : (
+                  <span
+                    aria-disabled="true"
+                    title={zh ? '论文即将发布' : 'Paper coming soon'}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dashed border-emerald-950/14 bg-white/60 text-xs font-medium text-slate-400 select-none whitespace-nowrap"
+                  >
+                    <FileText className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>{zh ? '论文' : 'Paper'}</span>
+                  </span>
+                )}
+              </div>
+            </>
           )}
         </div>
       )}

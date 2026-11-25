@@ -188,9 +188,9 @@ export const PerturbationPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
             onAxisMode={mode === 'rpe1' ? undefined : setAxisMode}
             onReplay={() => setReplayNonce((n) => n + 1)}
             tabs={[
-              { id: 'perturbqa', label: zh ? 'PerturbQA 基因扰动' : 'PerturbQA (CRISPRi)' },
-              { id: 'rpe1', label: zh ? 'RPE1 跨细胞系' : 'RPE1 OOD' },
-              { id: 'genetak', label: zh ? 'GeneTAK 未见药物' : 'GeneTAK (Compounds)' },
+              { id: 'perturbqa', label: zh ? '同细胞系未见基因扰动' : 'Same-cell unseen genes' },
+              { id: 'genetak', label: zh ? '同细胞系未见药物扰动' : 'Same-cell unseen drugs' },
+              { id: 'rpe1', label: zh ? '跨细胞系迁移已知扰动' : 'Cross-cell known transfer' },
             ]}
           />
         </div>
