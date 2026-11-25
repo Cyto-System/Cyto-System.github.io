@@ -24,8 +24,8 @@ export const CoScientistPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         subnav={[
           { href: '#cosci-architecture', label: zh ? '系统架构' : 'Architecture' },
           { href: '#cosci-trajectory', label: zh ? '研究轨迹' : 'Trajectory' },
-          { href: '#cosci-results', label: zh ? '算法设计' : 'Algorithm design' },
-          { href: '#cosci-cases', label: zh ? '案例影片' : 'Case films' },
+          { href: '#cosci-cases', label: zh ? '五项研究案例' : 'Five case studies' },
+          { href: '#cosci-results', label: zh ? '研究结果' : 'Study results' },
         ]}
         githubUrl="https://github.com/Cyto-System/Cyto.CoScientist"
       />
@@ -36,10 +36,10 @@ export const CoScientistPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         <CoSciTrajectory lang={lang} />
       </div>
       <div className="pt-12 sm:pt-14 border-t border-emerald-950/[0.08]">
-        <CoSciResults lang={lang} />
+        <CoSciCaseFilms lang={lang} />
       </div>
       <div className="pt-12 sm:pt-14 border-t border-emerald-950/[0.08]">
-        <CoSciCaseFilms lang={lang} />
+        <CoSciResults lang={lang} />
       </div>
     </div>
   );

@@ -72,40 +72,39 @@ export interface CoSciComponent {
   detail: BilingualText;
   hotspot: CoSciRegion;
   relatedRegions?: CoSciRegion[];
-  roles?: { name: BilingualText; responsibility: BilingualText }[];
 }
 
 export const COSCI_COMPONENTS: CoSciComponent[] = [
   {
     id: 'agent',
-    name: { zh: '研究状态与智能体架构', en: 'Research state and agent architecture' },
-    gist: { zh: '主智能体选择研究活动并委派任务；子智能体执行任务并回报结果。', en: 'The main agent selects activities and delegates tasks; subagents carry out the tasks and report back.' },
-    roles: [
-      {
-        name: { zh: '主智能体 · 研究决策', en: 'Main agent · Research decisions' },
-        responsibility: {
-          zh: '根据已有证据、评审意见和尚未解决的问题选择下一项活动，并委派具体任务。各项活动没有固定顺序。',
-          en: 'Selects the next activity based on evidence, review feedback, and open questions, then delegates a specific task. Activities have no fixed order.',
-        },
-      },
-      {
-        name: { zh: '子智能体 · 任务执行', en: 'Subagents · Task execution' },
-        responsibility: {
-          zh: '在独立上下文中执行受派任务，向主智能体返回发现、未决问题及原始记录的引用。任务来自五类研究活动：多源证据获取、假设演化与实验设计、算法与程序演化、生物信息学数据分析、科研论文写作。',
-          en: 'Work in isolated contexts and return findings, open questions, and references to the underlying records. Tasks span five activities: multi-source evidence acquisition, hypothesis evolution and experimental design, algorithm and program evolution, bioinformatics data analysis, and scientific manuscript writing.',
-        },
-      },
-    ],
+    name: { zh: '主智能体：研究决策', en: 'Main agent: research decisions' },
+    gist: { zh: '选择下一项研究活动，并将具体任务委派给子智能体。', en: 'Selects the next research activity and delegates a specific task to a subagent.' },
     detail: {
-      zh: '外环元评审独立回顾跨轮次的决策；必要时，人类专家可补充意见。',
-      en: 'Outer-loop meta-review independently assesses decisions across rounds; human experts may provide additional feedback.',
+      zh: '研究活动没有固定顺序。主智能体依据当前证据、评审意见和尚未解决的问题，决定补充证据、延续已有分析或调整研究方向。',
+      en: 'Research activities have no fixed order. The main agent uses current evidence, review feedback, and open questions to decide whether to gather more evidence, extend an analysis, or redirect the investigation.',
     },
     hotspot: { x: 15.4, y: 20.4, w: 69.2, h: 7.0 },
-    relatedRegions: [
-      { x: 17.6, y: 36.6, w: 31.2, h: 31.6 },
-      { x: 17.7, y: 7.3, w: 31.2, h: 7.6 },
-      { x: 51.1, y: 7.3, w: 31.2, h: 7.6, optional: true },
-    ],
+  },
+  {
+    id: 'subagents',
+    name: { zh: '子智能体：研究任务执行', en: 'Subagents: research task execution' },
+    gist: { zh: '在独立上下文中执行受派任务，向主智能体返回结果及其依据。', en: 'Work in isolated contexts and return findings and supporting records to the main agent.' },
+    detail: {
+      zh: '受派任务涵盖五类研究活动：多源证据获取、假设演化与实验设计、算法与程序演化、生物信息学数据分析、科研论文写作。',
+      en: 'Delegated tasks span five research activities: multi-source evidence acquisition, hypothesis evolution and experimental design, algorithm and program evolution, bioinformatics data analysis, and scientific manuscript writing.',
+    },
+    hotspot: { x: 17.6, y: 36.6, w: 31.2, h: 31.6 },
+  },
+  {
+    id: 'meta-review',
+    name: { zh: '外环元评审：跨轮次研究评估', en: 'Outer-loop meta-review' },
+    gist: { zh: '独立回顾多轮研究决策，识别遗漏的证据和反复无效的行动。', en: 'Independently reviews decisions across rounds for overlooked evidence and repeated ineffective actions.' },
+    detail: {
+      zh: '外环评审者定期对照研究目标检查决策和执行记录，将需要重新审视的假设或研究方向反馈给主智能体。人类专家可另行提供意见。',
+      en: 'The outer-loop reviewer periodically examines decisions and execution records against the research objective and flags assumptions or directions for the main agent to reconsider. Human experts may provide additional feedback.',
+    },
+    hotspot: { x: 17.7, y: 7.3, w: 31.2, h: 7.6 },
+    relatedRegions: [{ x: 51.1, y: 7.3, w: 31.2, h: 7.6, optional: true }],
   },
   {
     id: 'search',
@@ -189,10 +188,10 @@ export const COSCI_TRAJECTORY: TrajectoryStage[] = [
   },
   {
     index: '03',
-    label: { zh: '程序 → 分析 → 实验设计', en: 'Programs → analysis → design' },
+    label: { zh: '程序开发、生信分析或实验设计', en: 'Program development, analysis, or experimental design' },
     caption: {
-      zh: '程序、生信分析、实验设计三层各自维护候选树，上一层被选中的节点成为下一层的起点。',
-      en: 'Programs, bioinformatics analysis and experimental design each keep their own candidate tree; the node selected in one layer seeds the next.',
+      zh: '根据当前假设和所需证据，主智能体可选择开发程序、开展生信分析或设计实验。这些活动没有固定先后顺序。',
+      en: 'Depending on the hypothesis and the evidence needed, the main agent may develop a program, run a bioinformatics analysis, or design an experiment. These activities have no fixed order.',
     },
     hotspot: { x: 42.4, y: 14.0, w: 33.4, h: 78.0 },
   },
@@ -218,7 +217,7 @@ export const COSCI_TRAJECTORY: TrajectoryStage[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Cyto.CoScientist · 03 algorithm design (figure panels c–d). Sole home of these numbers.
+// Cyto.CoScientist · 04 study results: algorithm development (figure panels c–d). Sole home of these numbers.
 // ---------------------------------------------------------------------------
 
 export interface BarEntry {
@@ -281,7 +280,7 @@ export const COSCI_LUAD_DECISIONS: DecisionRow[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Cyto.CoScientist · 04 case films
+// Cyto.CoScientist · 03 case films
 // Method cases carry no metric boxes: their numbers live in section 03.
 // ---------------------------------------------------------------------------
 

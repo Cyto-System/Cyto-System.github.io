@@ -101,10 +101,10 @@ export const CoSciCaseFilms: React.FC<{ lang: Lang }> = ({ lang }) => {
     <div className="space-y-7 sm:space-y-8">
       <EyebrowHeading
         id="cosci-cases"
-        index="04"
-        kicker="RESEARCH IN MOTION"
-        title={zh ? '五个研究的完整过程，' : 'Five studies end to end,'}
-        accent={zh ? '从提问一直放到核心发现。' : 'from the question to key findings.'}
+        index="03"
+        kicker="CASE STUDIES"
+        title={zh ? '五项研究案例' : 'Five case studies'}
+        accent={zh ? '算法开发与开放式生信研究' : 'Algorithm development and open-ended bioinformatics inquiry'}
       />
 
       {/* Case selector: horizontal snap strip on mobile, 5-up grid on lg+ */}

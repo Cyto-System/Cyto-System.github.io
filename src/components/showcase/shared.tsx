@@ -253,14 +253,15 @@ interface HotspotFigureProps {
   height: number;
   hotspot?: CoSciRegion | null;
   relatedRegions?: CoSciRegion[];
+  outlined?: boolean;
   lang: Lang;
   caption?: string;
 }
 
 /** Figure with an optional highlighted region (everything else dimmed) and a zoom button. */
-export const HotspotFigure: React.FC<HotspotFigureProps> = ({ src, alt, width, height, hotspot, relatedRegions, lang, caption }) => {
+export const HotspotFigure: React.FC<HotspotFigureProps> = ({ src, alt, width, height, hotspot, relatedRegions, outlined = false, lang, caption }) => {
   const [zoom, setZoom] = useState(false);
-  const regions: CoSciRegion[] | null = hotspot && (hotspot.outline || relatedRegions?.length) ? [hotspot, ...(relatedRegions ?? [])] : null;
+  const regions: CoSciRegion[] | null = hotspot && (outlined || hotspot.outline || relatedRegions?.length) ? [hotspot, ...(relatedRegions ?? [])] : null;
   return (
     <figure className="bg-white rounded-2xl border border-emerald-950/[0.09] shadow-[0_1px_2px_rgba(6,78,59,0.04),0_18px_42px_-28px_rgba(6,78,59,0.2)] p-3 sm:p-4 lg:p-5">
       <div className="relative overflow-hidden rounded-xl bg-white">
@@ -279,11 +280,13 @@ export const HotspotFigure: React.FC<HotspotFigureProps> = ({ src, alt, width, h
             <path fill="rgba(244, 250, 246, 0.56)" fillRule="evenodd" d={
               'M0 0H100V100H0Z ' + regions.map(({ x, y, w, h, outline }) => outline ?? `M${x} ${y}h${w}v${h}h-${w}Z`).join(' ')
             } />
-            {regions.map(({ x, y, w, h, optional, secondary, outline }, i) => outline ? (
-              <path key={i} d={outline} fill="none" className="stroke-emerald-600" strokeWidth="2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-            ) : (
-              <rect key={i} x={x} y={y} width={w} height={h} rx={secondary ? 0.3 : 0.9} ry={secondary ? 0.4 : 1.5} fill="none" className="stroke-emerald-600" strokeWidth={secondary ? 1 : 2} strokeDasharray={optional ? '5 3' : undefined} vectorEffect="non-scaling-stroke" />
-            ))}
+            <g className="stroke-emerald-600" fill="none">
+              {regions.map(({ x, y, w, h, optional, secondary, outline }, i) => outline ? (
+                <path key={i} d={outline} strokeWidth="2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+              ) : (
+                <rect key={i} x={x} y={y} width={w} height={h} rx={secondary ? 0.3 : 0.9} ry={secondary ? 0.4 : 1.5} strokeWidth={secondary ? 1 : 2} strokeDasharray={optional ? '5 3' : undefined} vectorEffect="non-scaling-stroke" />
+              ))}
+            </g>
           </svg>
         )}
         {hotspot && !regions && (

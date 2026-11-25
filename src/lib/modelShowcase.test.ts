@@ -36,10 +36,15 @@ test('model hash parsing accepts only known ids', () => {
   assert.equal(modelIdFromHash('#models'), null);
 });
 
-test('CoScientist presents five mechanisms and highlights the optional human reviewer separately', () => {
-  assert.deepEqual(COSCI_COMPONENTS.map((c) => c.id), ['agent', 'search', 'control', 'context', 'skills']);
-  const [agent, , control, context] = COSCI_COMPONENTS;
-  assert.equal(agent.relatedRegions?.filter((r) => r.optional).length, 1);
+test('CoScientist separates research decisions, delegated tasks, and trajectory review', () => {
+  assert.deepEqual(COSCI_COMPONENTS.map((c) => c.id), ['agent', 'subagents', 'meta-review', 'search', 'control', 'context', 'skills']);
+  const [agent, subagents, review, , control, context] = COSCI_COMPONENTS;
+  assert.equal(agent.relatedRegions, undefined);
+  assert.equal(subagents.relatedRegions, undefined);
+  assert.ok(review.hotspot.y + review.hotspot.h < agent.hotspot.y);
+  assert.ok(agent.hotspot.y + agent.hotspot.h < subagents.hotspot.y);
+  assert.equal(review.relatedRegions?.length, 1);
+  assert.equal(review.relatedRegions?.[0].optional, true);
   assert.ok(control.hotspot.outline);
   assert.equal(control.relatedRegions?.length ?? 0, 0);
   assert.equal(context.relatedRegions?.filter((r) => r.secondary).length, 1);

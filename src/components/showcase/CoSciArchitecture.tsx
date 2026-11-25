@@ -22,7 +22,7 @@ export const CoSciArchitecture: React.FC<{ lang: Lang }> = ({ lang }) => {
         index="01"
         kicker="THE ARCHITECTURE"
         title={zh ? '任务内递归自改进' : 'Within-task recursive self-improvement'}
-        accent={zh ? '五项架构机制' : 'Five architectural mechanisms'}
+        accent={zh ? '研究角色与架构机制' : 'Research roles and architectural mechanisms'}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
@@ -67,6 +67,7 @@ export const CoSciArchitecture: React.FC<{ lang: Lang }> = ({ lang }) => {
             width={2400}
             height={1490}
             hotspot={current.hotspot}
+            outlined
             relatedRegions={current.relatedRegions}
             lang={lang}
           />
@@ -74,18 +75,8 @@ export const CoSciArchitecture: React.FC<{ lang: Lang }> = ({ lang }) => {
             className="rounded-xl border border-emerald-950/[0.08] bg-white px-4 sm:px-5 py-3.5 shadow-[0_1px_2px_rgba(6,78,59,0.03)] min-h-[4.25rem] flex flex-col justify-center"
             aria-live="polite"
           >
-            {current.roles && (
-              <dl className="grid gap-4 border-b border-emerald-950/10 pb-3 mb-3 sm:grid-cols-2">
-                {current.roles.map(({ name, responsibility }) => (
-                  <div key={name.en}>
-                    <dt className="text-sm font-semibold text-[#0C261B]">{name[lang]}</dt>
-                    <dd className="mt-1 text-[13px] leading-relaxed text-slate-600">{responsibility[lang]}</dd>
-                  </div>
-                ))}
-              </dl>
-            )}
             <p className="text-[13px] leading-[1.68] text-slate-600">
-              <span className="font-semibold text-[#0C261B] mr-2">{current.roles ? (zh ? '研究路线评审' : 'Trajectory review') : current.name[lang]}</span>
+              <span className="font-semibold text-[#0C261B] mr-2">{current.name[lang]}</span>
               {current.detail[lang]}
             </p>
           </div>
