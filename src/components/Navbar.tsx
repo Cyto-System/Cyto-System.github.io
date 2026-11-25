@@ -40,21 +40,18 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({ lang }) => {
           <svg
             width="24"
             height="24"
-            viewBox="0 0 24 24"
+            viewBox="0 0 100 100"
             fill="none"
             aria-hidden="true"
             className="shrink-0"
           >
-            <rect x="2" y="2" width="20" height="20" rx="5" stroke="#059669" strokeWidth="1.7" />
-            <circle cx="12" cy="12" r="4.6" stroke="#10B981" strokeWidth="1.5" />
-            <circle cx="12" cy="12" r="2" fill="#059669" />
             <path
-              d="M12 4.5V7.2M12 16.8V19.5M4.5 12H7.2M16.8 12H19.5"
-              stroke="#0C261B"
-              strokeOpacity="0.35"
-              strokeWidth="1.2"
+              d="M69 29A31 31 0 1 0 69 71"
+              stroke="#2f7d68"
+              strokeWidth="16"
               strokeLinecap="round"
             />
+            <circle cx="81" cy="50" r="14" fill="#2f7d68" />
           </svg>
           <span>Cyto</span>
         </a>
