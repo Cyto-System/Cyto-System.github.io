@@ -194,7 +194,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           index="02"
           kicker="IDENTITY BENCHMARK"
           title={zh ? '涵盖实体器官与泛癌 T 细胞微环境，' : 'Across diverse tissues and complex T-cell contexts,'}
-          accent={zh ? '系统对比单细胞 Foundation Model、分类器与 LLM Agent。' : 'systematically benchmarked against foundation models, classifiers, and LLM agents.'}
+          accent={zh ? '系统对比基础模型、参考分类器与 LLM 智能体。' : 'systematically benchmarked against foundation models, reference classifiers, and LLM agents.'}
         />
 
         <BenchControlsBar
@@ -240,8 +240,8 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               meta={cohort.tab[lang]}
               footer={
                 zh
-                  ? '要求预测满足作者标注的全部本体断言且不发生无依据的谱系偏离。'
-                  : 'Awards credit when predictions satisfy all ground-truth ontology assertions without unsupported lineage divergence.'
+                  ? '依据细胞本体层级严格判定：同时满足作者全部金标准断言方可计分，严惩跨谱系偏离。'
+                  : 'Evaluated under multi-assertion ontology compatibility, awarding credit for verified specificity while penalizing cross-branch divergence.'
               }
             >
               <TaiyiBarList
@@ -267,8 +267,8 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
               meta={cohort.tab[lang]}
               footer={
                 zh
-                  ? '对全部目标细胞类别等权平均，重点检验罕见亚型与细粒度分化状态的识别精度。'
-                  : 'Unweighted harmonic mean across all target classes, highlighting fine-grained and rare subtype recall.'
+                  ? '各类细胞 F1 的严格非加权平均，全面兼顾多数谱系与稀有亚群，避免样本量不均衡掩盖误判。'
+                  : 'Unweighted mean across all target classes, penalizing sample imbalance to rigorously test rare subtype recognition.'
               }
             >
               <TaiyiBarList
@@ -345,15 +345,15 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           id="identity-case"
           index="03"
           kicker="STAGED CASE STUDY"
-          title={zh ? '78,228 个人胸腺与外周血 T 细胞，' : '78,228 human thymic and peripheral blood T cells,'}
-          accent={zh ? '三阶段验证逐步纠偏并找回罕见亚群。' : 'refined stage by stage to recover rare invariant lineages.'}
+          title={zh ? '78,228 个原代人胸腺与外周血 T 细胞，' : '78,228 primary human thymic and peripheral blood T cells,'}
+          accent={zh ? '逐阶段纠偏分化混淆并高精度找回罕见亚群。' : 'resolving lineage discordance stage by stage to recover rare invariant subsets.'}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           <figure className="lg:col-span-7 rounded-2xl border border-emerald-950/[0.09] bg-white shadow-[0_1px_2px_rgba(6,78,59,0.04)] overflow-hidden flex flex-col">
             <div className="px-4 sm:px-5 py-3 border-b border-emerald-950/[0.06] flex items-center justify-between gap-2">
               <span className="text-xs sm:text-[13px] font-semibold text-[#0C261B]">
-                {zh ? '证据审阅、重标注与局部再分群演示' : 'Evidence review, relabeling, and localized cluster splitting'}
+                {zh ? '证据审阅、再注释与局部聚类细分演示' : 'Evidence review, re-annotation, and localized sub-clustering'}
               </span>
               <span className="font-mono text-[11px] text-slate-400">13 donors · RNA + TCR-seq</span>
             </div>

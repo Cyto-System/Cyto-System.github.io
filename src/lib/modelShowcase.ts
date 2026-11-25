@@ -917,9 +917,9 @@ export type IdentityParadigm = 'ours' | 'foundation' | 'classifier' | 'agent';
 
 export const IDENTITY_PARADIGM_LABEL: Record<IdentityParadigm, BilingualText> = {
   ours: { zh: 'scVerity (本文方法)', en: 'scVerity (Ours)' },
-  foundation: { zh: '单细胞基础模型', en: 'Foundation model' },
-  classifier: { zh: '参考图谱分类器', en: 'Reference classifier' },
-  agent: { zh: '大语言模型智能体', en: 'LLM agent' },
+  foundation: { zh: '基础模型', en: 'Foundation model' },
+  classifier: { zh: '参考分类器', en: 'Reference classifier' },
+  agent: { zh: 'LLM 智能体', en: 'LLM agent' },
 };
 
 export interface IdentityBenchmarkRow {
@@ -954,8 +954,8 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 33.55, macroF1: 27.87 },
     ],
     note: {
-      zh: 'scVerity 仅在 872 万参考细胞上预训练一次且零微调；相比最强外部基线 SingleR，ACC 提升 +14.86 个百分点，Macro-F1 提升 +11.83 个百分点。',
-      en: 'Pretrained once on 8.72M reference cells with zero dataset-specific fine-tuning; gains +14.86 pp accuracy and +11.83 pp Macro-F1 over strongest baseline SingleR.',
+      zh: '在三项独立单细胞队列上，scVerity 综合性能均位居首位；相比最强外部基线 SingleR，ACC 提升 +14.86 个百分点，Macro-F1 提升 +11.83 个百分点。',
+      en: 'scVerity ranks first across all three independent evaluation cohorts, outperforming the strongest baseline SingleR by +14.86 pp ACC and +11.83 pp Macro-F1.',
     },
   },
   {
@@ -990,7 +990,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 10.84, macroF1: 15.89 },
     ],
     note: {
-      zh: '细粒度 T 细胞亚型共享主导谱系标志，全局嵌入度量易发生表征坍缩（SCimilarity ACC 仅 10.84%）；scVerity 凭借条件局部度量与闭环核验达到 52.98% ACC / 41.67% Macro-F1。',
+      zh: '不同 T 细胞亚型间表达差异高度稀疏，易导致全局度量表征坍缩；scVerity 依托局部度量与闭环核验达到 52.98% ACC 与 41.67% Macro-F1。',
       en: 'Fine-grained T-cell states share dominant lineage markers that collapse global embedding retrieval (SCimilarity 10.84%); scVerity reaches 52.98% / 41.67%.',
     },
   },
