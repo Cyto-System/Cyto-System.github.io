@@ -53,7 +53,7 @@ interface EyebrowHeadingProps {
   index: string;
   kicker: string;
   title: React.ReactNode;
-  accent: React.ReactNode;
+  accent?: React.ReactNode;
   aside?: React.ReactNode;
   id?: string;
 }
@@ -67,7 +67,7 @@ export const EyebrowHeading: React.FC<EyebrowHeadingProps> = ({ index, kicker, t
       </p>
       <h3 className="text-2xl sm:text-3xl lg:text-[34px] font-bold tracking-tight leading-[1.2] [text-wrap:balance]">
         <span className="text-[#0C261B]">{title}</span>
-        <span className="block text-emerald-700 mt-1">{accent}</span>
+        {accent != null && <span className="block text-emerald-700 mt-1">{accent}</span>}
       </h3>
     </div>
     {aside && <p className="font-mono text-xs text-slate-500 lg:pb-1.5">{aside}</p>}

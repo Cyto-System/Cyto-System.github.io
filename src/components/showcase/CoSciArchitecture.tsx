@@ -21,8 +21,7 @@ export const CoSciArchitecture: React.FC<{ lang: Lang }> = ({ lang }) => {
         id="cosci-architecture"
         index="01"
         kicker="THE ARCHITECTURE"
-        title={zh ? '任务内递归自改进' : 'Within-task recursive self-improvement'}
-        accent={zh ? '研究角色与架构机制' : 'Research roles and architectural mechanisms'}
+        title={zh ? 'Cyto.CoScientist 系统架构' : 'Cyto.CoScientist Architecture'}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">

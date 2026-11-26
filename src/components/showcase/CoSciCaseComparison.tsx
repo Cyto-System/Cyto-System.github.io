@@ -26,7 +26,7 @@ const groups = [
       {
         name: { zh: '脓毒症死亡风险', en: 'Sepsis mortality' },
         type: { zh: '开放式假设探索与跨队列研究', en: 'Hypothesis development across cohorts' },
-        data: { zh: '用户仅提供需申请访问的 CMAISE 队列。Cyto.CoScientist 自主检索并评估其他公开队列。', en: 'Only CMAISE, a cohort requiring access approval, was provided. Cyto.CoScientist independently identified and assessed public cohorts.' },
+        data: { zh: 'Cyto.CoScientist 自主检索并评估其他公开队列。', en: 'Cyto.CoScientist independently identified and assessed public cohorts.' },
         goal: { zh: '在感染来源和机制未预设的条件下，提出与死亡风险相关的分子变化假设，并设计可区分疾病严重程度、治疗等替代解释的预测。', en: 'Propose measurable molecular changes associated with mortality and predictions that distinguish them from severity or treatment effects, with the infection source and mechanism left open.' },
       },
       {
