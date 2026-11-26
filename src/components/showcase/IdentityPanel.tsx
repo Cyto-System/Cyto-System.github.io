@@ -125,7 +125,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         description={
           <>
             <div className="mb-3 flex flex-wrap items-baseline gap-x-1.5 gap-y-1 text-sm leading-[1.65]">
-              <span className="text-[#0C261B]">
+              <span className="font-semibold text-emerald-700">
                 {zh ? '细胞注释' : 'CELL ANNOTATION'}
               </span>
               <span className="text-slate-400">=</span>
