@@ -38,7 +38,7 @@ const groups = [
       {
         name: { zh: '急性主动脉夹层', en: 'Acute aortic dissection' },
         type: { zh: '多组学整合分析', en: 'Multi-omics integration' },
-        data: { zh: '13 例术前患者与 5 名健康对照，同次采血获得单细胞 RNA、单细胞 ATAC、血浆蛋白质组、游离 DNA 甲基化和全基因组测序数据。', en: 'One blood draw each from 13 preoperative cases and 5 healthy controls, profiled by single-cell RNA-seq, single-cell ATAC-seq, plasma proteomics, cell-free DNA methylation, and whole-genome sequencing.' },
+        data: { zh: '13 例术前患者与 5 名健康对照，同次采血获单细胞 RNA、单细胞 ATAC、血浆蛋白组、游离 DNA 甲基化和全基因组测序数据。', en: 'One blood draw each from 13 preoperative cases and 5 healthy controls, profiled by single-cell RNA-seq, single-cell ATAC-seq, plasma proteomics, cell-free DNA methylation, and whole-genome sequencing.' },
         goal: { zh: '比较各组学的病例与对照差异，检验遗传变异、表观调控、转录、蛋白与表型之间的关联，为候选早筛标志物和相关通路确定验证优先级。', en: 'Compare cases and controls within each modality, test associations across molecular layers and phenotype, and prioritize candidate early-detection markers and pathways for validation.' },
       },
     ],
