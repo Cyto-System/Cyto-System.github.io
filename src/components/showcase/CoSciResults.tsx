@@ -19,24 +19,21 @@ export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
           {[
             {
               title: zh ? 'OpenProblems · 单细胞 RNA 测序去噪' : 'OpenProblems · Single-cell RNA-seq denoising',
-              panel: '1c', left: 26,
+              panel: '1c', preview: 'openproblems-benchmark.png',
               alt: zh ? '三组织平均 MSE（越低越好）：ALRA 0.2813，DCA 0.2346，MAGIC 0.2013，Cyto.CoScientist 0.1919。' : 'Three-tissue mean MSE (lower is better): ALRA 0.2813, DCA 0.2346, MAGIC 0.2013, Cyto.CoScientist 0.1919.',
               result: zh ? '改用图传播算子后，最终算法在三种组织上的均方误差均低于 MAGIC。等权平均 MSE 为 0.1919，比 MAGIC 的 0.2013 低 4.7%。' : 'The final graph-propagation denoiser reduced mean squared error relative to MAGIC in all three tissues. Equally weighted mean MSE was 0.1919 versus 0.2013 for MAGIC, a 4.7% reduction.',
             },
             {
               title: zh ? 'TCGA-LUAD · 多组学生存预测' : 'TCGA-LUAD · Multi-omics survival prediction',
-              panel: '1d', left: 272,
+              panel: '1d', preview: 'luad-benchmark.png',
               alt: zh ? 'Harrell C 指数（越高越好）：匹配复现的 DeepProg 为 0.5950，Cyto.CoScientist 为 0.6458。' : 'Harrell’s C-index (higher is better): matched DeepProg 0.5950, Cyto.CoScientist 0.6458.',
               result: zh ? '在相同的 336 人训练集和 84 人评估集上，Cyto.CoScientist 的 C 指数为 0.6458，比匹配复现的 DeepProg（0.5950）高 0.0508。' : 'On the same 336-patient training and 84-patient evaluation split, Cyto.CoScientist achieved a C-index of 0.6458 versus 0.5950 for matched DeepProg, an absolute gain of 0.0508.',
             },
-          ].map(({ title, panel, left, alt, result }) => (
+          ].map(({ title, panel, preview, alt, result }) => (
             <article key={panel} className="flex flex-col gap-3 rounded-xl border border-emerald-950/10 bg-white p-5">
               <h5 className="font-semibold text-[#0C261B]">{title}</h5>
               <a href="/assets/coscientist/cycle-cg.png" target="_blank" rel="noreferrer" className="flex flex-1 flex-col justify-between rounded-md focus-visible:outline-2 focus-visible:outline-emerald-700">
-                {/* Matched benchmark panels, cropped from the same Fig. 1c–g artwork. */}
-                <div className="relative aspect-[216/212] w-full max-w-[420px] self-center overflow-hidden">
-                  <img src="/assets/coscientist/cycle-cg.png" loading="lazy" alt={alt} className="absolute h-auto max-w-none" style={{width: `${1250 / 216 * 100}%`, left: `${-left / 216 * 100}%`, top: `${-434 / 212 * 100}%`}} />
-                </div>
+                <img src={`/assets/coscientist/results/${preview}`} width={415} height={407} alt={alt} className="h-auto w-full max-w-[360px] self-center" />
                 <span className="mt-2 text-xs font-semibold text-emerald-800 underline underline-offset-2">{zh ? `正文图 ${panel} · 查看案例总图` : `Fig. ${panel} · View case overview`}</span>
               </a>
               <p className="text-sm leading-relaxed text-slate-700">{result}</p>
