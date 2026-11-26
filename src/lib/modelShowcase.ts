@@ -18,7 +18,7 @@ export interface ShowcaseModel {
 
 export const SHOWCASE_MODELS: ShowcaseModel[] = [
   { id: 'spatial', index: '01', name: 'Cyto.Spatial', release: { zh: 'SUDOKU · 空间基座', en: 'SUDOKU · Spatial' } },
-  { id: 'identity', index: '02', name: 'Cyto.Identity', release: { zh: 'scVerity · 身份推理', en: 'scVerity · Identity' } },
+  { id: 'identity', index: '02', name: 'Cyto.Identity', release: { zh: 'scVerity · 开放世界注释', en: 'scVerity · Open-world annotation' } },
   { id: 'perturbation', index: '03', name: 'Cyto.Perturbation', release: { zh: 'RELAY · 扰动迁移', en: 'RELAY · Transfer' } },
   { id: 'coscientist', index: '04', name: 'Cyto.CoScientist', release: { zh: '案例展示', en: 'Case showcase' } },
 ];
@@ -876,37 +876,37 @@ export const IDENTITY_CASE_GIF = {
 export const IDENTITY_STAGES: { code: string; title: BilingualText; body: BilingualText; hotspot: Hotspot }[] = [
   {
     code: '01',
-    title: { zh: 'Manifold 候选生成', en: 'Adaptive Manifold (Candidate Generation)' },
+    title: { zh: '连续流形候选生成', en: 'Continuous Manifold (High-Recall Candidates)' },
     body: {
-      zh: '集成多视角表达特征，通过流形空间度量捕获细微表型差异，为单细胞输出候选 Cell Ontology 分布。',
-      en: 'Integrates multi-view expression features with adaptive manifold metrics to capture fine-grained phenotypic variations, proposing candidate Cell Ontology terms per cell.',
+      zh: '在连续表达流形中刻画细胞局部关系，并结合细胞本体知识图谱约束，保留相近亚型的竞争性候选标签。',
+      en: 'Captures local cell relationships along continuous expression variation and applies Cell Ontology knowledge-graph constraints to retain competing candidate labels for closely related subtypes.',
     },
     hotspot: { x: 26.2, y: 1.2, w: 73.0, h: 33.4 },
   },
   {
     code: '02',
-    title: { zh: 'Analyst Agent 证据分析', en: 'Analyst Agent (Evidence Profiling)' },
+    title: { zh: 'Analyst Agent：局部群体证据', en: 'Analyst Agent (Local-Population Evidence)' },
     body: {
-      zh: '独立于预测构建样本分群，全面检测标志基因、表达程序与质量指标，提取支持、矛盾或未测得的分子实测证据。',
-      en: 'Constructs unsupervised cell clusters independently from candidate predictions, systematically profiling marker expression, functional programmes, and quality metrics to compile verifiable biological evidence.',
+      zh: '独立于候选预测构建样本内局部分群，检测标志基因、表达程序与质量指标，汇总支持、矛盾或未测得的可测证据。',
+      en: 'Builds local sample clusters independently of candidate predictions, profiling marker expression, functional programmes, and quality metrics to compile supporting, conflicting, or missing measurable evidence.',
     },
     hotspot: { x: 0.7, y: 36.2, w: 50.6, h: 43.2 },
   },
   {
     code: '03',
-    title: { zh: 'Reviewer Agent、KG 与 Meta Review', en: 'Reviewer Agent, KG & Meta Review' },
+    title: { zh: 'Reviewer Agent：约束推理与复核', en: 'Reviewer Agent (Constrained Reasoning & Review)' },
     body: {
-      zh: '结合知识图谱 (KG) 与相关亚群评估假设，闭环决策细分、合并或回退；疑难谱系引入配对 TCR 等多模态数据开展 Meta Review 终审。',
-      en: 'Contextualizes candidates against Cell Ontology knowledge and comparator populations, executing closed-loop decisions; invokes Meta Review to resolve challenging lineages using multimodal single-cell data like paired TCRs.',
+      zh: '在知识图谱约束下逐层核验候选，推理并解释细分、合并或回退的依据；疑难谱系引入配对 TCR 等实测数据开展 Meta Review 终审。',
+      en: 'Verifies candidates layer by layer under knowledge-graph constraints, reasoning through and explaining splits, merges, or reversals; Meta Review resolves challenging lineages with measured modalities such as paired TCRs.',
     },
     hotspot: { x: 52.8, y: 36.2, w: 46.5, h: 43.2 },
   },
   {
     code: '04',
-    title: { zh: 'Release 确定性注释输出', en: 'Ontology-Constrained Release' },
+    title: { zh: 'Release：可推理的最细标签', en: 'Release (Finest Reasoned Label)' },
     body: {
       zh: '在排除观测矛盾的前提下，输出最细粒度的标准细胞本体身份，同步记录完整的细胞状态与证据溯源链。',
-      en: 'Releases the finest Cell Ontology identity supported by observed evidence without contradictions, maintaining full cellular state and traceable evidence chains.',
+      en: 'Releases the finest Cell Ontology label supported by observed evidence without contradictions, preserving cellular state and a traceable evidence chain.',
     },
     hotspot: { x: 0.7, y: 86.2, w: 98.6, h: 13.0 },
   },
@@ -989,7 +989,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
       { method: 'SCimilarity', paradigm: 'foundation', acc: 10.84, macroF1: 15.89 },
     ],
     note: {
-      zh: 'T 细胞亚型间表达差异稀疏，易导致全局嵌入度量坍缩；scVerity 依托局部度量与闭环核验，显著提升细粒度识别精度。',
+      zh: 'T 细胞亚型间表达差异稀疏，易导致全局嵌入度量坍缩；scVerity 利用连续流形的局部关系与 Agent 逐层核验，显著提升细粒度识别精度。',
       en: 'Fine-grained T-cell states share dominant lineage markers that collapse global embedding retrieval (SCimilarity 10.84%); scVerity reaches 52.98% / 41.67%.',
     },
   },
@@ -1013,7 +1013,7 @@ export const IDENTITY_BENCHMARKS: IdentityCohortBenchmark[] = [
   },
 ];
 
-/** Table 2: Staged verification on 78,228 human thymic & peripheral blood T cells (13 donors, FACS ground truth). */
+/** Table 2: Staged T-cell annotation on 78,228 human thymic & peripheral blood cells (13 donors, FACS ground truth). */
 export const IDENTITY_CASE_STAGES: {
   stage: BilingualText;
   acc: number;
@@ -1021,7 +1021,7 @@ export const IDENTITY_CASE_STAGES: {
   revised: number;
   netGain: number;
 }[] = [
-  { stage: { zh: 'Manifold', en: 'Manifold' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
+  { stage: { zh: '流形候选', en: 'Manifold candidates' }, acc: 52.29, macroF1Pct: 43.04, revised: 0, netGain: 0 },
   { stage: { zh: 'Agent Review', en: 'Agent Review' }, acc: 55.85, macroF1Pct: 45.34, revised: 3949, netGain: 2784 },
   { stage: { zh: 'Meta Review', en: 'Meta Review' }, acc: 56.63, macroF1Pct: 47.61, revised: 611, netGain: 606 },
 ];

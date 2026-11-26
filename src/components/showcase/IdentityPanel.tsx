@@ -27,7 +27,7 @@ const PARADIGM_COLOR: Record<IdentityParadigm, string> = {
   foundation: '#64748B',
 };
 
-/** Cyto.Identity (scVerity): architecture walkthrough, 3-cohort benchmark board, and staged T-cell case study. */
+/** Cyto.Identity (scVerity): open-world annotation architecture, benchmarks, and staged T-cell annotation case. */
 export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
   const zh = lang === 'zh';
   const [archRef, archInView] = useInView<HTMLDivElement>(false, 0.25);
@@ -103,26 +103,63 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
   });
 
   const singleCohorts = IDENTITY_BENCHMARKS.filter((b) => b.id !== 'mean');
+  const annotationEquation = zh
+    ? [
+        { label: '高召回候选', detail: '连续流形空间 + KG 约束' },
+        { label: '细胞局部群体可测证据', detail: 'Analyst Agent' },
+        { label: '约束下的最细可推理标签', detail: 'Reviewer Agent' },
+      ]
+    : [
+        { label: 'High-recall candidates', detail: 'Continuous manifold + KG constraints' },
+        { label: 'Local-population evidence', detail: 'Analyst Agent' },
+        { label: 'Finest reasoned label under constraints', detail: 'Reviewer Agent' },
+      ];
 
   return (
     <div className="space-y-14 sm:space-y-16">
-      <ModelIntro
-        lang={lang}
-        eyebrow="02 / CYTO.IDENTITY · SCVERITY"
-        name="Cyto.Identity"
-        tagline={zh ? '单细胞身份假设生成与样本生物学实测核验' : 'Sample-grounded, multi-modal T-cell identity verification'}
-        description={
-          zh
-            ? '将细胞级候选假设生成与样本内生物学证据验证解耦。自适应流形提供器保留相近亚型的竞争假设，分析与评审智能体结合细胞本体知识图谱与局部分群实测证据逐层核验，输出可溯源的细胞身份与状态。'
-            : 'Decouples per-cell candidate generation from sample-grounded biological verification. An Adaptive Manifold Provider preserves competing subtype hypotheses, while Analyst and Reviewer agents audit local query measurements against Cell Ontology knowledge to release traceable identities.'
-        }
-        subnav={[
-          { href: '#identity-architecture', label: zh ? '模型架构' : 'Architecture' },
-          { href: '#identity-benchmark', label: zh ? '基准评测' : 'Benchmarks' },
-          { href: '#identity-case', label: zh ? 'T 细胞分期案例' : 'Case study' },
-        ]}
-        githubUrl="https://github.com/Cyto-System/Cyto.Identity"
-      />
+      <div className="space-y-5">
+        <ModelIntro
+          lang={lang}
+          eyebrow="02 / CYTO.IDENTITY · SCVERITY"
+          name="Cyto.Identity"
+          tagline={zh ? '面向单细胞的开放世界注释模型' : 'An open-world annotation model for single cells'}
+          description={
+            zh
+              ? '将细胞级候选假设生成与样本内生物学证据核验解耦。自适应流形提供器保留相近亚型的竞争假设，分析与评审智能体结合细胞本体知识图谱与局部分群实测证据逐层核验，输出可溯源的细胞身份与状态。'
+              : 'Decouples cell-level candidate hypothesis generation from biological evidence verification within the sample. An adaptive manifold provider preserves competing hypotheses for closely related subtypes, while Analyst and Reviewer agents jointly verify candidates against Cell Ontology and measurable evidence from local cell populations, releasing traceable cell identities and states.'
+          }
+          subnav={[
+            { href: '#identity-architecture', label: zh ? '模型架构' : 'Architecture' },
+            { href: '#identity-benchmark', label: zh ? '基准评测' : 'Benchmarks' },
+            { href: '#identity-case', label: zh ? 'T 细胞逐阶段注释案例' : 'T-cell staged annotation' },
+          ]}
+          githubUrl="https://github.com/Cyto-System/Cyto.Identity"
+        />
+
+        <div className="rounded-2xl border border-emerald-950/[0.08] bg-white/75 px-4 py-4 sm:px-5">
+          <div className="grid grid-cols-1 lg:grid-cols-[auto_minmax(0,1fr)] gap-3 lg:gap-5 lg:items-center">
+            <p className="font-mono text-[11px] tracking-[0.14em] text-emerald-800">
+              {zh ? '细胞注释' : 'CELL ANNOTATION'}
+              <span aria-hidden="true" className="mx-2 text-slate-300">=</span>
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-2">
+              {annotationEquation.map((term, i) => (
+                <React.Fragment key={term.label}>
+                  {i > 0 && (
+                    <span aria-hidden="true" className="self-center text-center font-mono text-sm text-emerald-700/55">
+                      +
+                    </span>
+                  )}
+                  <div className="min-w-0 rounded-xl border border-emerald-950/[0.05] bg-[#F4FAF6] px-3 py-2.5">
+                    <span className="block text-[12.5px] font-semibold leading-snug text-[#0C261B]">{term.label}</span>
+                    <span className="mt-0.5 block font-mono text-[10.5px] leading-relaxed text-slate-500">{term.detail}</span>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* 01 Architecture */}
       <div ref={archRef} className="pt-12 sm:pt-14 border-t border-emerald-950/[0.08] space-y-8">
@@ -130,8 +167,8 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
           id="identity-architecture"
           index="01"
           kicker="THE ARCHITECTURE"
-          title={zh ? '基于自适应流形生成候选，' : 'Generate high-recall candidates on an adaptive manifold,'}
-          accent={zh ? '立足样本分子实测数据闭环核验。' : 'verify through closed-loop molecular evidence.'}
+          title={zh ? '连续变化提供细胞局部关系，' : 'Continuous variation reveals local cellular relationships,'}
+          accent={zh ? 'Agent 推理解释注释路径。' : 'while agents reason through and explain annotation paths.'}
         />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           <ol className="lg:col-span-4 space-y-2">
@@ -339,28 +376,28 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         </div>
       </div>
 
-      {/* 03 Staged Verification Case Study */}
+      {/* 03 Staged T-cell Annotation Case */}
       <div ref={caseRef} className="pt-12 sm:pt-14 border-t border-emerald-950/[0.08] space-y-8">
         <EyebrowHeading
           id="identity-case"
           index="03"
-          kicker="STAGED CASE STUDY"
+          kicker="STAGED T-CELL ANNOTATION CASE"
           title={zh ? '78,228 个原代人胸腺与外周血 T 细胞，' : '78,228 primary human thymic and peripheral blood T cells,'}
-          accent={zh ? '多阶段循证核验与罕见亚群精准召回。' : 'staged verification and precision recovery of rare invariant lineages.'}
+          accent={zh ? '多阶段 T 细胞鉴定与稀有细胞召回。' : 'multi-stage T-cell identification and rare-cell recovery.'}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           <figure className="lg:col-span-7 rounded-2xl border border-emerald-950/[0.09] bg-white shadow-[0_1px_2px_rgba(6,78,59,0.04)] overflow-hidden flex flex-col">
             <div className="px-4 sm:px-5 py-3 border-b border-emerald-950/[0.06] flex items-center justify-between gap-2">
               <span className="text-xs sm:text-[13px] font-semibold text-[#0C261B]">
-                {zh ? '证据审阅、再注释与局部聚类细分演示' : 'Evidence review, re-annotation, and localized sub-clustering'}
+                {zh ? 'T 细胞候选、局部证据与注释路径' : 'T-cell candidates, local evidence, and annotation paths'}
               </span>
               <span className="font-mono text-[11px] text-slate-400">13 donors · RNA + TCR-seq</span>
             </div>
             <div className="flex-1 bg-white p-3 sm:p-4 flex items-center justify-center">
               <img
                 src={IDENTITY_CASE_GIF.src}
-                alt={zh ? '人胸腺与外周血 T 细胞证据审阅、再注释与局部细分动态演示' : 'Animated scVerity case study showing evidence review, re-annotation, and localized sub-clustering'}
+                alt={zh ? '人胸腺与外周血 T 细胞逐阶段注释、局部证据核验与注释路径解释' : 'Staged annotation, local-evidence verification, and annotation-path reasoning for human thymic and peripheral blood T cells'}
                 width={IDENTITY_CASE_GIF.width}
                 height={IDENTITY_CASE_GIF.height}
                 loading="lazy"
@@ -369,19 +406,19 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
             </div>
             <figcaption className="px-4 sm:px-5 py-3 border-t border-emerald-950/[0.06] text-xs text-slate-500 leading-relaxed bg-[#FAFDFB]">
               {zh
-                ? '基于 13 位健康供体胸腺与外周血 T 细胞配对单细胞 RNA 及 TCR-seq 数据，展示 Agent Review 纠正 CD4/CD8 谱系混淆并细分胸腺 γδ 分支，以及 Meta Review 结合配对 TCR 高精度召回罕见 MAIT 与 iNKT 亚群。'
-                : 'On paired scRNA-seq and TCR profiles from 13 healthy donors, Agent Review resolves CD4/CD8 conflicts and splits hidden thymic γδ trajectories, while Meta Review recovers rare MAIT and iNKT populations backed by paired TCRs.'}
+                ? '以连续表达流形中的局部细胞关系为起点，Analyst Agent 在独立局部分群中汇总可测证据，Reviewer Agent 依据细胞本体约束逐阶段细分、回退或确证。案例展示 CD4/CD8 谱系混淆纠正，以及结合配对 TCR 对胸腺 γδ、MAIT 与 iNKT 分支的注释路径解释。'
+                : 'Starting from local cell relationships in a continuous expression manifold, Analyst Agent summarizes measurable evidence within independent local clusters, while Reviewer Agent splits, revises, or confirms annotations under Cell Ontology constraints. The case explains CD4/CD8 conflict resolution and paired-TCR-backed thymic γδ, MAIT, and iNKT branches.'}
             </figcaption>
           </figure>
 
           <div className="lg:col-span-5 flex flex-col gap-5">
             <BenchCard
-              title={zh ? 'T 细胞谱系逐阶段注释精度' : 'Staged annotation accuracy on T-cell lineages'}
+              title={zh ? 'T 细胞谱系逐阶段注释精度' : 'Staged T-cell annotation accuracy'}
               meta={zh ? 'FACS 物理分选金标准 (5 大主谱系)' : 'FACS-sorted ground truth (5 major lineages)'}
               footer={
                 zh
-                  ? 'Agent Review 重新注释 3,949 个细胞，正确标注净增 +2,784 个；Meta Review 结合配对 TCR 复核 611 个细胞，正确标注净增 +606 个。'
-                  : 'Agent Review reclassifies 3,949 cells (+2,784 net correct); Meta Review verifies 611 rare cells via paired TCRs (+606 net correct).'
+                  ? '从 Manifold 候选出发，Agent Review 重新注释 3,949 个细胞，正确标注净增 +2,784 个；Meta Review 结合配对 TCR 复核 611 个细胞，正确标注净增 +606 个。'
+                  : 'Starting from manifold candidates, Agent Review reclassifies 3,949 cells (+2,784 net correct); Meta Review verifies 611 rare cells via paired TCRs (+606 net correct).'
               }
             >
               <VerticalColumnChart
@@ -411,7 +448,7 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
 
             <BenchCard
               className="flex-1"
-              title={zh ? '配对 TCR 罕见亚群多模态确证' : 'Multimodal verification of rare lineages via paired TCR'}
+              title={zh ? '配对 TCR 证据约束下的罕见亚群注释' : 'Rare-lineage annotation under paired-TCR evidence constraints'}
               meta={zh ? '四聚体物理分选对照' : 'Tetramer sorting ground truth'}
               footer={
                 zh

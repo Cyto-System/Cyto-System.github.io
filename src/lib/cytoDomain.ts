@@ -267,16 +267,16 @@ export const CYTO_MODULES: CytoModule[] = [
     name: 'Cyto.Identity',
     tier: '02',
     tierTitle: { zh: '02 推演细胞', en: '02 Simulate & Reason' },
-    shortRole: { zh: '它是谁', en: 'Reasoning-based cell identity' },
-    tableTask: { zh: '可推理细胞鉴定', en: 'Reasoning-capable cell identity annotation' },
-    scaleLabel: { zh: '细胞本体论 · 谱系标志物证据链推理', en: 'Cell Ontology · Marker evidence chain reasoning' },
+    shortRole: { zh: '开放世界细胞注释', en: 'Open-world cell annotation' },
+    tableTask: { zh: '开放世界细胞注释', en: 'Open-world cell annotation' },
+    scaleLabel: { zh: '细胞本体论 · 局部分群证据推理', en: 'Cell Ontology · Local-population evidence reasoning' },
     inputOutput: {
-      zh: '输入：单细胞表达谱与组织上下文 → 输出：层级细胞身份判定 + 可解释分子证据链',
-      en: 'Input: Single-cell profile & tissue context → Output: Hierarchical cell identity + explicit molecular reasoning chain',
+      zh: '输入：单细胞表达谱与组织上下文 → 输出：本体约束下的最细细胞标签 + 可解释证据链',
+      en: 'Input: Single-cell profile & tissue context → Output: Finest ontology-constrained cell label + explicit evidence chain',
     },
     summary: {
-      zh: 'scVerity 将单细胞候选假设生成与样本内生物学证据核验解耦，结合自适应流形表征、分析与评审双智能体及细胞本体知识图谱，实现细粒度单细胞身份注释与多模态罕见亚群核验。',
-      en: 'scVerity decouples per-cell candidate generation from sample-grounded biological verification via an Adaptive Manifold Provider, Analyst/Reviewer agents, and Cell Ontology knowledge graph for open-world annotation.',
+      zh: 'scVerity 将细胞级候选假设生成与样本内生物学证据核验解耦。自适应流形提供器保留相近亚型的竞争假设，分析与评审智能体结合细胞本体知识图谱与局部分群实测证据逐层核验，输出可溯源的细胞身份与状态。',
+      en: 'scVerity decouples cell-level candidate hypothesis generation from biological evidence verification within the sample. An adaptive manifold provider preserves competing hypotheses for closely related subtypes, while Analyst and Reviewer agents jointly verify candidates against Cell Ontology and measurable evidence from local cell populations, releasing traceable identities and cellular states.',
     },
     reportLabel: 'arXiv',
     reportUrl: '#report-viewer',
@@ -285,8 +285,8 @@ export const CYTO_MODULES: CytoModule[] = [
     status: 'open_source',
     inMainTable: true,
     highlights: {
-      zh: ['输出完整标志基因与通路推理链', '零样本发现罕见与疾病特异亚群', 'Cell Ontology 层级一致性校验'],
-      en: ['Explicit marker & pathway reasoning trace', 'Zero-shot rare & disease subpopulation discovery', 'Cell Ontology hierarchy consistency'],
+      zh: ['高召回候选保留相近亚型竞争', '局部分群实测证据逐层核验', '可推理最细标签与完整证据溯源'],
+      en: ['High-recall candidates retain competing subtypes', 'Layer-wise verification with local-population evidence', 'Finest reasoned labels with traceable evidence'],
     },
   },
   {
@@ -355,7 +355,7 @@ export const CYTO_MODULES: CytoModule[] = [
       en: 'Input: Open biological/clinical question → Output: Multi-scale simulation trajectory, target candidates & testable protocol',
     },
     summary: {
-      zh: '协同调用 Cyto 家族基因组、空间 Niche、身份推理与扰动推演模块，从多尺度生物数据关联中自主提出科学假说、设计虚拟干预验证并输出完整研究轨迹，已上线华大云平台开放试用。',
+      zh: '协同调用 Cyto 家族基因组、空间 Niche、开放世界注释与扰动推演模块，从多尺度生物数据关联中自主提出科学假说、设计虚拟干预验证并输出完整研究轨迹，已上线华大云平台开放试用。',
       en: 'Orchestrates Cyto.Genome, Spatial, Identity, and Perturbation to autonomously synthesize multi-scale evidence, propose mechanistic hypotheses, run virtual interventions, and iterate with experimental feedback.',
     },
     reportLabel: 'arXiv',

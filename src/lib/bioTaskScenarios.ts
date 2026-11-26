@@ -123,12 +123,12 @@ export const CYTO_TASK_SCENARIOS: BioTaskScenario[] = [
         tierBadge: { zh: '02 推演细胞', en: '02 REASON IDENTITY' },
         boardMetric: '61.36%',
         roleHeadline: {
-          zh: '循证细胞身份推理',
-          en: 'Evidence-Grounded Identity',
+          zh: '开放世界细胞注释',
+          en: 'Open-World Cell Annotation',
         },
         roleDetail: {
-          zh: 'scVerity 解耦候选流形生成与样本内分子表达核验，三队列 ACC 均值领先最强外部基线 +14.86 个百分点并高精度找回罕见 T 细胞亚群',
-          en: 'scVerity decouples manifold candidates from sample-grounded verification (+14.86 pp over best baseline)',
+          zh: 'scVerity 以连续流形候选、局部群体实测证据与知识图谱约束逐层推理，输出可溯源的最细细胞标签；三队列 ACC 均值领先最强外部基线 +14.86 个百分点',
+          en: 'scVerity reasons from continuous-manifold candidates through local-population evidence and knowledge-graph constraints to release traceable cell labels (+14.86 pp over best baseline)',
         },
         readoutMetric: 'scVerity · Ontology ACC',
         accentColorCss: '#059669',
