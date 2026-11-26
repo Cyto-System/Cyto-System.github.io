@@ -45,7 +45,7 @@ export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
       </section>
       <section aria-labelledby="cosci-inquiry-results" className="space-y-4">
         <h4 id="cosci-inquiry-results" className="text-lg font-semibold text-[#0C261B]">
-          {zh ? '开放式生信研究：主要发现与证据边界' : 'Open-ended bioinformatics: findings and limits of the evidence'}
+          {zh ? '开放式生信研究：主要发现与后续计划' : 'Open-ended bioinformatics: findings and next steps'}
         </h4>
         <div className="grid gap-4 lg:grid-cols-3">
           {[
@@ -56,7 +56,7 @@ export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
               caption: zh ? '同一患者第 1 天至第 7 天的苯丙氨酸变化' : 'Day 1 to day 7 phenylalanine changes within patients',
               title: zh ? '脓毒症死亡风险' : 'Sepsis mortality',
               finding: zh ? '研究从单次采血转向同一患者第 1 天与第 7 天的配对比较。以另外 19 种氨基酸为参照，苯丙氨酸的相对水平在存活组和死亡组平均均有下降，但死亡组降幅较小。' : 'The analysis shifted from single blood draws to changes within patients from day 1 to day 7. Relative to 19 other amino acids, phenylalanine fell on average in both outcome groups, but less in non-survivors.',
-              limit: zh ? '该模式仍需在独立配对队列中验证，尚不能据此判断死亡风险。' : 'The pattern requires replication in an independent paired cohort; its association with mortality remains unresolved.',
+              nextStep: zh ? '在独立脓毒症队列中，利用第 1 天和第 7 天的配对血浆样本，检验 28 天内死亡患者的苯丙氨酸相对降幅是否小于存活患者。' : 'Use paired day 1 and day 7 plasma samples from an independent sepsis cohort to test whether the relative decline in phenylalanine is smaller in patients who die within 28 days than in survivors.',
             },
             {
               panel: '11c',
@@ -65,7 +65,7 @@ export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
               caption: zh ? '记忆 B 细胞比例变化与状态内 TOP2A 表达' : 'Memory B-cell proportions and within-state TOP2A expression',
               title: zh ? '食管鳞癌淋巴结转移' : 'Lymph node metastasis in esophageal squamous cell carcinoma',
               finding: zh ? '配对比较显示，转移淋巴结中记忆 B 细胞总体占比下降，但在记忆 B 细胞内部，10 名可评估患者的 TOP2A 表达均升高。' : 'In paired lymph nodes from 12 patients, the memory B-cell proportion fell overall in metastatic nodes, while TOP2A expression within memory B cells rose in all 10 evaluable patients.',
-              limit: zh ? 'B 细胞标签下检出的 CXCL13 RNA 不能证明其由 B 细胞产生，仍需原位定位。' : 'CXCL13 RNA detected under B-cell labels does not establish that B cells produced it. Its cellular origin requires in situ localization.',
+              nextStep: zh ? '在同一患者的配对淋巴结切片上原位定位 CXCL13 RNA，依据细胞边界区分信号来自 B 细胞还是邻近细胞。' : 'Localize CXCL13 RNA in paired lymph node sections from the same patient and use cell boundaries to distinguish transcripts in B cells from those in neighboring cells.',
             },
             {
               panel: '13e',
@@ -74,9 +74,9 @@ export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
               caption: zh ? '13 例患者中 SMAD3 区域的甲基化与染色质可及性' : 'SMAD3 methylation and chromatin accessibility across 13 cases',
               title: zh ? '急性主动脉夹层五组学研究' : 'Five-omics analysis of acute aortic dissection',
               finding: zh ? '比较不同样本材料中的 48 对预设指标时，仅 SMAD3 区域在 13 例患者中呈现一致的负相关：血浆游离 DNA 甲基化越高，外周血单个核细胞的染色质可及性越低。' : 'Of 48 prespecified cross-material pairs, only the SMAD3 region showed a consistent inverse association across 13 cases: higher plasma cell-free DNA methylation tracked with lower chromatin accessibility in peripheral blood mononuclear cells.',
-              limit: zh ? '该关联仍需独立队列复现。另一个候选位点 CP6B 缺少物理染色质接触证据，评审后撤回了这一解释。' : 'The association awaits independent replication. At a separate candidate locus, CP6B, review found no evidence of physical chromatin contact, and that interpretation was withdrawn.',
+              nextStep: zh ? '在独立主动脉夹层队列中检验 SMAD3 区域甲基化与染色质可及性的负相关。另对原队列全体参与者完成 CP6B 分型，再评估其等位基因效应。' : 'Test whether the inverse association between SMAD3 methylation and chromatin accessibility replicates in an independent aortic dissection cohort. Genotype CP6B in all participants in the original cohort before assessing allelic effects.',
             },
-          ].map(({ title, finding, limit, preview, original, panel, caption }) => (
+          ].map(({ title, finding, nextStep, preview, original, panel, caption }) => (
             <article key={title} className="space-y-3 rounded-xl border border-emerald-950/10 bg-white p-5">
               <h5 className="font-semibold text-[#0C261B]">{title}</h5>
               <figure className="space-y-2">
@@ -87,7 +87,10 @@ export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
                 <figcaption className="text-sm font-medium leading-snug text-[#29483A]">{caption}</figcaption>
               </figure>
               <p className="text-sm leading-relaxed text-slate-700">{finding}</p>
-              <p className="border-t border-emerald-950/10 pt-3 text-sm leading-relaxed text-slate-600">{limit}</p>
+              <p className="border-t border-emerald-950/10 pt-3 text-sm leading-relaxed text-slate-600">
+                <strong className="font-semibold text-[#29483A]">{zh ? '后续计划：' : 'Next steps: '}</strong>
+                {nextStep}
+              </p>
             </article>
           ))}
         </div>
