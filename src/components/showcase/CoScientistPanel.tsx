@@ -18,8 +18,8 @@ export const CoScientistPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         tagline={zh ? '面向长程自主生物学研究的 AI 科学家' : 'An AI Scientist for Long-Horizon Autonomous Biological Research'}
         description={
           zh
-            ? 'Cyto.CoScientist 采用递归自进化（RSI）开展生物信息学算法开发与开放式多组学研究。系统依据每轮获得的证据与评审意见修订假设、程序和生物信息学分析方案，并可将研究方法与结果写成论文初稿。'
-            : 'Cyto.CoScientist uses recursive self-improvement (RSI) to develop bioinformatics algorithms and investigate open-ended questions in multi-omics research. It revises hypotheses, programs, and bioinformatics analysis plans in response to evidence and feedback from each round and can draft a manuscript describing the methods and results.'
+            ? 'Cyto.CoScientist 采用递归自进化（RSI）开展生物信息学算法开发与开放式多组学研究。系统依据每轮获得的证据与评审意见修订假设、程序和分析方案，并可将研究方法与结果整理为论文初稿。'
+            : 'Cyto.CoScientist uses recursive self-improvement (RSI) to develop bioinformatics algorithms and investigate open-ended multi-omics questions. It revises hypotheses, programs, and analysis plans based on evidence and review feedback from each round, and can draft a manuscript reporting the methods and results.'
         }
         subnav={[
           { href: '#cosci-architecture', label: zh ? '系统架构' : 'Architecture' },

@@ -64,7 +64,7 @@ export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
               original: 'fig1_escc_bcell_decoupling.png',
               caption: zh ? '记忆 B 细胞比例变化与状态内 TOP2A 表达' : 'Memory B-cell proportions and within-state TOP2A expression',
               title: zh ? '食管鳞癌淋巴结转移' : 'Lymph node metastasis in esophageal squamous cell carcinoma',
-              finding: zh ? '配对比较显示，转移淋巴结中记忆 B 细胞总体占比下降，但在记忆 B 细胞内部，10 名可评估患者的 TOP2A 表达均升高。' : 'In paired lymph nodes from 12 patients, the memory B-cell proportion fell overall in metastatic nodes, while TOP2A expression within memory B cells rose in all 10 evaluable patients.',
+              finding: zh ? '12 例患者的配对淋巴结比较显示，转移淋巴结中记忆 B 细胞总体占比下降，而在记忆 B 细胞内部，10 名可评估患者的 TOP2A 表达均升高；同时，B 细胞标签下检出的 CXCL13 升高多伴随 T 细胞标志物共检出，其细胞来源尚不明确。' : 'In paired lymph nodes from 12 patients, the memory B-cell proportion fell overall in metastatic nodes, while TOP2A expression within memory B cells rose in all 10 evaluable patients. Meanwhile, elevated CXCL13 captured under B-cell labels frequently co-detected T-cell markers, leaving its cellular origin unresolved.',
               nextStep: zh ? '在同一患者的配对淋巴结切片上原位定位 CXCL13 RNA，依据细胞边界区分信号来自 B 细胞还是邻近细胞。' : 'Localize CXCL13 RNA in paired lymph node sections from the same patient and use cell boundaries to distinguish transcripts in B cells from those in neighboring cells.',
             },
             {
@@ -73,7 +73,7 @@ export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
               original: 'fig1_anzhen_single_dual_smad3.png',
               caption: zh ? '13 例患者中 SMAD3 区域的甲基化与染色质可及性' : 'SMAD3 methylation and chromatin accessibility across 13 cases',
               title: zh ? '急性主动脉夹层五组学研究' : 'Five-omics analysis of acute aortic dissection',
-              finding: zh ? '比较不同样本材料中的 48 对预设指标时，仅 SMAD3 区域在 13 例患者中呈现一致的负相关：血浆游离 DNA 甲基化越高，外周血单个核细胞的染色质可及性越低。' : 'Of 48 prespecified cross-material pairs, only the SMAD3 region showed a consistent inverse association across 13 cases: higher plasma cell-free DNA methylation tracked with lower chromatin accessibility in peripheral blood mononuclear cells.',
+              finding: zh ? '在跨样本材料的 48 对预设指标中，仅 SMAD3 区域在 13 例患者中呈现一致的负相关：血浆游离 DNA 甲基化越高，外周血单个核细胞的染色质可及性越低。此外，GFI1 启动子注释区域 CP6B 虽在 3 例携带者中呈现五组学候选关联，但其余 15 名参与者的基因型未知。' : 'Of 48 prespecified cross-material pairs, only the SMAD3 region showed a consistent inverse association across 13 cases: higher plasma cell-free DNA methylation tracked with lower chromatin accessibility in peripheral blood mononuclear cells. Separately, the GFI1 promoter-annotated region CP6B emerged as a five-omics candidate in 3 carriers, but genotypes were unknown in the remaining 15 participants.',
               nextStep: zh ? '在独立主动脉夹层队列中检验 SMAD3 区域甲基化与染色质可及性的负相关。另对原队列全体参与者完成 CP6B 分型，再评估其等位基因效应。' : 'Test whether the inverse association between SMAD3 methylation and chromatin accessibility replicates in an independent aortic dissection cohort. Genotype CP6B in all participants in the original cohort before assessing allelic effects.',
             },
           ].map(({ title, finding, nextStep, preview, original, panel, caption }) => (

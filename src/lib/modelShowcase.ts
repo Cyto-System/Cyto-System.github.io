@@ -88,7 +88,7 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
   {
     id: 'subagents',
     name: { zh: '子智能体：研究任务执行', en: 'Subagents: research task execution' },
-    gist: { zh: '在独立上下文中执行受派任务，向主智能体返回结果及其依据。', en: 'Work in isolated contexts and return findings and supporting records to the main agent.' },
+    gist: { zh: '在独立上下文中执行受派任务，向主智能体返回结果与支撑记录。', en: 'Execute delegated tasks in isolated contexts and return findings with supporting records to the main agent.' },
     detail: {
       zh: '受派任务涵盖五类研究活动：多源证据获取、假设演化与实验设计、算法与程序演化、生物信息学数据分析、科研论文写作。',
       en: 'Delegated tasks span five research activities: multi-source evidence acquisition, hypothesis evolution and experimental design, algorithm and program evolution, bioinformatics data analysis, and scientific manuscript writing.',
@@ -97,10 +97,10 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
   },
   {
     id: 'meta-review',
-    name: { zh: '外环元评审：跨轮次研究评估', en: 'Outer-loop meta-review' },
+    name: { zh: 'Outer-loop Meta-Review：独立研究评估', en: 'Outer-loop Meta-Review: independent research evaluation' },
     gist: { zh: '独立回顾多轮研究决策，识别遗漏的证据和反复无效的行动。', en: 'Independently reviews decisions across rounds for overlooked evidence and repeated ineffective actions.' },
     detail: {
-      zh: '外环评审者定期对照研究目标检查决策和执行记录，将需要重新审视的假设或研究方向反馈给主智能体。人类专家可另行提供意见。',
+      zh: 'Meta-Review 模块定期对照研究目标检查决策和执行记录，将需要重新审视的假设或研究方向反馈给主智能体。人类专家可另行提供意见。',
       en: 'The outer-loop reviewer periodically examines decisions and execution records against the research objective and flags assumptions or directions for the main agent to reconsider. Human experts may provide additional feedback.',
     },
     hotspot: { x: 17.7, y: 7.3, w: 31.2, h: 7.6 },
@@ -111,18 +111,18 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
     name: { zh: '显式搜索空间与候选演化', en: 'Explicit search spaces and candidate evolution' },
     gist: { zh: '分支选择决定延续哪个候选，评审反馈指导如何修订。', en: 'Branch selection determines which candidate to extend; review guides its revision.' },
     detail: {
-      zh: '修订假设、程序或分析方案会产生新版本，并保留其与原版本的关系。新证据也可以改变对已有版本的评价，而不改写其内容。',
-      en: 'Revising a hypothesis, program, or analysis produces a new version linked to its parent. New evidence can also change the assessment of an existing version without changing its content.',
+      zh: '修订假设、程序或分析方案会生成新版本，并保留其与原版本的关联。新证据也可更新对已有版本的评价，而不改写其内容。',
+      en: 'Revising a hypothesis, program, or analysis plan produces a new version linked to its parent. New evidence can also update the assessment of an existing version without altering its content.',
     },
     hotspot: { x: 1.0, y: 72.6, w: 29.4, h: 26.6 },
   },
   {
     id: 'control',
     name: { zh: '基于证据的执行控制与研究监督', en: 'Evidence-based execution control and research supervision' },
-    gist: { zh: '行动前核对前提，行动后评审结果，研究结束前逐项核对目标。', en: 'Check prerequisites before acting, review results afterward, and verify objective coverage before concluding.' },
+    gist: { zh: '行动前核对前提，行动后评审结果，研究结束前逐项核对目标。', en: 'Checks prerequisites before acting, reviews results afterward, and verifies objective coverage before concluding.' },
     detail: {
-      zh: '缺少必要输入或前置评审时，行动暂不执行。分层评审（R0–R4）判断结果能支持哪些结论；完成判定则检查证据和已评审的研究产出是否覆盖研究目标。',
-      en: 'An action waits if required inputs or reviews are missing. Layered review (R0–R4) determines what each result supports; the completion check asks whether the evidence and reviewed deliverables address the research objectives.',
+      zh: '缺少必要输入或前置评审时，行动暂缓执行。分层评审（R0–R4）界定结果能支持哪些结论；完成判定则核查证据和已评审产出是否覆盖研究目标。',
+      en: 'An action is held if required inputs or prior reviews are missing. Layered review (R0–R4) defines what each result supports; the completion check verifies whether the evidence and reviewed deliverables cover the research objectives.',
     },
     // One L-shaped outline follows the two gates and the review panel in Fig. 1a.
     hotspot: {
@@ -133,10 +133,10 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
   {
     id: 'context',
     name: { zh: '长程研究状态与经验复用', en: 'Long-horizon research state and experience reuse' },
-    gist: { zh: '在独立上下文中执行局部任务，保留后续决策所需的证据与经验。', en: 'Local tasks run in isolated contexts; their evidence and findings remain available to later decisions.' },
+    gist: { zh: '局部任务在独立上下文中运行，但其证据与经验会被持久保留，供后续决策复用。', en: 'Local tasks run in isolated contexts, while their evidence and findings persist for later decisions.' },
     detail: {
-      zh: '研究时间线记录哪些判断已修正、哪些问题尚待解决。分层记忆将研究层面的综合判断（L3）连接到各次尝试的发现与经验（L2），再追溯到数据、代码和评审记录（L1）。',
-      en: 'A revisable timeline tracks changes in interpretation and unresolved questions. Hierarchical memory links the study synthesis (L3) to findings from individual attempts (L2) and to primary records such as data, code, and reviews (L1).',
+      zh: '研究时间线记录哪些判断已修正、哪些问题尚待解决。分层记忆将研究层面的综合判断（L3）连接到各次尝试的发现与经验（L2），并向下追溯至数据、代码和评审记录（L1）。',
+      en: 'A revisable timeline tracks revised interpretations and unresolved questions. Hierarchical memory links study-level synthesis (L3) to findings from individual attempts (L2) and traces back to primary records—data, code, and reviews (L1).',
     },
     hotspot: { x: 30.9, y: 72.8, w: 44.4, h: 26.3 },
     // Only the “subagents in isolated contexts” label within Research activities.
@@ -145,7 +145,7 @@ export const COSCI_COMPONENTS: CoSciComponent[] = [
   {
     id: 'skills',
     name: { zh: '研究技能的发现与整合', en: 'Research skill discovery and integration' },
-    gist: { zh: '按需检索和组合分析方法，再根据执行结果与评审意见改进。', en: 'The main agent retrieves and combines analytical procedures, then refines them using results and review feedback.' },
+    gist: { zh: '按需检索并组合分析方法，再根据执行结果与评审意见持续改进。', en: 'Retrieves and combines analytical procedures as needed, then refines them using execution results and review feedback.' },
     detail: {
       zh: '主智能体优先检索本地方法库；已有方法不足时，再查找外部资源。修订后的方法经过检验，才在后续研究中复用。',
       en: 'The main agent searches the local skill library first and consults external sources when local procedures are insufficient. It tests revised procedures before reusing them later in the study.',

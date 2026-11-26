@@ -18,6 +18,7 @@ export interface TaskPipelineStep {
   tierTag: string;
   tierBadge: BilingualText;
   boardMetric: string;
+  fallbackTopic?: BilingualText;
   roleHeadline: BilingualText;
   roleDetail: BilingualText;
   readoutMetric: string;
@@ -174,21 +175,22 @@ export const CYTO_TASK_SCENARIOS: BioTaskScenario[] = [
         tierTag: '03 DISCOVER',
         tierBadge: { zh: '03 闭环发现', en: '03 CLOSED-LOOP' },
         boardMetric: '0.6458',
+        fallbackTopic: { zh: '长程自主生物学研究', en: 'Autonomous Biological Research' },
         roleHeadline: {
-          zh: '多组学自主方法与发现',
-          en: 'Closed-Loop Multi-Omics',
+          zh: '算法开发与开放式生信研究',
+          en: 'Algorithm Development & Open-Ended Inquiry',
         },
         roleDetail: {
-          zh: '自主构建 TCGA-LUAD 三模态生存融合（0.6458 vs 0.5950）并完成食管癌配对淋巴结机制分析',
-          en: 'Autonomously designs TCGA-LUAD 3-assay survival fusion (0.6458 vs 0.5950) & ESCC paired-node discovery',
+          zh: '自主构建 TCGA-LUAD 三组学生存预测流程（0.6458 vs 0.5950），并完成食管鳞癌配对淋巴结探索发现',
+          en: 'Autonomously builds a TCGA-LUAD 3-omics survival pipeline (0.6458 vs 0.5950) and conducts ESCC paired-node discovery',
         },
         readoutMetric: 'TCGA-LUAD C-index',
         accentColorCss: '#047857',
         accentHex: 0x047857,
         windowZone: 'top-right',
         targetElementLabel: {
-          zh: '靶向分子与闭环验证',
-          en: 'Ligands & Loop Validation',
+          zh: '任务内递归自进化',
+          en: 'Within-Task RSI',
         },
         boardPos: [1.94, 0.88, 0.78],
         boardRotY: -0.14,

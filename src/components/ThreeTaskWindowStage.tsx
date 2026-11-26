@@ -447,7 +447,7 @@ function drawDynamicModelRoleBoard(
   // Active Model Role Headline
   ctx.font = '700 27px "Plus Jakarta Sans", "Noto Sans SC", sans-serif';
   ctx.fillStyle = '#0c261b';
-  ctx.fillText(st.roleHeadline[lang], 24, 194);
+  ctx.fillText(st.roleHeadline[lang], 24, 194, w - 48);
 
   // Wrapped 2–3 Line Biological Action Explanation
   ctx.font = '500 20px "Plus Jakarta Sans", "Noto Sans SC", sans-serif';
@@ -1686,10 +1686,10 @@ export const ThreeTaskWindowStage: React.FC<ThreeTaskWindowStageProps> = ({
       {webglFallback ? (
         <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center space-y-2 bg-[#F2FAF6]">
           <div className="text-sm font-semibold text-[#0C261B]">
-            {scenario.shortTabLabel[lang]} · {currentStep.moduleName}
+            {(currentStep.fallbackTopic ?? scenario.shortTabLabel)[lang]} · {currentStep.moduleName}
           </div>
           <p className="text-xs text-emerald-800 font-mono">
-            {currentStep.boardMetric} · {currentStep.roleHeadline[lang]}
+            {currentStep.fallbackTopic ? `${currentStep.readoutMetric} ` : ''}{currentStep.boardMetric} · {currentStep.roleHeadline[lang]}
           </p>
         </div>
       ) : (

@@ -15,7 +15,7 @@ export const Navbar: React.FC<NavbarProps> = React.memo(({ lang }) => {
   const navItems = [
     { href: '#architecture', zh: '模型家族', en: 'Family' },
     { href: '#model-family', zh: '模型详解', en: 'Models' },
-    { href: '#model-coscientist', zh: '闭环科研', en: 'CoScientist', showcaseId: 'coscientist' as const },
+    { href: '#model-coscientist', zh: '面向长程自主生物学研究的 AI 科学家', en: 'CoScientist', showcaseId: 'coscientist' as const },
   ];
 
   const handleNavClick = (

@@ -38,7 +38,7 @@ export const EcosystemAndFooter: React.FC<EcosystemAndFooterProps> = React.memo(
             }}
             className="hover:text-white transition-colors"
           >
-            {lang === 'zh' ? '闭环科研' : 'CoScientist'}
+            {lang === 'zh' ? '面向长程自主生物学研究的 AI 科学家' : 'CoScientist'}
           </a>
         </div>
       </div>
