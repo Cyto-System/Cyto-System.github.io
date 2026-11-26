@@ -1,6 +1,6 @@
 // Content for the four-model showcase (Spatial / Identity / Perturbation / CoScientist).
 // Every number below is taken from the Cyto-System repositories:
-//   Cyto.CoScientist  README.md, assets/research-cycle.png, videos/*_case_demo.mp4
+//   Cyto.CoScientist  README.md, assets/research-cycle.png, videos/*_case_demo_v*.mp4
 //   Cyto.Perturbation README_zh.md, RELAY slide deck (landscape framework figure)
 //   SUDOKU            README_zh.md, docs/assets/sudoku-architecture.png
 // Editorial rule: each fact appears in exactly one place on the page.
@@ -329,10 +329,10 @@ export const COSCI_CASE_FILMS: CoSciCaseFilm[] = [
     dataset: 'OpenProblems',
     title: { zh: '单细胞 RNA 去噪', en: 'Single-cell RNA denoising' },
     headline: { zh: '一个细胞，能从邻居得到多少信号？', en: 'How much signal can a cell draw from its neighbors?' },
-    video: `${ASSET}/videos/OpenProblems_case_demo.mp4`,
+    video: `${ASSET}/videos/OpenProblems_case_demo_v5.mp4`,
     cover: `${ASSET}/covers/OpenProblems-cover.jpg`,
-    duration: 57,
-    chapters: chapters([0, 8.2, 20, 43.5]),
+    duration: 83,
+    chapters: chapters([0, 17.933, 28.414, 68.951]),
     data: {
       zh: '肺 24,540 · 胰腺 1,937 · PBMC 1,087 个细胞；每个细胞留出部分分子作为答案，三个组织等权评分。',
       en: 'Lung 24,540 · pancreas 1,937 · PBMC 1,087 cells; held-out molecules per cell, three tissues weighted equally.',
@@ -352,10 +352,10 @@ export const COSCI_CASE_FILMS: CoSciCaseFilm[] = [
     dataset: 'TCGA-LUAD',
     title: { zh: '肺腺癌生存风险', en: 'Lung adenocarcinoma survival' },
     headline: { zh: '为什么要否决一个高分模型？', en: 'Why reject a high-scoring model?' },
-    video: `${ASSET}/videos/TCGA-LUAD_case_demo.mp4`,
+    video: `${ASSET}/videos/TCGA-LUAD_case_demo_v5.mp4`,
     cover: `${ASSET}/covers/TCGA-LUAD-cover.jpg`,
-    duration: 64,
-    chapters: chapters([0, 10.3, 22.5, 49.5]),
+    duration: 88.033,
+    chapters: chapters([0, 19.956, 29.975, 72.068]),
     data: {
       zh: 'TCGA 420 位肺腺癌患者，RNA / miRNA / DNA 甲基化三项检测；336 人训练，固定 84 人评估。',
       en: 'TCGA, 420 LUAD patients with RNA / miRNA / DNA methylation; 336 to train, a fixed 84 to evaluate.',
@@ -375,10 +375,10 @@ export const COSCI_CASE_FILMS: CoSciCaseFilm[] = [
     dataset: 'Sepsis',
     title: { zh: '脓毒症死亡风险', en: 'Sepsis mortality' },
     headline: { zh: '单次采血与同一患者的变化，回答的是不同问题。', en: 'A single draw and a within-patient change answer different questions.' },
-    video: `${ASSET}/videos/Sepsis_case_demo.mp4`,
+    video: `${ASSET}/videos/Sepsis_case_demo_v5.mp4`,
     cover: `${ASSET}/covers/Sepsis-cover.jpg`,
-    duration: 67,
-    chapters: chapters([0, 9, 22, 55.5]),
+    duration: 81.133,
+    chapters: chapters([0, 21.310, 27.485, 65.049]),
     data: {
       zh: 'CMAISE 蛋白分支 342 人（非纵向）；另检索 PXD055932、MI GAiNS 血浆蛋白与 ALBIOS 20 人第 1 / 7 天配对样本。',
       en: 'CMAISE protein branch, 342 patients (not longitudinal); retrieved PXD055932, MI GAiNS plasma proteins and ALBIOS paired day-1 / day-7 samples (20 patients).',
@@ -404,10 +404,10 @@ export const COSCI_CASE_FILMS: CoSciCaseFilm[] = [
     dataset: 'ESCC',
     title: { zh: '食管癌配对淋巴结', en: 'Paired lymph nodes in esophageal cancer' },
     headline: { zh: '配对淋巴结，揭示跨细胞平均会掩盖的变化。', en: 'Paired nodes reveal what an average across cells can hide.' },
-    video: `${ASSET}/videos/ESCC_case_demo.mp4`,
+    video: `${ASSET}/videos/ESCC_case_demo_v6.mp4`,
     cover: `${ASSET}/covers/ESCC-cover.jpg`,
-    duration: 66,
-    chapters: chapters([0, 11.3, 22.5, 57.5]),
+    duration: 89.767,
+    chapters: chapters([0, 21.384, 28.238, 73.049]),
     data: {
       zh: '40 位患者 · 110 份单细胞组织文库；13 人同时有转移与非转移淋巴结，其中 12 人同平台测量。',
       en: '40 patients · 110 single-cell libraries; 13 had both node types, 12 measured on the same platform.',
@@ -430,10 +430,10 @@ export const COSCI_CASE_FILMS: CoSciCaseFilm[] = [
     dataset: 'Anzhen',
     title: { zh: '急性主动脉夹层', en: 'Acute aortic dissection' },
     headline: { zh: '跨材料的关联，不等于细胞内的机制。', en: 'A cross-material association is not a mechanism within cells.' },
-    video: `${ASSET}/videos/Anzhen_case_demo.mp4`,
+    video: `${ASSET}/videos/Anzhen_case_demo_v5.mp4`,
     cover: `${ASSET}/covers/Anzhen-cover.jpg`,
-    duration: 73,
-    chapters: chapters([0, 10, 23, 62]),
+    duration: 85.433,
+    chapters: chapters([0, 19.999, 33.006, 68.606]),
     data: {
       zh: '13 例急性夹层与 5 位健康对照，每人一次采血；基因组、DNA 甲基化、染色质、RNA、蛋白五种检测。',
       en: '13 acute dissection cases and 5 healthy controls, one draw each; genome, DNA methylation, chromatin, RNA and protein.',
