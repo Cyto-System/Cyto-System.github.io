@@ -124,15 +124,15 @@ export const IdentityPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         tagline={zh ? '面向单细胞的开放世界注释模型' : 'An open-world annotation model for single cells'}
         description={
           <>
-            <div className="mb-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 rounded-xl border border-emerald-950/[0.06] bg-[#F7FBF9] px-3 py-2.5">
-              <span className="font-mono text-[10.5px] tracking-[0.12em] text-emerald-800">
+            <div className="mb-3 flex flex-wrap items-baseline gap-x-1.5 gap-y-1 text-sm leading-[1.65]">
+              <span className="font-mono text-xs tracking-[0.1em] text-emerald-800">
                 {zh ? '细胞注释' : 'CELL ANNOTATION'}
               </span>
               <span className="text-slate-400">=</span>
               {annotationEquation.map((term, i) => (
                 <React.Fragment key={term}>
                   {i > 0 && <span className="text-emerald-700/50">+</span>}
-                  <span className="text-[11.5px] font-semibold leading-snug text-[#0C261B]">{term}</span>
+                  <strong className="font-semibold text-[#0C261B]">{term}</strong>
                 </React.Fragment>
               ))}
             </div>
