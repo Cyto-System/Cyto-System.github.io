@@ -78,7 +78,7 @@ interface ModelIntroProps {
   eyebrow: string;
   name: string;
   tagline: string;
-  description: string;
+  description: React.ReactNode;
   logo?: string;
   subnav?: { href: string; label: string }[];
   githubUrl?: string;
@@ -117,9 +117,9 @@ export const ModelIntro: React.FC<ModelIntroProps> = ({
             <span className="block text-emerald-700 mt-1.5 text-2xl sm:text-3xl lg:text-[34px] leading-[1.2]">{tagline}</span>
           </h3>
         </div>
-        <p className="lg:col-span-5 text-sm text-slate-600 leading-[1.7] lg:border-l lg:border-emerald-950/10 lg:pl-7 lg:py-0.5 [text-wrap:pretty]">
+        <div className="lg:col-span-5 text-sm text-slate-600 leading-[1.7] lg:border-l lg:border-emerald-950/10 lg:pl-7 lg:py-0.5 [text-wrap:pretty]">
           {description}
-        </p>
+        </div>
       </div>
       {showFooterBar && (
         <div className="flex flex-wrap items-center gap-x-2 gap-y-2.5 pt-5 border-t border-emerald-950/[0.08]">
