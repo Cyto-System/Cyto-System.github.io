@@ -12,9 +12,8 @@ export const CoSciCaseFilms: React.FC<{ lang: Lang }> = ({ lang }) => {
 
   const [active, setActive] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
   const [time, setTime] = useState(0);
-  const userPausedRef = useRef(false);
   const wantPlayRef = useRef(false);
 
   const film = COSCI_CASE_FILMS[active];
@@ -25,11 +24,9 @@ export const CoSciCaseFilms: React.FC<{ lang: Lang }> = ({ lang }) => {
     const v = videoRef.current;
     if (!v) return;
     wantPlayRef.current = true;
-    v.play().catch(() => {
-      // Autoplay with sound can be blocked; retry muted.
-      v.muted = true;
-      setMuted(true);
-      v.play().catch(() => undefined);
+    v.play().catch((error: DOMException) => {
+      // A source change or pause can interrupt an earlier play request.
+      if (error.name !== 'AbortError') wantPlayRef.current = false;
     });
   }, []);
 
@@ -38,9 +35,9 @@ export const CoSciCaseFilms: React.FC<{ lang: Lang }> = ({ lang }) => {
     videoRef.current?.pause();
   }, []);
 
-  // Autoplay (muted) while visible, unless the user paused.
+  // Resume on re-entry only after the viewer has requested playback.
   useEffect(() => {
-    if (inView && !userPausedRef.current) play();
+    if (inView && wantPlayRef.current) play();
     if (!inView) videoRef.current?.pause();
   }, [inView, play]);
 
@@ -66,10 +63,8 @@ export const CoSciCaseFilms: React.FC<{ lang: Lang }> = ({ lang }) => {
 
   const togglePlay = () => {
     if (playing) {
-      userPausedRef.current = true;
       pause();
     } else {
-      userPausedRef.current = false;
       play();
     }
   };
@@ -80,7 +75,6 @@ export const CoSciCaseFilms: React.FC<{ lang: Lang }> = ({ lang }) => {
     v.muted = !v.muted;
     setMuted(v.muted);
     if (!v.muted && v.paused) {
-      userPausedRef.current = false;
       play();
     }
   };
@@ -295,7 +289,6 @@ export const CoSciCaseFilms: React.FC<{ lang: Lang }> = ({ lang }) => {
                       onClick={() => {
                         seek(c.start + 0.05);
                         if (!playing) {
-                          userPausedRef.current = false;
                           play();
                         }
                       }}
