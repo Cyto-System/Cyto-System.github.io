@@ -1,29 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { RotateCcw } from 'lucide-react';
+import React from 'react';
 import type { Lang } from '../../lib/cytoDomain';
-import { COSCI_ALGO_CHARTS, COSCI_LUAD_DECISIONS, COSCI_OPENPROBLEMS_TISSUES } from '../../lib/modelShowcase';
-import { BenchCard, DonutChart, LollipopAuditChart, VerticalColumnChart } from './BenchCharts';
-import { EyebrowHeading, useInView } from './shared';
+import { EyebrowHeading } from './shared';
 
 export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
   const zh = lang === 'zh';
-  const [ref, inView] = useInView<HTMLDivElement>(true, 0.2);
-  const [play, setPlay] = useState(false);
-  const [replayNonce, setReplayNonce] = useState(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    setPlay(false);
-    const id = window.requestAnimationFrame(() => window.requestAnimationFrame(() => setPlay(true)));
-    return () => window.cancelAnimationFrame(id);
-  }, [inView, replayNonce]);
-
-  const denoise = COSCI_ALGO_CHARTS[0];
-  const luad = COSCI_ALGO_CHARTS[1];
-
   return (
-    <div ref={ref} className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div className="space-y-8">
         <EyebrowHeading
           id="cosci-results"
           index="03"
@@ -31,99 +13,37 @@ export const CoSciResults: React.FC<{ lang: Lang }> = ({ lang }) => {
           title={zh ? '研究结果' : 'Study results'}
           accent={zh ? '两项算法评估与三项开放式生信研究' : 'Two algorithm evaluations and three open-ended bioinformatics studies'}
         />
-        <button
-          type="button"
-          onClick={() => setReplayNonce((n) => n + 1)}
-          className="self-start sm:self-end inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-slate-500 hover:text-emerald-700 rounded-lg hover:bg-white/80 transition-colors cursor-pointer shrink-0"
-        >
-          <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>{zh ? '重播动画' : 'Replay'}</span>
-        </button>
-      </div>
-
-      <h4 className="text-lg font-semibold text-[#0C261B]">{zh ? '算法开发：定量评估' : 'Algorithm development: quantitative evaluation'}</h4>
-      {/* Task 1: OpenProblems scRNA denoising — cohort donut + MSE column drop */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        <BenchCard
-          className="lg:col-span-5"
-          title={zh ? 'OpenProblems 三组织测试细胞构成' : 'OpenProblems 3-tissue evaluation cohort'}
-          meta={zh ? '三组织等权评分' : 'Equal-weight tissues'}
-          footer={
-            zh
-              ? '每个细胞留出部分分子作为测试目标，在肺、胰腺与 PBMC 三组织上等权平均。'
-              : 'Held-out molecules per cell, weighted equally across lung, pancreas, and PBMC.'
-          }
-        >
-          <div className="h-full flex items-center">
-            <DonutChart
-              centerValue="27,564"
-              centerLabel={zh ? '测试细胞' : 'cells'}
-              segments={COSCI_OPENPROBLEMS_TISSUES.map((t) => ({
-                label: t.label[lang],
-                value: t.count,
-                color: t.color,
-              }))}
-            />
-          </div>
-        </BenchCard>
-
-        <BenchCard
-          className="lg:col-span-7"
-          title={denoise.tab[lang]}
-          meta={denoise.metric[lang]}
-          footer={zh ? '越低越好；虚线标示最优已有方法 MAGIC（0.2013）。' : 'Lower is better; dashed line marks MAGIC (0.2013).'}
-        >
-          <VerticalColumnChart
-            yDomain={[0.15, 0.30]}
-            digits={4}
-            play={play}
-            refLine={{ value: 0.2013, label: 'MAGIC 0.2013' }}
-            groups={denoise.entries.map((e) => ({
-              label: e.label,
-              bars: [{ name: e.label, value: e.value, ours: e.ours }],
-            }))}
-          />
-        </BenchCard>
-      </div>
-
-      {/* Task 2: TCGA-LUAD survival — C-index column comparison + candidate fusion audit track */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        <BenchCard
-          className="lg:col-span-5"
-          title={luad.tab[lang]}
-          meta={luad.metric[lang]}
-          footer={zh ? '420 例肺腺癌三组学（RNA / miRNA / DNA 甲基化）匹配评估。' : '420 LUAD patients across RNA, miRNA, and DNA methylation.'}
-        >
-          <VerticalColumnChart
-            yDomain={[0.54, 0.67]}
-            digits={4}
-            play={play}
-            refLine={{ value: 0.595, label: 'DeepProg 0.5950', align: 'left' }}
-            groups={luad.entries.map((e) => ({
-              label: e.label === 'CytoCoScientist' ? 'CytoCoScientist' : 'DeepProg (matched)',
-              bars: [{ name: e.label, value: e.value, ours: e.ours }],
-            }))}
-          />
-        </BenchCard>
-
-        <BenchCard
-          className="lg:col-span-7"
-          title={zh ? 'TCGA-LUAD 候选融合方案评审轨迹' : 'TCGA-LUAD fusion candidate audit track'}
-          meta="C-index"
-        >
-          <LollipopAuditChart
-            play={play}
-            domain={[0.56, 0.66]}
-            baseline={{ value: 0.595, label: 'DeepProg' }}
-            rows={COSCI_LUAD_DECISIONS.map((r) => ({
-              label: r.design[lang],
-              score: Number(r.score),
-              decision: r.decision[lang],
-              kept: r.kept,
-            }))}
-          />
-        </BenchCard>
-      </div>
+      <section aria-labelledby="cosci-algorithm-results" className="space-y-4">
+        <h4 id="cosci-algorithm-results" className="text-lg font-semibold text-[#0C261B]">{zh ? '算法开发：定量评估' : 'Algorithm development: quantitative evaluation'}</h4>
+        <div className="grid gap-4 lg:grid-cols-2">
+          {[
+            {
+              title: zh ? 'OpenProblems · 单细胞 RNA 测序去噪' : 'OpenProblems · Single-cell RNA-seq denoising',
+              panel: '1c', left: 26,
+              alt: zh ? '三组织平均 MSE（越低越好）：ALRA 0.2813，DCA 0.2346，MAGIC 0.2013，Cyto.CoScientist 0.1919。' : 'Three-tissue mean MSE (lower is better): ALRA 0.2813, DCA 0.2346, MAGIC 0.2013, Cyto.CoScientist 0.1919.',
+              result: zh ? '改用图传播算子后，最终算法在三种组织上的均方误差均低于 MAGIC。等权平均 MSE 为 0.1919，比 MAGIC 的 0.2013 低 4.7%。' : 'The final graph-propagation denoiser reduced mean squared error relative to MAGIC in all three tissues. Equally weighted mean MSE was 0.1919 versus 0.2013 for MAGIC, a 4.7% reduction.',
+            },
+            {
+              title: zh ? 'TCGA-LUAD · 多组学生存预测' : 'TCGA-LUAD · Multi-omics survival prediction',
+              panel: '1d', left: 272,
+              alt: zh ? 'Harrell C 指数（越高越好）：匹配复现的 DeepProg 为 0.5950，Cyto.CoScientist 为 0.6458。' : 'Harrell’s C-index (higher is better): matched DeepProg 0.5950, Cyto.CoScientist 0.6458.',
+              result: zh ? '在相同的 336 人训练集和 84 人评估集上，Cyto.CoScientist 的 C 指数为 0.6458，比匹配复现的 DeepProg（0.5950）高 0.0508。' : 'On the same 336-patient training and 84-patient evaluation split, Cyto.CoScientist achieved a C-index of 0.6458 versus 0.5950 for matched DeepProg, an absolute gain of 0.0508.',
+            },
+          ].map(({ title, panel, left, alt, result }) => (
+            <article key={panel} className="flex flex-col gap-3 rounded-xl border border-emerald-950/10 bg-white p-5">
+              <h5 className="font-semibold text-[#0C261B]">{title}</h5>
+              <a href="/assets/coscientist/cycle-cg.png" target="_blank" rel="noreferrer" className="flex flex-1 flex-col justify-between rounded-md focus-visible:outline-2 focus-visible:outline-emerald-700">
+                {/* Matched benchmark panels, cropped from the same Fig. 1c–g artwork. */}
+                <div className="relative aspect-[216/212] w-full max-w-[420px] self-center overflow-hidden">
+                  <img src="/assets/coscientist/cycle-cg.png" loading="lazy" alt={alt} className="absolute h-auto max-w-none" style={{width: `${1250 / 216 * 100}%`, left: `${-left / 216 * 100}%`, top: `${-434 / 212 * 100}%`}} />
+                </div>
+                <span className="mt-2 text-xs font-semibold text-emerald-800 underline underline-offset-2">{zh ? `正文图 ${panel} · 查看案例总图` : `Fig. ${panel} · View case overview`}</span>
+              </a>
+              <p className="text-sm leading-relaxed text-slate-700">{result}</p>
+            </article>
+          ))}
+        </div>
+      </section>
       <section aria-labelledby="cosci-inquiry-results" className="space-y-4">
         <h4 id="cosci-inquiry-results" className="text-lg font-semibold text-[#0C261B]">
           {zh ? '开放式生信研究：主要发现与证据边界' : 'Open-ended bioinformatics: findings and limits of the evidence'}
