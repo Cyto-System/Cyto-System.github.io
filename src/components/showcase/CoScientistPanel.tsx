@@ -1,10 +1,10 @@
 import React from 'react';
 import type { Lang } from '../../lib/cytoDomain';
 import { CoSciArchitecture } from './CoSciArchitecture';
-import { CoSciTrajectory } from './CoSciTrajectory';
 import { CoSciResults } from './CoSciResults';
 import { CoSciCaseFilms } from './CoSciCaseFilms';
-import { ModelIntro } from './shared';
+import { CoSciCaseComparison } from './CoSciCaseComparison';
+import { EyebrowHeading, ModelIntro } from './shared';
 
 export const CoScientistPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
   const zh = lang === 'zh';
@@ -23,7 +23,6 @@ export const CoScientistPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         }
         subnav={[
           { href: '#cosci-architecture', label: zh ? '系统架构' : 'Architecture' },
-          { href: '#cosci-trajectory', label: zh ? '研究轨迹' : 'Trajectory' },
           { href: '#cosci-cases', label: zh ? '五项研究案例' : 'Five case studies' },
           { href: '#cosci-results', label: zh ? '研究结果' : 'Study results' },
         ]}
@@ -33,10 +32,17 @@ export const CoScientistPanel: React.FC<{ lang: Lang }> = ({ lang }) => {
         <CoSciArchitecture lang={lang} />
       </div>
       <div className="pt-12 sm:pt-14 border-t border-emerald-950/[0.08]">
-        <CoSciTrajectory lang={lang} />
-      </div>
-      <div className="pt-12 sm:pt-14 border-t border-emerald-950/[0.08]">
-        <CoSciCaseFilms lang={lang} />
+        <div className="space-y-7 sm:space-y-8">
+          <EyebrowHeading
+            id="cosci-cases"
+            index="02"
+            kicker="CASE STUDIES"
+            title={zh ? '五项研究案例' : 'Five case studies'}
+            accent={zh ? '算法开发与开放式生信研究' : 'Algorithm development and open-ended bioinformatics inquiry'}
+          />
+          <CoSciCaseComparison lang={lang} />
+          <CoSciCaseFilms lang={lang} />
+        </div>
       </div>
       <div className="pt-12 sm:pt-14 border-t border-emerald-950/[0.08]">
         <CoSciResults lang={lang} />

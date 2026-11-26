@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, Maximize, Pause, Play, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import type { Lang } from '../../lib/cytoDomain';
 import { COSCI_CASE_FILMS, chapterIndexAt, formatClock } from '../../lib/modelShowcase';
-import { EyebrowHeading, useInView } from './shared';
+import { useInView } from './shared';
 
 export const CoSciCaseFilms: React.FC<{ lang: Lang }> = ({ lang }) => {
   const zh = lang === 'zh';
@@ -99,14 +99,6 @@ export const CoSciCaseFilms: React.FC<{ lang: Lang }> = ({ lang }) => {
 
   return (
     <div className="space-y-7 sm:space-y-8">
-      <EyebrowHeading
-        id="cosci-cases"
-        index="03"
-        kicker="CASE STUDIES"
-        title={zh ? '五项研究案例' : 'Five case studies'}
-        accent={zh ? '算法开发与开放式生信研究' : 'Algorithm development and open-ended bioinformatics inquiry'}
-      />
-
       {/* Case selector: horizontal snap strip on mobile, 5-up grid on lg+ */}
       <div
         role="tablist"
